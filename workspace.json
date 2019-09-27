@@ -1,8 +1,70 @@
 {
   "version": 1,
-  "projects": {},
+  "projects": {
+    "database-builder": {
+      "root": "apps/database-builder",
+      "sourceRoot": "apps/database-builder/src",
+      "projectType": "application",
+      "prefix": "database-builder",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/database-builder",
+            "main": "apps/database-builder/src/main.ts",
+            "tsConfig": "apps/database-builder/tsconfig.app.json",
+            "assets": [
+              "apps/database-builder/src/assets"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/database-builder/src/environments/environment.ts",
+                  "with": "apps/database-builder/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "database-builder:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "config": "apps/database-builder/.eslintrc",
+            "tsConfig": [
+              "apps/database-builder/tsconfig.app.json",
+              "apps/database-builder/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/database-builder/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/database-builder/jest.config.js",
+            "tsConfig": "apps/database-builder/tsconfig.spec.json"
+          }
+        }
+      }
+    }
+  },
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
+    "defaultCollection": "@nrwl/node"
   },
   "schematics": {
     "@nrwl/workspace": {
@@ -48,5 +110,6 @@
         "linter": "eslint"
       }
     }
-  }
+  },
+  "defaultProject": "database-builder"
 }

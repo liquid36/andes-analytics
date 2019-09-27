@@ -25,15 +25,28 @@
     "help": "nx help"
   },
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "moment": "^2.24.0",
+    "mongodb": "^3.3.2"
+  },
   "devDependencies": {
+    "@nrwl/eslint-plugin-nx": "8.5.1",
+    "@nrwl/jest": "8.5.1",
+    "@nrwl/node": "^8.5.1",
     "@nrwl/workspace": "8.5.1",
-    "@types/node": "~8.9.4",
+    "@types/jest": "24.0.9",
+    "@types/mongodb": "^3.3.3",
+    "@types/node": "^8.9.5",
+    "@typescript-eslint/eslint-plugin": "2.0.0-alpha.4",
+    "@typescript-eslint/parser": "2.0.0-alpha.4",
     "dotenv": "6.2.0",
+    "eslint": "6.1.0",
+    "eslint-config-prettier": "6.0.0",
+    "jest": "24.1.0",
+    "prettier": "1.18.2",
+    "ts-jest": "24.0.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
-    "eslint": "6.1.0",
-    "typescript": "~3.4.5",
-    "prettier": "1.18.2"
+    "typescript": "~3.4.5"
   }
 }
