@@ -10,6 +10,9 @@
   "projects": {
     "database-builder": {
       "tags": []
+    },
+    "api": {
+      "tags": []
     }
   }
 }

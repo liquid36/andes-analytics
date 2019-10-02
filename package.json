@@ -22,12 +22,18 @@
     "format:check": "nx format:check",
     "workspace-schematic": "nx workspace-schematic",
     "dep-graph": "nx dep-graph",
-    "help": "nx help"
+    "help": "nx help",
+    "api": "PORT=3001 MONGO_DB_CONN='mongodb://localhost:27018/es-edition' ANDES_DB_CONN='mongodb://localhost:27018/andes' npm run start api"
   },
   "private": true,
   "dependencies": {
+    "base-64": "^0.1.0",
+    "body-parser": "^1.19.0",
+    "bson": "^4.0.2",
+    "express": "^4.17.1",
     "moment": "^2.24.0",
-    "mongodb": "^3.3.2"
+    "mongodb": "^3.3.2",
+    "passport": "^0.4.0"
   },
   "devDependencies": {
     "@nrwl/eslint-plugin-nx": "8.5.1",
