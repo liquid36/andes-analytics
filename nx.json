@@ -13,6 +13,15 @@
     },
     "api": {
       "tags": []
+    },
+    "ui": {
+      "tags": []
+    },
+    "analytics-e2e": {
+      "tags": []
+    },
+    "analytics": {
+      "tags": []
     }
   }
 }

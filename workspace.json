@@ -14,9 +14,7 @@
             "outputPath": "dist/apps/database-builder",
             "main": "apps/database-builder/src/main.ts",
             "tsConfig": "apps/database-builder/tsconfig.app.json",
-            "assets": [
-              "apps/database-builder/src/assets"
-            ]
+            "assets": ["apps/database-builder/src/assets"]
           },
           "configurations": {
             "production": {
@@ -47,10 +45,7 @@
               "apps/database-builder/tsconfig.app.json",
               "apps/database-builder/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/database-builder/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/database-builder/**"]
           }
         },
         "test": {
@@ -75,9 +70,7 @@
             "outputPath": "dist/apps/api",
             "main": "apps/api/src/main.ts",
             "tsConfig": "apps/api/tsconfig.app.json",
-            "assets": [
-              "apps/api/src/assets"
-            ]
+            "assets": ["apps/api/src/assets"]
           },
           "configurations": {
             "production": {
@@ -108,10 +101,7 @@
               "apps/api/tsconfig.app.json",
               "apps/api/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/api/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/api/**"]
           }
         },
         "test": {
@@ -119,6 +109,160 @@
           "options": {
             "jestConfig": "apps/api/jest.config.js",
             "tsConfig": "apps/api/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "ui": {
+      "projectType": "library",
+      "root": "libs/ui",
+      "sourceRoot": "libs/ui/src",
+      "prefix": "andes-analytics",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/tsconfig.lib.json",
+              "libs/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/jest.config.js",
+            "tsConfig": "libs/ui/tsconfig.spec.json",
+            "setupFile": "libs/ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "analytics": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/analytics",
+      "sourceRoot": "apps/analytics/src",
+      "prefix": "andes-analytics",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/analytics",
+            "index": "apps/analytics/src/index.html",
+            "main": "apps/analytics/src/main.ts",
+            "polyfills": "apps/analytics/src/polyfills.ts",
+            "tsConfig": "apps/analytics/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "apps/analytics/src/favicon.ico",
+              "apps/analytics/src/assets"
+            ],
+            "styles": ["apps/analytics/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/analytics/src/environments/environment.ts",
+                  "with": "apps/analytics/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "analytics:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "analytics:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "analytics:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/analytics/tsconfig.app.json",
+              "apps/analytics/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/analytics/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/analytics/jest.config.js",
+            "tsConfig": "apps/analytics/tsconfig.spec.json",
+            "setupFile": "apps/analytics/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "analytics-e2e": {
+      "root": "apps/analytics-e2e",
+      "sourceRoot": "apps/analytics-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/analytics-e2e/cypress.json",
+            "tsConfig": "apps/analytics-e2e/tsconfig.e2e.json",
+            "devServerTarget": "analytics:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "analytics:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/analytics-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/analytics-e2e/**"]
           }
         }
       }
@@ -170,6 +314,13 @@
       "application": {
         "linter": "eslint"
       }
+    },
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
     }
   },
   "defaultProject": "database-builder"
