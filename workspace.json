@@ -266,6 +266,37 @@
           }
         }
       }
+    },
+    "snomed": {
+      "projectType": "library",
+      "root": "libs/snomed",
+      "sourceRoot": "libs/snomed/src",
+      "prefix": "andes-analytics",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/snomed/tsconfig.lib.json",
+              "libs/snomed/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/snomed/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/snomed/jest.config.js",
+            "tsConfig": "libs/snomed/tsconfig.spec.json",
+            "setupFile": "libs/snomed/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
     }
   },
   "cli": {

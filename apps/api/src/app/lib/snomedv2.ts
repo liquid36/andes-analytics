@@ -10,7 +10,8 @@ export const performMongoDbRequest = async function (databaseName) {
         return databases[databaseName];
     } else {
         try {
-            const db = await MongoClient.connect(mongoConnection);
+            const conn = await MongoClient.connect(mongoConnection);
+            const db = conn.db(databaseName);
             databases[databaseName] = db;
             return db;
         } catch (err) {

@@ -1,0 +1,61 @@
+.ui-badge {
+    background: transparent;
+    border: 1.5px solid;
+    font-size: 0.75em;
+    font-weight: normal;
+    padding: 6px;
+    text-transform: uppercase;
+
+    // Espaciado del ícono
+    >i {
+        margin-right: 5px;
+    }
+}
+
+.ui-badge + .ui-badge-pill {
+    color: white;
+    padding: 6px;
+    border: 1.5px solid;
+    font-size: 0.75em;    
+}
+
+
+.ui-badge-danger {
+    border-color: $red;
+    color: $red; 
+}
+
+.ui-badge-success {
+    border-color: $green;
+    color: $green;  
+}
+
+.ui-badge-warning {
+    border-color: $orange;
+    color: $orange;  
+}
+
+.ui-badge-info {
+    border-color: $blue;
+    color: $blue;
+}
+ 
+.ui-badge-pill-danger {
+    background-color: $red;
+    border-color: $red!important; 
+}
+
+.ui-badge-pill-success {
+    background-color: $green;
+    border-color: $green!important;  
+}
+
+.ui-badge-pill-warning {
+    background-color: $orange;
+    border-color: $orange!important; 
+}
+
+.ui-badge-pill-info {
+    background-color: $blue;
+    border-color: $blue!important;
+}

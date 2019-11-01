@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import '../../../libs/ui/src/styles';
+
+html {
+	font-family: sans-serif;
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust:     100%;
+}
+
+body {
+	margin: 0;
+}

@@ -1,0 +1,30 @@
+<div class="p-3">
+    <input uiText [(ngModel)]="text" (write)="onChange($event)" debounce="400" [distinct]="true">
+</div>
+
+<div class="contenedor-semantic-tags pt-2">
+    <div *ngIf="semTagSelected$ | async as semTagSelected; else sinDatos">
+        <ui-badge [label]="semTagSelected" pill="X" (click)="removeSemTag()"></ui-badge>
+    </div>
+    <ng-template #sinDatos>
+        <ng-container *ngFor="let semTag of (semantics$ | async) | keyvalue: valueAscOrder">
+            <div class="ml-2 mb-2" style="cursor: pointer;" (click)="onSemtagClick(semTag.key)">
+                <ui-badge [label]="semTag.key" [pill]="semTag.value"></ui-badge>
+            </div>
+        </ng-container>
+    </ng-template>
+</div>
+
+<ul class="list-group m-2">
+    <li class="list-group-item d-flex justify-content-between" *ngFor="let concept of (results$ | async)"
+        (click)="onClick(concept)">
+        <div>
+            <div>
+                <concept-definition-status-icon [concept]="concept"></concept-definition-status-icon>
+                {{ concept.term }}
+            </div>
+            <small> {{concept.conceptId}} </small>
+        </div>
+        <concept-count-pill [concept]="concept"></concept-count-pill>
+    </li>
+</ul>

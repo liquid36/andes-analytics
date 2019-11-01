@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@andes-analytics/ui": ["libs/ui/src/index.ts"]
+      "@andes-analytics/ui": ["libs/ui/src/index.ts"],
+      "@andes-analytics/snomed": ["libs/snomed/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -1,0 +1,14 @@
+<div class="bar d-flex justify-content-between">
+    <div>
+        <div>
+            <concept-definition-status-icon [concept]="concept"></concept-definition-status-icon>
+            <strong> {{ concept.fsn }} </strong>
+        </div>
+        <div>
+            <strong>SCTID:</strong> {{ concept.conceptId }}
+        </div>
+    </div>
+    <div>
+        <ui-badge [label]="concept.semtag" type="warning"></ui-badge>
+    </div>
+</div>

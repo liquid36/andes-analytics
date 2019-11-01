@@ -1,0 +1,10 @@
+.contenedor-semantic-tags {
+    width: 100%;
+    display: flex;
+    white-space: nowrap;
+    flex-wrap: wrap;
+    height: 88px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    flex-direction: column;
+}

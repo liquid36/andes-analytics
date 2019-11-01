@@ -1,0 +1,8 @@
+<ng-container *ngIf="concept$ | async as concept">
+    <app-navbar-detail-component [concept]="concept"></app-navbar-detail-component>
+
+    <app-concept-stats [concept]="concept"></app-concept-stats>
+
+    <snd-concept-desc-table [concept]="concept" [refSetLanguage]="refSetLanguage" [terms$]="term$">
+    </snd-concept-desc-table>
+</ng-container>

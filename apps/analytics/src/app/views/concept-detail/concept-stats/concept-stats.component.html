@@ -1,0 +1,18 @@
+<ng-container *ngIf="(snomed.stats(concept.conceptId) | async) as stats">
+    <div class="contenedor-datos-principales">
+        <div class="bloque-numerico-principal">
+            <h1>{{ stats.total }}</h1>
+            <h3>Totales</h3>
+        </div>
+        <div class="bloque-numerico-secundario">
+            <article>
+                <h2>{{ stats.exact }}</h2>
+                <h4>Exactos</h4>
+            </article>
+            <article>
+                <h2>{{ stats.children }}</h2>
+                <h4>Descendientes</h4>
+            </article>
+        </div>
+    </div>
+</ng-container>

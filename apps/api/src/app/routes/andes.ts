@@ -7,6 +7,7 @@ export const router = express.Router();
 
 import { execQuery } from '../lib/analytica';
 import { makePattern } from '../lib/util';
+import { getConnection } from '../lib/database';
 
 const mongoConnection = process.env['ANDES_DB_CONN'] || process.env['MONGO_DB_CONN'] || "localhost:27017";
 const databases = {};
@@ -33,20 +34,6 @@ router.post('/analytics/:visualization', async function (req, res) {
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
-const getConnection = async function () {
-    try {
-        if (databases['andes']) {
-            return databases['andes'];
-        } else {
-            const db = MongoClient.connect(mongoConnection);
-            databases['andes'] = db;
-            return db;
-        }
-    } catch (err) {
-        console.warn(err.message);
-        process.exit();
-    }
-}
 
 function getDate(date) {
     return date ? moment(date) : null;

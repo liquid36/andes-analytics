@@ -1,0 +1,45 @@
+<div class="row m-2 mt-3 text-center">
+    <div class="col-12">
+        <h6>
+            <strong> {{ refSetLanguage.term }} </strong>
+        </h6>
+    </div>
+</div>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th> Término </th>
+            <th> Aceptabilidad&nbsp;&nbsp;({{languageName}}) </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let term of terms">
+            <td>
+                <span *ngIf="term.type.conceptId === '900000000000003001'">F</span>
+                <span *ngIf="term.type.conceptId === '900000000000013009'">S</span>
+                <span *ngIf="term.type.conceptId === '900000000000550004'">D</span>
+
+                <span *ngIf="term.preferred">
+                    <i class="mdi"
+                       [ngClass]="term.type.conceptId === '900000000000003001' ? 'mdi-star-outline' : 'mdi-star'"></i>
+                </span>
+                <span *ngIf="term.acceptable">
+                    <i class="mdi mdi-check"></i>
+                </span>
+                {{term.term}}
+
+                <span class="badge badge-primary badge-pill" *ngIf="termCount[term.term]">
+                    {{ termCount[term.term] }}
+                </span>
+
+            </td>
+            <td>
+                <ng-container *ngIf="term.preferred; else elseif1">Preferido</ng-container>
+                <ng-template #elseif1>
+                    <ng-container *ngIf="term.acceptable; else else1">Acceptable</ng-container>
+                </ng-template>
+                <ng-template #else1> No Aceptable </ng-template>
+            </td>
+        </tr>
+    </tbody>
+</table>
