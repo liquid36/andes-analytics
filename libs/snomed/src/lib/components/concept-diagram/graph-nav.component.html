@@ -1,0 +1,78 @@
+<svg:svg version="1.1" width="1000px" height="500px" *ngIf="concept">
+   <defs id="SctDiagramsDefs">
+      <marker id="BlackTriangle" refX="0" refY="10" markerWidth="8" markerHeight="6" orient="auto" viewBox="0 0 22 20"
+              markerUnits="strokeWidth" fill="black" stroke="black" stroke-width="2">
+         <path d="M 0 0 L 20 10 L 0 20 z"></path>
+      </marker>
+      <marker id="ClearTriangle" refX="0" refY="10" markerWidth="8" markerHeight="8" orient="auto" viewBox="0 0 22 20"
+              markerUnits="strokeWidth" fill="white" stroke="black" stroke-width="2">
+         <path d="M 0 0 L 20 10 L 0 20 z"></path>
+      </marker>
+      <marker id="LineMarker" refX="0" refY="10" markerWidth="8" markerHeight="8" orient="auto" viewBox="0 0 22 20"
+              markerUnits="strokeWidth" fill="white" stroke="black" stroke-width="2">
+         <path d="M 0 10 L 20 10"></path>
+      </marker>
+   </defs>
+
+   <g #elConcept sctBox [x]="initialX" [y]="initialY" [label]="concept.preferredTerm" [sctid]="concept.conceptId"
+      [type]="isPrimitive ? 'sct-primitive-concept' : 'sct-defined-concept'"></g>
+
+   <g #circle1 circleNode [type]="isPrimitive ? 'subsumed-by' : 'equivalent'" [x]="circle1X" [y]="circle1Y"></g>
+   <g connectElement [from]="elConcept.bbox" [to]="circle1.bbox" sideFrom="bottom-50" sideTo="left"></g>
+
+   <g #circle2 circleNode type="conjunction" [x]="circle2X" [y]="circle2Y"></g>
+   <g connectElement [from]="circle1.bbox" [to]="circle2.bbox" sideFrom="right" sideTo="left" endMarker="LineMarker">
+   </g>
+
+   <ng-container *ngFor="let rel of isARel; let i=index">
+      <g #rect sctBox [x]="initialIsARelX" [y]="initialIsARelY + i * (39 + 25)" [label]="rel.destination.preferredTerm"
+         [sctid]="rel.destination.conceptId"
+         [type]="rel.destination.definitionStatus.conceptId !== '900000000000073002' ? 'sct-primitive-concept' : 'sct-defined-concept'"
+         (click)="selectConcept(rel.destination)">
+      </g>
+
+      <g connectElement [from]="circle2.bbox" [to]="rect.bbox" sideFrom="center" sideTo="left"
+         endMarker="ClearTriangle"></g>
+   </ng-container>
+
+   <ng-container *ngFor="let rel of zeroAttribute; let i=index">
+      <g #rectAttr sctBox [x]="initialIsARelX" [y]="initialZeroAttributeY + i * (39 + 25) "
+         [label]="rel.type.preferredTerm" [sctid]="rel.type.conceptId" type="sct-attribute">
+      </g>
+      <g connectElement [from]="circle2.bbox" [to]="rectAttr.bbox" sideFrom="center" sideTo="left"></g>
+
+      <g #rectTarget sctBox [x]="initialIsARelX + rectAttr.bbox.width + 50" [y]="initialZeroAttributeY + i * (39 + 25) "
+         [label]="rel.destination.preferredTerm" [sctid]="rel.destination.conceptId"
+         [type]="rel.destination.definitionStatus.conceptId !== '900000000000073002' ? 'sct-primitive-concept' : 'sct-defined-concept'">
+      </g>
+
+      <g connectElement [from]="rectAttr.bbox" [to]="rectTarget.bbox" sideFrom="right" sideTo="left"></g>
+   </ng-container>
+
+   <ng-container *ngFor="let groups of getAttributeGroup; let j=index">
+      <g #groupNode circleNode type="attribute-group" [x]="initialIsARelX"
+         [y]="initialGroupAttributeY + offsetGroupAttrY(j)"></g>
+      <g connectElement [from]="circle2.bbox" [to]="groupNode.bbox" sideFrom="center" sideTo="left"></g>
+
+      <g #conjunctionNode circleNode type="conjunction" [x]="initialIsARelX + 55"
+         [y]="initialGroupAttributeY + offsetGroupAttrY(j)"></g>
+      <g connectElement [from]="groupNode.bbox" [to]="conjunctionNode.bbox" sideFrom="right" sideTo="left"></g>
+
+      <ng-container *ngFor="let rel of groups; let i=index">
+         <g #rectAttr sctBox [x]="initialIsARelX + 85"
+            [y]="initialGroupAttributeY + offsetGroupAttrY(j) + i * (39 + 25) " [label]="rel.type.preferredTerm"
+            [sctid]="rel.type.conceptId" type="sct-attribute">
+         </g>
+         <g connectElement [from]="conjunctionNode.bbox" [to]="rectAttr.bbox" sideFrom="center" sideTo="left"></g>
+
+         <g #rectTarget sctBox [x]="initialIsARelX + 85 + rectAttr.bbox.width + 30"
+            [y]="initialGroupAttributeY + offsetGroupAttrY(j) + i * (39 + 25) " [label]="rel.destination.preferredTerm"
+            [sctid]="rel.destination.conceptId"
+            [type]="rel.destination.definitionStatus.conceptId !== '900000000000073002' ? 'sct-primitive-concept' : 'sct-defined-concept'">
+         </g>
+
+         <g connectElement [from]="rectAttr.bbox" [to]="rectTarget.bbox" sideFrom="right" sideTo="left"></g>
+      </ng-container>
+
+
+   </ng-container>

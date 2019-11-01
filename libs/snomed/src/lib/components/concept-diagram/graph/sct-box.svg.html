@@ -1,0 +1,59 @@
+<svg:g>
+    <!-- test box para ver el tamaño del label -->
+    <text attr.x="{{x}}" attr.y="{{y}}" attr.font-family="{{fontFamily}}" font-size="10" fill="black" #testBox style="opacity: 0;">
+        {{ testText }}
+    </text>
+
+    <svg:g [ngSwitch]="type">
+        <svg:g *ngSwitchCase="'sct-primitive-concept'">
+            <rect [attr.x]="x" [attr.y]="y" [attr.width]="textWidth + widthPadding" [attr.height]="textHeight + heightpadding" 
+                  fill="#99ccff" stroke="#333" stroke-width="2">
+            </rect>
+        </svg:g>
+        <svg:g *ngSwitchCase="'sct-defined-concept'">
+            <rect [attr.x]="x - 2" [attr.y]="y - 2" [attr.width]="textWidth + widthPadding + 4" [attr.height]="textHeight + heightpadding + 4" 
+                  fill="white" stroke="#333" stroke-width="1">
+            </rect>
+            <rect [attr.x]="x" [attr.y]="y" [attr.width]="textWidth + widthPadding" [attr.height]="textHeight + heightpadding" 
+                  fill="#ccccff" stroke="#333" stroke-width="1">
+            </rect>
+        </svg:g>
+        <svg:g *ngSwitchCase="'sct-attribute'">
+            <rect [attr.x]="x - 2" [attr.y]="y - 2" [attr.width]="textWidth + widthPadding + 4" [attr.height]="textHeight + heightpadding + 4" 
+                rx="18" ry="18" fill="white" stroke="#333" stroke-width="1">
+            </rect>
+            <rect [attr.x]="x" [attr.y]="y" [attr.width]="textWidth + widthPadding" [attr.height]="textHeight + heightpadding" 
+                rx="18" ry="18" fill="#ffffcc" stroke="#333" stroke-width="1">
+            </rect>
+        </svg:g>
+        <svg:g *ngSwitchCase="'sct-slot'">
+            <rect [attr.x]="x" [attr.y]="y" [attr.width]="textWidth + widthPadding" [attr.height]="textHeight + heightpadding" 
+                fill="#99ccff" stroke="#333" stroke-width="2">
+            </rect>
+        </svg:g>   
+        <svg:g *ngSwitchDefault>
+            <rect [attr.x]="x" [attr.y]="y" [attr.width]="textWidth + widthPadding" [attr.height]="textHeight + heightpadding" 
+                fill="white" stroke="black" stroke-width="1">
+            </rect>
+        </svg:g>
+    </svg:g>
+
+    <svg:g *ngIf="sctid && label">
+        <text [attr.x]="x + 10" [attr.y]="y + 16" [attr.font-family]="fontFamily" font-size="10" fill="black">
+            {{ sctid }}
+        </text>
+        <text [attr.x]="x + 10" [attr.y]="y + 31" [attr.font-family]="fontFamily" font-size="12" fill="black">
+            {{ label }}
+        </text>
+    </svg:g>
+    <svg:g *ngIf="!sctid && label">
+        <text [attr.x]="x + 10" [attr.y]="y + 18" [attr.font-family]="fontFamily" font-size="12" fill="black">
+            {{ label }}
+        </text>
+    </svg:g>
+    <svg:g *ngIf="sctid && !label">
+        <text [attr.x]="x + 10" [attr.y]="y + 18" [attr.font-family]="fontFamily" font-size="12" fill="black">
+            {{ sctid }}
+        </text>
+    </svg:g>
+</svg:g>

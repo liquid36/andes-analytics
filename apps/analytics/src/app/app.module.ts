@@ -38,7 +38,7 @@ import { AppConceptStatsComponent } from './views/concept-detail/concept-stats/c
       { path: '', component: AppConceptDetailView }
     ], { initialNavigation: 'enabled' }),
     UiModule,
-    SnomedModule
+    SnomedModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { SnomedSearchService } from './snomed-search.service';
 import { KeyValue } from '@angular/common';
 import { QueryOptionsService } from '../../services/query-filter.service';
+import { AppService } from '../../services/app.service';
 
 @Component({
     selector: 'snomed-search',
@@ -17,7 +17,8 @@ export class SnomedSearchComponent {
 
     constructor(
         private searchService: SnomedSearchService,
-        private qf: QueryOptionsService
+        private qf: QueryOptionsService,
+        public appService: AppService
     ) {
 
     }
@@ -40,6 +41,10 @@ export class SnomedSearchComponent {
 
     onClick(concept) {
         this.qf.selectConcept(concept.conceptId);
+    }
+
+    toogleNavbar() {
+        this.appService.tootleNavbarState();
     }
 
 }

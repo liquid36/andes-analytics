@@ -1,11 +1,9 @@
 
 import { Injectable } from '@angular/core';
-import { Server } from './server.service';
-import { map, tap, bufferTime, filter, switchMap } from 'rxjs/operators';
+import { map, bufferTime, filter, switchMap } from 'rxjs/operators';
 import { of, BehaviorSubject } from 'rxjs';
 import { QueryOptionsService } from './query-filter.service';
-import { environment } from '../../environments/environment';
-import { SnomedHTTP } from './snomed.http';
+import { SnomedHTTP } from '@andes-analytics/snomed';
 
 @Injectable({
     providedIn: 'root',

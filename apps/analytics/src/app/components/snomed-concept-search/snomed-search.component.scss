@@ -8,3 +8,16 @@
     overflow-y: hidden;
     flex-direction: column;
 }
+
+
+.toogle-float {
+    position: absolute;
+    top: 50%;
+    left: 385px;
+    background-color: darkturquoise;
+    width: 18px;
+    height: 56px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+}

@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Server } from './server.service';
 import { map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../../../apps/analytics/src/environments/environment';
 
 @Injectable({
     providedIn: 'root',

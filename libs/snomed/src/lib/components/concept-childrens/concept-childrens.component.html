@@ -1,0 +1,27 @@
+<div class="parent-card">
+    <h5 class="card-title">
+        Descendientes
+        <span *ngIf="relatioships.length === 0"> (0) </span>
+    </h5>
+    <ul *ngIf="relatioships.length > 0">
+        <li *ngFor="let relacion of relatioships; let i = index;"
+            [ngStyle]="{'padding-left': relacion._level * 15 + 'px'  }">
+            <button class="btn btn-link" (click)="getChildren(relacion, i)">
+                <i class="mdi mdi-chevron-right" *ngIf="!relacion._expanded && !relacion.isLeafStated"></i>
+                <i class="mdi mdi-chevron-down" *ngIf="relacion._expanded && !relacion.isLeafStated"></i>
+                <i class="mdi mdi-minus" *ngIf="relacion.isLeafStated"></i>
+            </button>
+
+            <span class="badge alert-warning" style="padding: 3px 7px;border-radius: 10px;">
+                {{ relacion.definitionStatus.conceptId === '900000000000073002' ? '≡' : '&nbsp;&nbsp;' }}
+            </span>
+
+            <span style="cursor: pointer;" (dblclick)="onSelect(relacion)">
+                {{ relacion.preferredTerm }}
+            </span>
+
+            <ng-container *ngTemplateOutlet="iconTemplate; context: { concept: relacion }"></ng-container>
+
+        </li>
+    </ul>
+</div>

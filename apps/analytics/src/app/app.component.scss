@@ -5,8 +5,11 @@ main {
                          "sidebar search"
                          "sidebar main";
     grid-template-rows:    56px  56px 1fr;
-    grid-template-columns: 400px 1fr;
+    grid-template-columns: 0px 1fr;
 
+    &.open {
+        grid-template-columns: 400px 1fr;
+    }
 }
 
 ui-navbar {
@@ -16,7 +19,7 @@ ui-navbar {
 
 snomed-search {
     grid-area:  sidebar;
-    overflow: scroll;
+    // overflow: scroll;
 }
 
 app-query-options {
@@ -25,4 +28,6 @@ app-query-options {
 
 .main {
     grid-area: main;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }

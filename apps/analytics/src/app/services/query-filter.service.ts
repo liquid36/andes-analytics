@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { mergeObject, distincObject } from '../operators';
 import { pluck, tap } from 'rxjs/operators';
-import { SnomedHTTP } from './snomed.http';
+import { SnomedHTTP } from '../../../../../libs/snomed/src/lib/services/snomed.http';
 
 type IFILTER = 'start' | 'end' | 'organizacion' | 'profesional' | 'relationship';
 
