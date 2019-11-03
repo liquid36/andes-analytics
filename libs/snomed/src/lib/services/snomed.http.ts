@@ -86,7 +86,7 @@ export class SnomedHTTP {
     }
 
     organizaciones(search) {
-        return this.http.get('/andes/organizaciones', { params: { search } });
+        return this.http.get('/andes/organizaciones', { params: search });
     }
 
     semanticTags(search) {

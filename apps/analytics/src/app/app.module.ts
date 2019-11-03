@@ -5,9 +5,11 @@ import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 import { UiModule } from '@andes-analytics/ui';
 import { SnomedModule } from '@andes-analytics/snomed';
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 
 import { AppComponent } from './app.component';
 import { SnomedSearchComponent } from './components/snomed-concept-search/snomed-search.component';
@@ -34,6 +36,8 @@ import { AppConceptStatsComponent } from './views/concept-detail/concept-stats/c
     BrowserModule,
     FormsModule,
     NgbModule,
+    NgSelectModule,
+    NgxDaterangepickerMd.forRoot(),
     RouterModule.forRoot([
       { path: '', component: AppConceptDetailView }
     ], { initialNavigation: 'enabled' }),

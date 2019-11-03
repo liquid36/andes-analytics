@@ -1,13 +1,16 @@
-<form class="app-query-options form-inline h-100">
-    <div class="form-group pr-2">
-        <ng-template #rt let-r="result" let-t="term">
-            <ngb-highlight [result]="r.nombre" [term]="t"></ngb-highlight>
-        </ng-template>
-        <input id="typeahead-http" type="text" class="form-control" [class.is-invalid]="searchFailed"
-               [ngbTypeahead]="search" placeholder="Organizaciones" [resultTemplate]="rt" [inputFormatter]="formatter"
-               (selectItem)="onOrgSelect($event)" />
+<div class="app-query-options">
+    <div>
+        <input type="text" ngxDaterangepickerMd [ranges]="ranges" [alwaysShowCalendars]="true" opens="center"
+               [(ngModel)]="selected" class="form-control" placeholder="Desde -> Hasta"
+               (datesUpdated)="datesUpdated($event)" [showClearButton]="true" />
     </div>
-    <div class="form-group pr-2">
+    <div>
+        <ng-select [items]="organizations$ | async" bindLabel="nombre" [trackByFn]="trackByFn" [typeahead]="orgInput$"
+                   [(ngModel)]="selectedOrganizations" (change)="onOrgSelect($event)"
+                   placeholder="Seleccione una organización...">
+        </ng-select>
+    </div>
+    <!-- <div class="form-group pr-2 col-3">
         <div class="input-group">
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary calendar" (click)="dd.toggle()" type="button">
@@ -18,7 +21,7 @@
             </div>
         </div>
     </div>
-    <div class="form-group pr-2">
+    <div class="form-group col-3">
         <div class="input-group">
             <input class="form-control" placeholder="Hasta" name="dph" (dateSelect)="onEndDate($event)" ngbDatepicker
                    #dh="ngbDatepicker">
@@ -28,7 +31,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- <div ngbDropdown>
         <button ngbDropdownToggle class="btn btn-block dropdown-toggle" type="button">
             {{ qf.relationship$ | async }}
@@ -42,4 +45,4 @@
             </button>
         </div>
     </div> -->
-</form>
+</div>
