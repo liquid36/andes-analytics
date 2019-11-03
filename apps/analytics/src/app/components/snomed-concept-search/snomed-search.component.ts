@@ -32,7 +32,7 @@ export class SnomedSearchComponent {
     }
 
     onSemtagClick(semTag) {
-        this.searchService.search({ semanticTag: semTag });
+        this.searchService.search({ semanticTag: semTag.key });
     }
 
     removeSemTag() {

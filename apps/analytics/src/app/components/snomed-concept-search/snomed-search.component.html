@@ -1,9 +1,21 @@
 <div style="overflow: scroll; height: 100%;">
-    <div class="p-3">
+    <div class="p-1">
         <input uiText [(ngModel)]="text" (write)="onChange($event)" debounce="400" [distinct]="true">
     </div>
+    <div class="p-1">
+        <ng-select [items]="(semantics$ | async) | keyvalue: valueAscOrder" bindLabel="key"
+                   placeholder="Filtro por semanticTags" (change)="onSemtagClick($event)" (clear)="removeSemTag()">
 
-    <div class="contenedor-semantic-tags pt-2">
+            <ng-template ng-label-tmp let-item="item">
+                {{item.key}} ({{ item.value }})
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+                {{item.key}} ({{ item.value }})
+            </ng-template>
+        </ng-select>
+    </div>
+
+    <!-- <div class="contenedor-semantic-tags pt-2">
         <div *ngIf="semTagSelected$ | async as semTagSelected; else sinDatos">
             <ui-badge [label]="semTagSelected" pill="X" (click)="removeSemTag()"></ui-badge>
         </div>
@@ -14,22 +26,31 @@
                 </div>
             </ng-container>
         </ng-template>
-    </div>
-
-    <ul class="list-group m-2">
-        <li class="list-group-item d-flex justify-content-between" *ngFor="let concept of (results$ | async)"
-            (click)="onClick(concept)">
-            <div>
+    </div> -->
+    <ng-container *ngIf="(results$ | async) as results">
+        <ul class="list-group m-1" *ngIf="results.length > 0">
+            <li class="list-group-item d-flex justify-content-between align-items-center"
+                *ngFor="let concept of results" (click)="onClick(concept)">
                 <div>
-                    <concept-definition-status-icon [concept]="concept"></concept-definition-status-icon>
-                    {{ concept.term }}
+                    <div>
+                        <concept-definition-status-icon [concept]="concept"></concept-definition-status-icon>
+                        {{ concept.term }}
+                    </div>
+                    <small> {{concept.fsn}} </small>
                 </div>
-                <small> {{concept.conceptId}} </small>
-            </div>
-            <concept-count-pill [concept]="concept"></concept-count-pill>
-        </li>
-    </ul>
-    <div class="toogle-float" (click)="toogleNavbar()" [style.left.px]="(appService.navbarState | async) ? 385 : 0">
+                <concept-count-pill [concept]="concept"></concept-count-pill>
+            </li>
+        </ul>
+        <div *ngIf="results.length === 0">
+            <h5 *ngIf="text.length > 0">
+                No hay resultados
+            </h5>
+            <h5 *ngIf="!text || text.length === 0">
+                Escribe algún término para optener resultados
+            </h5>
+        </div>
+    </ng-container>
+    <!-- <div class="toogle-float" (click)="toogleNavbar()" [style.left.px]="(appService.navbarState | async) ? 385 : 0">
         {{ (appService.navbarState | async) ? '<' : '>' }}
-    </div>
+    </div> -->
 </div>

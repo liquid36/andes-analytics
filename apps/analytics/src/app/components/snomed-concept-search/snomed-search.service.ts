@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { SnomedAPI } from '../../services/snomed.service';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, of } from 'rxjs';
 import { mergeObject, distincObject, cache } from '../../operators';
 import { tap, filter, switchMap, pluck, map } from 'rxjs/operators';
 
@@ -26,9 +26,12 @@ export class SnomedSearchService {
             //         queryParams: params, queryParamsHandling: 'merge'
             //     });
             // }),
-            // filter((params: any) => params.mode && params.search && params.status),
-            switchMap((params) => {
-                return this.searchRequest(params);
+            switchMap((params: any) => {
+                if (params.search && params.search.length > 0) {
+                    return this.searchRequest(params);
+                } else {
+                    return of({ matches: [], filters: { semTag: {} } })
+                }
             }),
             map((result) => {
                 return {

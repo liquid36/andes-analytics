@@ -4,7 +4,7 @@ main {
     grid-template-areas: "header header"
                          "sidebar search"
                          "sidebar main";
-    grid-template-rows:    56px  56px 1fr;
+    grid-template-rows:    var(--navbar-height)  var(--navbar-height) 1fr;
     grid-template-columns: 0px 1fr;
 
     &.open {
