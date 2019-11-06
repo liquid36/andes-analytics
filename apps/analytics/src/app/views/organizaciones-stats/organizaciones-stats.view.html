@@ -3,6 +3,6 @@
     <app-navbar-detail-component [concept]="concept"></app-navbar-detail-component>
 
     <ng-container *ngIf="organizaciones$ | async as organizaciones">
-        <ui-table [values]="organizaciones"></ui-table>
+        <ui-table [values]="organizaciones" *ngIf="!loading"></ui-table>
     </ng-container>
 </ng-container>

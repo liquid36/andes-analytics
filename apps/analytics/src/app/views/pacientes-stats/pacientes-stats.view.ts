@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SnomedAPI } from '../../services/snomed.service';
 import { QueryOptionsService } from '../../services/query-filter.service';
 import { combineLatest, BehaviorSubject, forkJoin } from 'rxjs';
-import { pluck, switchMap, map, startWith } from 'rxjs/operators';
+import { pluck, switchMap, map, startWith, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { cache, combineDataset } from '../../operators';
 
@@ -11,6 +11,8 @@ import { cache, combineDataset } from '../../operators';
     templateUrl: './pacientes-stats.view.html'
 })
 export class AppPacientesStatsView {
+    public loading = false;
+
     public nacional = [0, 1, 2, 6, 10, 15, 50];
     public provincial = [0, 1, 5, 15, 20, 40, 70];
 
@@ -46,6 +48,7 @@ export class AppPacientesStatsView {
             this.concept$,
             this.qf.filstrosParams$.pipe(startWith({}))
         ).pipe(
+            tap(() => this.loading = true),
             map(([concept, _]) => concept),
             switchMap((concept: any) => {
                 return forkJoin(
@@ -64,7 +67,8 @@ export class AppPacientesStatsView {
                         ...item.value
                     }
                 })
-            })
+            }),
+            tap(() => this.loading = false),
         );
     }
 

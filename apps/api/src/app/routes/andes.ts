@@ -7,7 +7,7 @@ export const router = express.Router();
 
 import { execQuery } from '../lib/analytica';
 import { makePattern } from '../lib/util';
-import { getConnection } from '../lib/database';
+import { getConnection, MAIN_DB } from '../lib/database';
 
 const mongoConnection = process.env['ANDES_DB_CONN'] || process.env['MONGO_DB_CONN'] || "localhost:27017";
 const databases = {};
@@ -333,9 +333,10 @@ function combine(listA, listB, key) {
 
 router.post('/rup/cluster', async function (req, res) {
     const db = await getConnection();
-    const PrestacionesTx = db.collection('prestaciontx2');
+    const PrestacionesTx = db.collection(MAIN_DB);
     const conceptId = req.body.conceptId;
     const semanticTags = req.body.semanticTags || ['trastorno'];
+    console.time('start')
     const pipeline = [
         {
             $match: {
@@ -350,19 +351,32 @@ router.post('/rup/cluster', async function (req, res) {
         { $group: { '_id': '$registros.paciente.id' } }
     ];
     const results = await PrestacionesTx.aggregate(pipeline).toArray()
-    const ids = results.map(e => new ObjectID(e._id));
+    const ids = results.map(e => e._id);
+    console.timeEnd('start')
+    console.time('two')
 
     const pipeline2 = [
+        { $match: { 'registros.paciente.id': { $in: ids } } },
         {
             $match: {
-                'registros.paciente.id': { $in: ids }
+                'concepto.semanticTag': { $in: semanticTags },
+                'concepto.conceptId': { $ne: conceptId }
             }
         },
-        { $match: { 'concepto.semanticTag': { $in: semanticTags }, 'concepto.conceptId': { $ne: conceptId } } },
-        { $group: { '_id': '$concepto.conceptId', 'nombre': { $first: '$concepto.term' }, count: { $sum: 1 } } },
-        { $sort: { count: -1 } }
+        { $unwind: '$registros' },
+        { $match: { 'registros.paciente.id': { $in: ids } } },
+        {
+            $group: {
+                '_id': '$concepto.conceptId',
+                'label': { $first: '$concepto.term' },
+                total: { $sum: 1 }
+            }
+        },
+        { $sort: { total: -1 } }
     ];
-    const concepts = await PrestacionesTx.aggregate(pipeline2).toArray()
+    const concepts = await PrestacionesTx.aggregate(pipeline2).toArray();
+    console.timeEnd('two')
+
     return res.json(concepts);
 });
 

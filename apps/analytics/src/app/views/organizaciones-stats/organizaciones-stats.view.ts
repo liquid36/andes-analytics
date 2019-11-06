@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SnomedAPI } from '../../services/snomed.service';
 import { QueryOptionsService } from '../../services/query-filter.service';
 import { combineLatest, BehaviorSubject, forkJoin } from 'rxjs';
-import { pluck, switchMap, map, merge, startWith } from 'rxjs/operators';
+import { pluck, switchMap, map, merge, startWith, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { cache, combineDataset } from '../../operators';
 
@@ -11,6 +11,7 @@ import { cache, combineDataset } from '../../operators';
     templateUrl: './organizaciones-stats.view.html'
 })
 export class AppOrganizacionesStatsView {
+    public loading = false;
     public concept$;
     public organizaciones$;
     public data$;
@@ -33,6 +34,7 @@ export class AppOrganizacionesStatsView {
             this.qf.filstrosParams$.pipe(startWith({}))
         ).pipe(
             map(([concept, _]) => concept),
+            tap(() => this.loading = true),
             switchMap((concept: any) => {
                 return forkJoin(
                     this.snomed.analytics(concept.conceptId, 'count', 'organizacion'),
@@ -50,7 +52,8 @@ export class AppOrganizacionesStatsView {
                         ...item.value
                     }
                 })
-            })
+            }),
+            tap(() => this.loading = false),
         );
     }
 }

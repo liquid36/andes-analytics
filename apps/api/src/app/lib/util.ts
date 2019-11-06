@@ -8,22 +8,18 @@ export const FILTER_AVAILABLE = [
         unwind: false,
         field: 'profesional.id',
         label: 'profesional.nombre',
-        // transform: ObjectID
     },
     {
         name: 'prestacion',
         unwind: true,
         field: 'registros.tipoPrestacion.conceptId',
         label: 'registros.tipoPrestacion.term',
-        // transform: ObjectID
     },
     {
         name: 'organizacion',
         unwind: false,
         field: 'organizacion.id',
         label: 'organizacion.nombre',
-        // transform: ObjectID
-
     },
     {
         name: 'sexo',

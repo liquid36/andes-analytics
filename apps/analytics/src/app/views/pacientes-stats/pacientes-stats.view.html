@@ -25,7 +25,7 @@
     <app-demografia-table [data]="data$ | async" [rangoEtario]="rango | async"></app-demografia-table>
 
     <ng-container *ngIf="localidades$ | async as localidades">
-        <ui-table [values]="localidades"></ui-table>
+        <ui-table [values]="localidades" *ngIf="!loading"></ui-table>
 
     </ng-container>
 </ng-container>

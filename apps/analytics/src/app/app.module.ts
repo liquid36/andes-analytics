@@ -27,6 +27,7 @@ import { DemografiaTableComponent } from './views/pacientes-stats/demografia-tab
 import { AppOrganizacionesStatsView } from './views/organizaciones-stats/organizaciones-stats.view';
 import { AppProfesionalesStatsView } from './views/profesionales-stats/profesionales-stats.view';
 import { AppPrestacionesStatsView } from './views/prestaciones-stats/prestaciones-stats.view';
+import { AppConceptosAsociadosStatsView } from './views/conceptos-asociados-stats/conceptos-asociados-stats.view';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { AppPrestacionesStatsView } from './views/prestaciones-stats/prestacione
     AppPacientesStatsView,
     AppOrganizacionesStatsView,
     AppProfesionalesStatsView,
-    AppPrestacionesStatsView
+    AppPrestacionesStatsView,
+    AppConceptosAsociadosStatsView
   ],
   imports: [
     HttpClientModule,
@@ -58,6 +60,8 @@ import { AppPrestacionesStatsView } from './views/prestaciones-stats/prestacione
       { path: 'concept/:id/organizaciones', component: AppOrganizacionesStatsView },
       { path: 'concept/:id/profesionales', component: AppProfesionalesStatsView },
       { path: 'concept/:id/prestaciones', component: AppPrestacionesStatsView },
+      { path: 'concept/:id/asociados', component: AppConceptosAsociadosStatsView },
+
       { path: 'home', component: AppHomeView },
       { path: '**', redirectTo: '/home' }
 
