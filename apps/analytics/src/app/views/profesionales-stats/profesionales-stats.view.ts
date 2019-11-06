@@ -2,25 +2,18 @@ import { Component } from '@angular/core';
 import { SnomedAPI } from '../../services/snomed.service';
 import { QueryOptionsService } from '../../services/query-filter.service';
 import { combineLatest, BehaviorSubject, forkJoin } from 'rxjs';
-import { pluck, switchMap, map, startWith } from 'rxjs/operators';
+import { pluck, switchMap, map, merge, startWith } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { cache, combineDataset } from '../../operators';
 
 @Component({
-    selector: 'app-pacientes-stats-view',
-    templateUrl: './pacientes-stats.view.html'
+    selector: 'app-profesionales-stats-view',
+    templateUrl: './profesionales-stats.view.html'
 })
-export class AppPacientesStatsView {
-    public nacional = [0, 1, 2, 6, 10, 15, 50];
-    public provincial = [0, 1, 5, 15, 20, 40, 70];
-
-    public rango = new BehaviorSubject(this.nacional);
-    public rango$ = this.rango.asObservable();
-
+export class AppProfesionalesStatsView {
     public concept$;
-    public localidades$;
+    public profesionales$;
     public data$;
-
 
     constructor(
         private snomed: SnomedAPI,
@@ -34,23 +27,16 @@ export class AppPacientesStatsView {
             cache()
         )
 
-        this.data$ = combineLatest(this.concept$, this.rango$, this.qf.filstrosParams$.pipe(startWith({}))).pipe(
-            switchMap(([concept, rango]) => {
-                return this.snomed.demografia((concept as any).conceptId, rango)
-            }),
-            cache()
-        )
 
-
-        this.localidades$ = combineLatest(
+        this.profesionales$ = combineLatest(
             this.concept$,
             this.qf.filstrosParams$.pipe(startWith({}))
         ).pipe(
             map(([concept, _]) => concept),
             switchMap((concept: any) => {
                 return forkJoin(
-                    this.snomed.analytics(concept.conceptId, 'count', 'localidad'),
-                    this.snomed.analytics(concept.conceptId, 'unique', 'localidad')
+                    this.snomed.analytics(concept.conceptId, 'count', 'profesional'),
+                    this.snomed.analytics(concept.conceptId, 'unique', 'profesional')
                 )
             }),
             map(([dataA, dataB]) => {
@@ -59,17 +45,12 @@ export class AppPacientesStatsView {
                     return { ...valueA };
                 }).map((item: any) => {
                     return {
-                        _id: item._id.localidad || 'SIN LOCALIDAD',
-                        label: item.label.localidad || 'SIN LOCALIDAD',
+                        _id: item._id.profesional || 'SIN NOMBRE',
+                        label: item.label.profesional || 'SIN NOMBRE',
                         ...item.value
                     }
                 })
             })
         );
     }
-
-    changeRangoEtario(rango) {
-        this.rango.next(rango);
-    }
-
 }

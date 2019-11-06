@@ -24,6 +24,9 @@ import { AppConceptDetailView } from './views/concept-detail/concept-detail.view
 import { AppHomeView } from './views/home/home.view';
 import { AppPacientesStatsView } from './views/pacientes-stats/pacientes-stats.view';
 import { DemografiaTableComponent } from './views/pacientes-stats/demografia-table/demografia-table.component';
+import { AppOrganizacionesStatsView } from './views/organizaciones-stats/organizaciones-stats.view';
+import { AppProfesionalesStatsView } from './views/profesionales-stats/profesionales-stats.view';
+import { AppPrestacionesStatsView } from './views/prestaciones-stats/prestaciones-stats.view';
 
 @NgModule({
   declarations: [
@@ -32,12 +35,15 @@ import { DemografiaTableComponent } from './views/pacientes-stats/demografia-tab
     ConceptCountPillComponent,
     ConceptDefinitionStatusIconComponent,
     AppQueryOptionsComponent,
-    AppConceptDetailView,
     AppNavbarDetailComponent,
     AppConceptStatsComponent,
     DemografiaTableComponent,
     AppHomeView,
-    AppPacientesStatsView
+    AppConceptDetailView,
+    AppPacientesStatsView,
+    AppOrganizacionesStatsView,
+    AppProfesionalesStatsView,
+    AppPrestacionesStatsView
   ],
   imports: [
     HttpClientModule,
@@ -49,6 +55,9 @@ import { DemografiaTableComponent } from './views/pacientes-stats/demografia-tab
     RouterModule.forRoot([
       { path: 'concept/:id/detail', component: AppConceptDetailView },
       { path: 'concept/:id/pacientes', component: AppPacientesStatsView },
+      { path: 'concept/:id/organizaciones', component: AppOrganizacionesStatsView },
+      { path: 'concept/:id/profesionales', component: AppProfesionalesStatsView },
+      { path: 'concept/:id/prestaciones', component: AppPrestacionesStatsView },
       { path: 'home', component: AppHomeView },
       { path: '**', redirectTo: '/home' }
 

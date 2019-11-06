@@ -11,6 +11,13 @@ export const FILTER_AVAILABLE = [
         // transform: ObjectID
     },
     {
+        name: 'prestacion',
+        unwind: true,
+        field: 'registros.tipoPrestacion.conceptId',
+        label: 'registros.tipoPrestacion.term',
+        // transform: ObjectID
+    },
+    {
         name: 'organizacion',
         unwind: false,
         field: 'organizacion.id',

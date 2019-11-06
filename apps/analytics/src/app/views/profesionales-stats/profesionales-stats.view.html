@@ -1,0 +1,8 @@
+<ng-container *ngIf="concept$ | async as concept">
+
+    <app-navbar-detail-component [concept]="concept"></app-navbar-detail-component>
+
+    <ng-container *ngIf="profesionales$ | async as profesionales">
+        <ui-table [values]="profesionales"></ui-table>
+    </ng-container>
+</ng-container>

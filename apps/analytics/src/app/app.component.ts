@@ -12,8 +12,8 @@ export class AppComponent {
     menuItems = [
         { key: 'detail', label: 'Detalle' },
         { key: 'pacientes', label: 'Pacientes' },
+        { key: 'organizaciones', label: 'Organizaciones' },
         { key: 'profesionales', label: 'Profesionales' },
-        { key: 'organizacion', label: 'Organizaciones' },
         { key: 'prestaciones', label: 'Prestaciones' },
         { key: 'asociados', label: 'Conceptos Asociados' },
         { key: 'mapa', label: 'Mapa' },
