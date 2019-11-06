@@ -4,6 +4,7 @@ import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { mergeObject, distincObject } from '../operators';
 import { pluck, tap } from 'rxjs/operators';
 import { SnomedHTTP } from '../../../../../libs/snomed/src/lib/services/snomed.http';
+import { Router, ActivatedRoute } from '@angular/router';
 
 type IFILTER = 'start' | 'end' | 'organizacion' | 'profesional' | 'relationship';
 
@@ -21,7 +22,11 @@ export class QueryOptionsService {
     private conceptSelected = new BehaviorSubject<any>(null);
     private conceptSelected$ = this.conceptSelected.asObservable();
 
-    constructor(private snomed: SnomedHTTP) {
+    constructor(
+        private snomed: SnomedHTTP,
+        private router: Router,
+        private activeRoute: ActivatedRoute
+    ) {
         this.filstrosParams$ = this.filstrosParams.asObservable().pipe(
             mergeObject(),
             distincObject(),
@@ -42,11 +47,12 @@ export class QueryOptionsService {
     }
 
     selectConcept(conceptId: string) {
-        if (conceptId) {
-            this.snomed.concept(conceptId).subscribe((snomed) => {
-                this.conceptSelected.next(snomed);
-            });
-        }
+        this.router.navigate(['concept', conceptId, 'detail'], { queryParamsHandling: 'preserve' });
+        // if (conceptId) {
+        //     this.snomed.concept(conceptId).subscribe((snomed) => {
+        //         this.conceptSelected.next(snomed);
+        //     });
+        // }
     }
 
     onConcept() {

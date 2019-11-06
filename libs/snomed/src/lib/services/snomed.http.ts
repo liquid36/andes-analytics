@@ -51,7 +51,7 @@ export class SnomedHTTP {
 
 
     analytics(query) {
-        return this.http.post(`/andes/analytics/count`, query);
+        return this.http.post(`/andes/analytics/${query.visualization}`, query);
     }
 
     demografia(params) {

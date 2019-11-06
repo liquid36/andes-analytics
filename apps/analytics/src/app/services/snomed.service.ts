@@ -5,6 +5,8 @@ import { of, BehaviorSubject } from 'rxjs';
 import { QueryOptionsService } from './query-filter.service';
 import { SnomedHTTP } from '@andes-analytics/snomed';
 
+type VISULIZATION = 'unique' | 'count';
+
 @Injectable({
     providedIn: 'root',
 })
@@ -66,22 +68,22 @@ export class SnomedAPI {
         return this.conceptBS[id];
     }
 
-    history(sctids: string[]) {
+    getParams() {
         const start = this.qf.getValue('start');
         const end = this.qf.getValue('end');
         const organizacion = this.qf.getValue('organizacion') ? this.qf.getValue('organizacion').id : null;
-        const form = this.qf.getValue('relationship') || 'inferred';
+        const type = this.qf.getValue('relationship') || 'inferred';
+        return { start, end, organizacion, type };
+    }
+
+    history(sctids: string[]) {
+        const filter = this.getParams();
 
         const reals = sctids.filter(c => !this.cache[c]);
         const body = {
             visualization: 'count',
             target: reals,
-            type: form,
-            filter: {
-                start,
-                end,
-                organizacion
-            }
+            filter
         };
 
         if (reals.length > 0) {
@@ -112,11 +114,30 @@ export class SnomedAPI {
     }
 
     demografia(sctid, rangoEtario) {
-        const start = this.qf.getValue('start');
-        const end = this.qf.getValue('end');
-        const organizacion = this.qf.getValue('organizacion') ? this.qf.getValue('organizacion').id : null;
+        const filter = this.getParams();
 
-        return this.api.demografia({ conceptId: sctid, rango: rangoEtario, start, end, organizacion });
+        const body = {
+            visualization: 'count',
+            target: sctid,
+            filter: {
+                ...filter,
+                rangoEtario
+            },
+            group: ['sexo', 'decada']
+        };
+
+        return this.api.analytics(body).pipe(map(data => data[sctid]));
+    }
+
+    analytics(sctid, visualization: VISULIZATION, group = null) {
+        const filter = this.getParams();
+        const body = {
+            visualization,
+            target: sctid,
+            filter,
+            group
+        }
+        return this.api.analytics(body).pipe(map(data => data[sctid]));
     }
 
     cluster(sctid, semanticTags) {

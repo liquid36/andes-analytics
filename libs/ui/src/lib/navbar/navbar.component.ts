@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
     selector: 'ui-navbar',
@@ -7,8 +7,7 @@ import { Component } from '@angular/core';
 })
 export class NavBarComponent {
     public isCollapsed = true;
-
-    menuItems = [{
+    @Input() menuItems = [{
         key: 'profesional',
         label: 'Profesional'
     },
@@ -18,5 +17,11 @@ export class NavBarComponent {
     }, {
         key: 'profesional',
         label: 'Prestaciones'
-    }]
+    }];
+    @Output() itemClick = new EventEmitter();
+
+
+    navClick(menuItem) {
+        this.itemClick.emit(menuItem);
+    }
 }

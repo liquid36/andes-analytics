@@ -25,7 +25,7 @@ export const FILTER_AVAILABLE = [
         label: 'registros.paciente.sexo',
     },
     {
-        name: 'edad',
+        name: 'decada',
         unwind: true,
         field: 'registros.paciente.edad.edad',
         label: 'registros.paciente.edad.edad',

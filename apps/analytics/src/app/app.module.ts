@@ -16,9 +16,14 @@ import { SnomedSearchComponent } from './components/snomed-concept-search/snomed
 import { ConceptCountPillComponent } from './elements/concept-count-pill/concept-count-pill.component';
 import { ConceptDefinitionStatusIconComponent } from './elements/concept-definition-status-icon/concept-definition-status-icon.component';
 import { AppQueryOptionsComponent } from './components/app-query-options/app-query-options.component';
-import { AppConceptDetailView } from './views/concept-detail/concept-detail.view';
 import { AppNavbarDetailComponent } from './views/concept-detail/navbar-detail/navbar-detail.component';
 import { AppConceptStatsComponent } from './views/concept-detail/concept-stats/concept-stats.component';
+
+
+import { AppConceptDetailView } from './views/concept-detail/concept-detail.view';
+import { AppHomeView } from './views/home/home.view';
+import { AppPacientesStatsView } from './views/pacientes-stats/pacientes-stats.view';
+import { DemografiaTableComponent } from './views/pacientes-stats/demografia-table/demografia-table.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +34,10 @@ import { AppConceptStatsComponent } from './views/concept-detail/concept-stats/c
     AppQueryOptionsComponent,
     AppConceptDetailView,
     AppNavbarDetailComponent,
-    AppConceptStatsComponent
+    AppConceptStatsComponent,
+    DemografiaTableComponent,
+    AppHomeView,
+    AppPacientesStatsView
   ],
   imports: [
     HttpClientModule,
@@ -39,7 +47,11 @@ import { AppConceptStatsComponent } from './views/concept-detail/concept-stats/c
     NgSelectModule,
     NgxDaterangepickerMd.forRoot(),
     RouterModule.forRoot([
-      { path: '', component: AppConceptDetailView }
+      { path: 'concept/:id/detail', component: AppConceptDetailView },
+      { path: 'concept/:id/pacientes', component: AppPacientesStatsView },
+      { path: 'home', component: AppHomeView },
+      { path: '**', redirectTo: '/home' }
+
     ], { initialNavigation: 'enabled' }),
     UiModule,
     SnomedModule.forRoot()

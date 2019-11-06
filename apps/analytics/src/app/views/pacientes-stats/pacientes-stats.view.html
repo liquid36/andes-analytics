@@ -1,0 +1,31 @@
+<ng-container *ngIf="concept$ | async as concept">
+
+    <app-navbar-detail-component [concept]="concept"></app-navbar-detail-component>
+
+
+    <div class="ml-5 mr-5 d-flex justify-content-between">
+        <h5>
+            Rango Etario
+        </h5>
+        <div ngbDropdown>
+            <button ngbDropdownToggle class="btn btn-info dropdown-toggle" type="button">
+                Cambiar escala
+            </button>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <button ngbDropdownItem (click)="changeRangoEtario(nacional)">
+                    Rango Etario Nacional
+                </button>
+                <button ngbDropdownItem (click)="changeRangoEtario(provincial)">
+                    Rango Etario Provincial
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <app-demografia-table [data]="data$ | async" [rangoEtario]="rango | async"></app-demografia-table>
+
+    <ng-container *ngIf="localidades$ | async as localidades">
+        <ui-table [values]="localidades"></ui-table>
+
+    </ng-container>
+</ng-container>

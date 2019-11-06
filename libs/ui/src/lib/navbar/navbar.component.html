@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Andes | Analytics</a>
+    <a class="navbar-brand" href="#">ANDES | Analytics</a>
 
     <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed">
         <span class="navbar-toggler-icon"></span>
@@ -9,7 +9,7 @@
         <div></div>
         <ul class="navbar-nav">
             <li class="nav-item" *ngFor="let menu of menuItems">
-                <a class="nav-link" href="#"> {{ menu.label }} </a>
+                <span class="nav-link text-white" (click)="navClick(menu)"> {{ menu.label }} </span>
             </li>
         </ul>
     </div>

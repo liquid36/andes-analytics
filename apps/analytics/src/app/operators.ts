@@ -36,3 +36,10 @@ export function cache() {
         refCount()
     );
 }
+
+export function combineDataset(datasetA: any[], datasetB: any[], fn) {
+    const mapping = {};
+    datasetA.forEach(item => mapping[item.hashId] = item);
+    datasetB.forEach(item => mapping[item.hashId].value = fn(mapping[item.hashId].value, item.value));
+    return Object.values(mapping)
+}
