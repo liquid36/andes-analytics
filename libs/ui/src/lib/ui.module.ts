@@ -4,6 +4,7 @@ import { NavBarComponent } from './navbar/navbar.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UiTextDirective } from './text/text.directive';
 import { BadgeComponent } from './badge/badge.component';
+import { UiModalComponent } from './modal/modal.component';
 import { TableSetComponent } from './table/table.component';
 
 import { MatTableModule } from '@angular/material/table';
@@ -22,13 +23,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NavBarComponent,
     UiTextDirective,
     BadgeComponent,
+    UiModalComponent,
     TableSetComponent
   ],
   exports: [
     NavBarComponent,
     UiTextDirective,
     BadgeComponent,
-    TableSetComponent
+    TableSetComponent,
+    UiModalComponent
   ]
 })
 export class UiModule { }

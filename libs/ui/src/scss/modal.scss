@@ -1,0 +1,35 @@
+.ui-modal {
+    position: fixed;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1100;
+    height: 100vh;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    animation: present-modal .15s ease-in;
+
+    .ui-modal-content {
+        background-color: white;
+        min-width: 30vw;
+        max-width: 90vw;
+        max-height: 95vh;
+        margin: auto;
+        transition: opacity;
+        overflow: scroll;
+    }
+}
+
+@keyframes present-modal {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

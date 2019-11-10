@@ -336,7 +336,6 @@ router.post('/rup/cluster', async function (req, res) {
     const PrestacionesTx = db.collection(MAIN_DB);
     const conceptId = req.body.conceptId;
     const semanticTags = req.body.semanticTags || ['trastorno'];
-    console.time('start')
     const pipeline = [
         {
             $match: {
@@ -352,8 +351,6 @@ router.post('/rup/cluster', async function (req, res) {
     ];
     const results = await PrestacionesTx.aggregate(pipeline).toArray()
     const ids = results.map(e => e._id);
-    console.timeEnd('start')
-    console.time('two')
 
     const pipeline2 = [
         { $match: { 'registros.paciente.id': { $in: ids } } },
@@ -375,14 +372,13 @@ router.post('/rup/cluster', async function (req, res) {
         { $sort: { total: -1 } }
     ];
     const concepts = await PrestacionesTx.aggregate(pipeline2).toArray();
-    console.timeEnd('two')
 
     return res.json(concepts);
 });
 
 router.post('/rup/maps', async function (req, res) {
     const db = await getConnection();
-    const PrestacionesTx = db.collection('prestaciontx2');
+    const PrestacionesTx = db.collection(MAIN_DB);
     const conceptId = req.body.conceptId;
 
     const pipeline = [

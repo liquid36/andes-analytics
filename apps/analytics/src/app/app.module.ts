@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AgmCoreModule } from '@agm/core';
 
 import { UiModule } from '@andes-analytics/ui';
 import { SnomedModule } from '@andes-analytics/snomed';
@@ -28,6 +29,8 @@ import { AppOrganizacionesStatsView } from './views/organizaciones-stats/organiz
 import { AppProfesionalesStatsView } from './views/profesionales-stats/profesionales-stats.view';
 import { AppPrestacionesStatsView } from './views/prestaciones-stats/prestaciones-stats.view';
 import { AppConceptosAsociadosStatsView } from './views/conceptos-asociados-stats/conceptos-asociados-stats.view';
+import { AppMapsStatsView } from './views/maps-stats/maps-stats.view';
+import { AppBubbleChartsView } from './views/conceptos-asociados-stats/bubble-charts/bubble-charts.component';
 
 @NgModule({
   declarations: [
@@ -39,13 +42,15 @@ import { AppConceptosAsociadosStatsView } from './views/conceptos-asociados-stat
     AppNavbarDetailComponent,
     AppConceptStatsComponent,
     DemografiaTableComponent,
+    AppBubbleChartsView,
     AppHomeView,
     AppConceptDetailView,
     AppPacientesStatsView,
     AppOrganizacionesStatsView,
     AppProfesionalesStatsView,
     AppPrestacionesStatsView,
-    AppConceptosAsociadosStatsView
+    AppConceptosAsociadosStatsView,
+    AppMapsStatsView
   ],
   imports: [
     HttpClientModule,
@@ -54,6 +59,9 @@ import { AppConceptosAsociadosStatsView } from './views/conceptos-asociados-stat
     NgbModule,
     NgSelectModule,
     NgxDaterangepickerMd.forRoot(),
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyC__of8PZKirB_IvkjzI7XTlfYtLieGRh0&libraries=visualization'
+    }),
     RouterModule.forRoot([
       { path: 'concept/:id/detail', component: AppConceptDetailView },
       { path: 'concept/:id/pacientes', component: AppPacientesStatsView },
@@ -61,6 +69,7 @@ import { AppConceptosAsociadosStatsView } from './views/conceptos-asociados-stat
       { path: 'concept/:id/profesionales', component: AppProfesionalesStatsView },
       { path: 'concept/:id/prestaciones', component: AppPrestacionesStatsView },
       { path: 'concept/:id/asociados', component: AppConceptosAsociadosStatsView },
+      { path: 'concept/:id/mapa', component: AppMapsStatsView },
 
       { path: 'home', component: AppHomeView },
       { path: '**', redirectTo: '/home' }

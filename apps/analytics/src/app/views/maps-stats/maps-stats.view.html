@@ -1,0 +1,10 @@
+<ng-container *ngIf="concept$ | async as concept">
+
+    <app-navbar-detail-component [concept]="concept"></app-navbar-detail-component>
+
+    <div style="height: 100%;">
+        <agm-map style="height: 100%;" [latitude]="lat" [longitude]="lng" [zoom]="zoom" (mapReady)="onMap($event)">
+        </agm-map>
+    </div>
+
+</ng-container>

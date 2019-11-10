@@ -2,32 +2,43 @@
 
     <app-navbar-detail-component [concept]="concept"></app-navbar-detail-component>
 
-    <div class="d-flex justify-content-between">
-        <h5>
-            Conceptos en común
-        </h5>
-        <div ngbDropdown>
-            <button ngbDropdownToggle class="btn btn-info dropdown-toggle" type="button">
-                {{ semanticCluster$ | async }}
+    <ng-container *ngIf="asociados$ | async as asociados">
+        <div class="d-flex justify-content-between">
+            <h5>
+                Conceptos en común
+            </h5>
+
+            <button class="btn btn-success" type="button" (click)="modal.show();">
+                VER GRAFICO
             </button>
-            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <button ngbDropdownItem (click)="semanticCluster.next('trastorno')">
-                    Trastorno
+
+            <div ngbDropdown>
+                <button ngbDropdownToggle class="btn btn-info dropdown-toggle" type="button">
+                    {{ semanticCluster$ | async }}
                 </button>
-                <button ngbDropdownItem (click)="semanticCluster.next('hallazgo')">
-                    Hallazgo
-                </button>
-                <button ngbDropdownItem (click)="semanticCluster.next('procedimiento')">
-                    Procedimiento
-                </button>
-                <button ngbDropdownItem (click)="semanticCluster.next('producto')">
-                    Producto
-                </button>
+                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button ngbDropdownItem (click)="semanticCluster.next('trastorno')">
+                        Trastorno
+                    </button>
+                    <button ngbDropdownItem (click)="semanticCluster.next('hallazgo')">
+                        Hallazgo
+                    </button>
+                    <button ngbDropdownItem (click)="semanticCluster.next('procedimiento')">
+                        Procedimiento
+                    </button>
+                    <button ngbDropdownItem (click)="semanticCluster.next('producto')">
+                        Producto
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <ng-container *ngIf="asociados$ | async as asociados">
+
+        <ui-modal #modal>
+            <app-bubble-charts-component [data]="asociados"></app-bubble-charts-component>
+        </ui-modal>
+
         <ui-table [values]="asociados" *ngIf="!loading"></ui-table>
+
     </ng-container>
 </ng-container>
