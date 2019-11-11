@@ -50,6 +50,13 @@ router.get('/organizaciones', async function (req, res) {
     return res.json(orgs);
 });
 
+router.get('/conceptos-numericos', async function (req, res) {
+    const db = await getConnection();
+    const Organizaciones = db.collection('conceptos_numericos');
+    const orgs = await Organizaciones.find({}, { conceptId: 1, term: 1, fsn: 1 }).toArray();
+    return res.json(orgs);
+});
+
 router.get('/semanticTags', async function (req, res) {
     const search = req.query.search;
     const expWord = makePattern(search);

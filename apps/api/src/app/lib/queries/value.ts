@@ -13,16 +13,27 @@ async function query(conceptId, perdiodo, params, group) {
         ...pipeline,
         ...addOns,
         {
+            $match: {
+                'registros.valorType': 'number',
+                'registros.valor': { $ne: null }
+            }
+        },
+        {
             $group: {
                 ...metadataID,
-                value: { $addToSet: { $toString: '$registros.paciente.id' } }
+                count: { $sum: 1 },
+                sum: { $sum: '$registros.valor' }
+
             }
         },
         {
             $project: {
                 _id: 1,
                 label: createLabelMetadata(group),
-                value: 1
+                value: {
+                    count: '$count',
+                    sum: '$sum'
+                }
             }
         }
     ];
@@ -34,17 +45,24 @@ async function query(conceptId, perdiodo, params, group) {
     return results;
 }
 
-const initial = () => new Set()
+const initial = () => ({ count: 0, sum: 0 })
 
-const reducer = (acc, value) => {
-    const set = new Set([...acc, ...value]);
-    return [...set];
+const reducer = (a, b) => {
+    return {
+        count: a.count + b.count,
+        sum: a.sum + b.sum
+    }
 };
 
-const transform = (value) => value.length
+const transform = (value) => {
+    if (value.count > 0) {
+        return value.sum / value.count;
+    }
+    return 0;
+}
 
 export const QUERY = {
-    name: 'unique',
+    name: 'value',
     query,
     reducer,
     initial,

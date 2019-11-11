@@ -89,6 +89,10 @@ export class SnomedHTTP {
         return this.http.get('/andes/organizaciones', { params: search });
     }
 
+    conceptosNumerticos() {
+        return this.http.get('/andes/conceptos-numericos', { params: {} });
+    }
+
     semanticTags(search) {
         return this.http.get('/andes/semanticTags', { params: { search } });
     }

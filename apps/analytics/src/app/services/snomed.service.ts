@@ -4,8 +4,9 @@ import { map, bufferTime, filter, switchMap } from 'rxjs/operators';
 import { of, BehaviorSubject } from 'rxjs';
 import { QueryOptionsService } from './query-filter.service';
 import { SnomedHTTP } from '@andes-analytics/snomed';
+import { cache } from '../operators';
 
-type VISULIZATION = 'unique' | 'count';
+type VISULIZATION = 'unique' | 'count' | 'value';
 
 @Injectable({
     providedIn: 'root',
@@ -113,11 +114,11 @@ export class SnomedAPI {
         }
     }
 
-    demografia(sctid, rangoEtario) {
+    demografia(type: VISULIZATION, sctid, rangoEtario) {
         const filter = this.getParams();
 
         const body = {
-            visualization: 'count',
+            visualization: type,
             target: sctid,
             filter: {
                 ...filter,
@@ -170,6 +171,10 @@ export class SnomedAPI {
     organizaciones(search) {
         return this.api.organizaciones({ search });
     }
+
+    public conceptosNumericos$ = this.api.conceptosNumerticos().pipe(
+        cache()
+    )
 
     semanticTags(search) {
         return this.api.semanticTags({ search });

@@ -1,0 +1,10 @@
+#### Outliers de peso para mujeres
+
+db.getCollection('prestacionTx').aggregate([
+    { $match: { $or : [  {'concepto.conceptId' : '27113001' } , { 'concepto.inferredAncestors': '27113001' }  ] } },
+    {  $unwind: '$registros' },
+    { $match: {  'registros.paciente.sexo': 'femenino', 'registros.paciente.edad.edad': { $gte: 15 } }},
+    { $project: { 'valor': '$registros.valor', 'fecha': '$registros.fecha' } },
+    { $sort: { 'valor': -1 } }
+    
+])

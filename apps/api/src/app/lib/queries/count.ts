@@ -39,7 +39,7 @@ async function query(conceptId, periodo, params, group) {
             }
         }
     ];
-    const results = await PrestacionesTx.aggregate($pipeline).toArray();
+    const results = await PrestacionesTx.aggregate($pipeline, { allowDiskUse: true }).toArray();
     results.forEach(r => {
         r.hashId = hash(r._id);
     });

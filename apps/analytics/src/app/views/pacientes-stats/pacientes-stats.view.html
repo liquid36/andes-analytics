@@ -2,13 +2,39 @@
 
     <app-navbar-detail-component [concept]="concept"></app-navbar-detail-component>
 
+    <!-- <ui-modal #modal>
+        <iframe #frame style="height:600px;width:80vw;border:none"
+                src="https://sanddance.js.org/embed/v1/sanddance-embed.html"></iframe>
+    </ui-modal> -->
 
     <div class="ml-5 mr-5 d-flex justify-content-between">
         <h5>
             Rango Etario
         </h5>
+
+        <!-- <button class="btn btn-success" type="button" (click)="modal.show();verSandDance()">
+            VER GRAFICO
+        </button> -->
+
         <div ngbDropdown>
-            <button ngbDropdownToggle class="btn btn-info dropdown-toggle" type="button">
+            <button ngbDropdownToggle class="btn btn-xs btn-info dropdown-toggle" type="button">
+                Metrica
+            </button>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <button ngbDropdownItem (click)="setMetrica('count')">
+                    Registros
+                </button>
+                <button ngbDropdownItem (click)="setMetrica('unique')">
+                    Paciente Únicos
+                </button>
+                <button ngbDropdownItem (click)="setMetrica('value')" *ngIf="concept.isNumeric">
+                    Promedio
+                </button>
+            </div>
+        </div>
+
+        <div ngbDropdown>
+            <button ngbDropdownToggle class="btn btn-xs btn-info dropdown-toggle" type="button">
                 Cambiar escala
             </button>
             <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -22,10 +48,10 @@
         </div>
     </div>
 
-    <app-demografia-table [data]="data$ | async" [rangoEtario]="rango | async"></app-demografia-table>
+    <app-demografia-table [data]="data$ | async" [metrica]="metrica$ | async" [rangoEtario]="rango$ | async">
+    </app-demografia-table>
 
     <ng-container *ngIf="localidades$ | async as localidades">
         <ui-table [values]="localidades" *ngIf="!loading"></ui-table>
-
     </ng-container>
 </ng-container>

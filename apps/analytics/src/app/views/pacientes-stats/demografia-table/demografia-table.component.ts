@@ -8,9 +8,7 @@ export class DemografiaTableComponent implements OnInit, OnChanges {
 
     @Input() data;
     @Input() rangoEtario = [0, 1, 2, 6, 10, 15, 50];
-
-    // public nacional = [0, 1, 2, 6, 10, 15, 50];
-    // public provincial = [0, 1, 5, 15, 20, 40, 70];
+    @Input() metrica;
 
     public conceptSelected = null;
     public tableDemografia = [
@@ -48,12 +46,20 @@ export class DemografiaTableComponent implements OnInit, OnChanges {
             this.data.forEach(dato => {
                 const i = dato._id.sexo === 'masculino' ? 0 : 1;
                 const j = this.mappingIndex[dato._id.decada];
-
                 this.tableDemografia[i][j] += dato.value.total;
                 this.tableDemografia[2][j] += dato.value.total;
                 this.tableDemografia[i][this.numCols] += dato.value.total;
                 this.tableDemografia[2][this.numCols] += dato.value.total;
             });
+            if (this.metrica === 'value') {
+                this.rangoEtario.forEach((item, i) => {
+                    this.tableDemografia[2][i] = this.tableDemografia[2][i] / 2;
+                });
+                this.tableDemografia[0][this.numCols] = this.tableDemografia[0][this.numCols] / this.numCols;
+                this.tableDemografia[1][this.numCols] = this.tableDemografia[1][this.numCols] / this.numCols;
+                this.tableDemografia[2][this.numCols] = this.tableDemografia[2][this.numCols] / (this.numCols * 2);
+
+            }
         }
     }
 

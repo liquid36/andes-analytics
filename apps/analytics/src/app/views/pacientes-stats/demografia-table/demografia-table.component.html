@@ -12,23 +12,23 @@
                 <tr>
                     <td>Masculino</td>
                     <td *ngFor="let j of indices">
-                        {{ tableDemografia[0][j] }}
+                        {{ tableDemografia[0][j] | number }}
                     </td>
-                    <td> {{ tableDemografia[0][numCols] }} </td>
+                    <td> {{ tableDemografia[0][numCols] | number }} </td>
                 </tr>
                 <tr>
                     <td>Femenino</td>
                     <td *ngFor="let j of indices">
-                        {{ tableDemografia[1][j] }}
+                        {{ tableDemografia[1][j] | number }}
                     </td>
-                    <td> {{ tableDemografia[1][numCols] }} </td>
+                    <td> {{ tableDemografia[1][numCols] | number }} </td>
                 </tr>
                 <tr>
                     <td>Total</td>
                     <td *ngFor="let j of indices">
-                        {{ tableDemografia[2][j] }}
+                        {{ tableDemografia[2][j] | number }}
                     </td>
-                    <td> {{ tableDemografia[2][numCols] }} </td>
+                    <td> {{ tableDemografia[2][numCols]  | number }} </td>
                 </tr>
             </tbody>
         </table>

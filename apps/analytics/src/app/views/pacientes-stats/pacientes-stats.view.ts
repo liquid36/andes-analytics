@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import { SnomedAPI } from '../../services/snomed.service';
 import { QueryOptionsService } from '../../services/query-filter.service';
 import { combineLatest, BehaviorSubject, forkJoin } from 'rxjs';
@@ -19,10 +19,15 @@ export class AppPacientesStatsView {
     public rango = new BehaviorSubject(this.nacional);
     public rango$ = this.rango.asObservable();
 
+    public metrica = new BehaviorSubject('count');
+    public metrica$ = this.metrica.asObservable();
+
     public concept$;
     public localidades$;
     public data$;
 
+
+    public demografiaCache;
 
     constructor(
         private snomed: SnomedAPI,
@@ -32,13 +37,37 @@ export class AppPacientesStatsView {
         this.concept$ = this.activeRoute.paramMap.pipe(
             map((dto: any) => dto.params),
             pluck('id'),
-            switchMap((conceptId) => this.snomed.concept(conceptId)),
+            switchMap((conceptId) => {
+                return forkJoin(
+                    this.snomed.concept(conceptId),
+                    this.snomed.conceptosNumericos$
+                );
+            }),
+            map(([concept, numericos]: [any, any[]]) => {
+                const isNumerico = numericos.find(item => item.conceptId === concept.conceptId);
+                concept.isNumeric = isNumerico;
+                return concept;
+            }),
             cache()
         )
 
-        this.data$ = combineLatest(this.concept$, this.rango$, this.qf.filstrosParams$.pipe(startWith({}))).pipe(
-            switchMap(([concept, rango]) => {
-                return this.snomed.demografia((concept as any).conceptId, rango)
+        this.data$ = combineLatest(
+            this.concept$,
+            this.rango$,
+            this.metrica$,
+            this.qf.filstrosParams$.pipe(startWith({}))
+        ).pipe(
+            switchMap(([concept, rango, metrica]) => {
+                return this.snomed.demografia(metrica as any, (concept as any).conceptId, rango)
+            }),
+            map(list => {
+                this.demografiaCache = list;
+                return list.map(item => {
+                    if (!item.value.total) {
+                        item.value = { total: item.value };
+                    }
+                    return item;
+                })
             }),
             cache()
         )
@@ -76,4 +105,23 @@ export class AppPacientesStatsView {
         this.rango.next(rango);
     }
 
+    setMetrica(metrica) {
+        this.metrica.next(metrica);
+    }
+
+    // @ViewChild('frame', { static: false }) element;
+    // verSandDance() {
+    //     setTimeout(() => {
+    //         debugger
+    //         const m = this.demografiaCache.map(i => {
+    //             return {
+    //                 sexo: i._id.sexo,
+    //                 decada: i._id.decada,
+    //                 total: i.value.total,
+    //                 exact: i.value.exact
+    //             }
+    //         });
+    //         this.element.nativeElement.contentWindow.postMessage(m, '*');
+    //     }, 500)
+    // }
 }
