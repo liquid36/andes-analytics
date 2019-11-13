@@ -32,9 +32,8 @@ export class AppBubbleChartsView {
         const diameter = 600;
         // const color: any = d3.scaleOrdinal(this.data.map(d => d.label))
         const svg = d3.select(this.contenedor.nativeElement).append('svg')
-            .attr('width', diameter)
-            .attr('height', diameter)
-            .attr("font-size", 14)
+            .attr('width', 600)
+            .attr('height', 600)
             .attr("font-family", "sans-serif")
             .attr("text-anchor", "middle");
 
@@ -65,12 +64,22 @@ export class AppBubbleChartsView {
             .attr("fill", (d: any) => '#aa0011');
 
         vis.append("text")
+            .style("font-size", function (d) {
+                const cantWords = (d as any).data.name.split(' ').length;
+                const lengthWord = Math.max(...((d as any).data.name.split(' ').map(t => t.length)));
+                if (cantWords > 5 || lengthWord > 14) {
+                    return Math.min(2 * (d as any).r, (2 * (d as any).r - 8) / 160 * 24) + "px";
+                } else {
+                    return Math.min(2 * (d as any).r, (2 * (d as any).r - 8) / 120 * 24) + "px";
+                }
+            })
+            .attr("dy", ".35em")
             .selectAll("tspan")
             .data((d: any) => d.data.name.split(/(\ )/g).filter(c => c !== ' '))
             .join("tspan")
             .attr("x", 0)
             .attr("y", (d, i, nodes) => `${i - nodes.length / 2 + 0.8}em`)
-            .text((d: any) => d);
+            .text((d: any) => d)
 
         // vis.enter().append("text")
         //     .attr('transform', function (d) { return 'translate(' + d.x + ',' + d.y + ')'; })
