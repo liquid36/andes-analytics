@@ -7,6 +7,9 @@ export function flatPrestacion(prestacion) {
 }
 
 export function flatRegistros(registro, ancestorsId, ancestorsSctId): any[] {
+    if (registro.esSolicitud) {
+        return [];
+    }
     const tx = {
         registroId: registro._id,
         valor: registro.valor,

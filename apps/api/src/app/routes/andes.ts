@@ -50,6 +50,17 @@ router.get('/organizaciones', async function (req, res) {
     return res.json(orgs);
 });
 
+router.get('/organizaciones2', async function (req, res) {
+    // const search = req.query.search;
+    // const expWord = makePattern(search);
+
+    const db = await getConnection();
+    const Organizaciones = db.collection('org_2');
+    const orgs = await Organizaciones.find({}).toArray();
+    return res.json(orgs);
+});
+
+
 router.get('/conceptos-numericos', async function (req, res) {
     const db = await getConnection();
     const Organizaciones = db.collection('conceptos_numericos');
@@ -400,7 +411,7 @@ router.post('/rup/maps', async function (req, res) {
         },
         { $unwind: '$registros' },
         { $match: { 'registros.paciente.coordenadas': { $ne: null } } },
-        { $project: { 'coordenadas': '$registros.paciente.coordenadas' } }
+        { $project: { 'coordenadas': '$registros.paciente.coordenadas', 'localidad': '$registros.paciente.localidad' } }
 
     ];
     function desvio() {
@@ -411,11 +422,13 @@ router.post('/rup/maps', async function (req, res) {
     const r = results.map(point => {
         if (point.coordenadas.aprox) {
             return {
+                localidad: point.localidad,
                 lat: point.coordenadas.lat + desvio(),
                 lng: point.coordenadas.lng + desvio()
             }
         } else {
             return {
+                localidad: point.localidad,
                 lat: point.coordenadas.lat,
                 lng: point.coordenadas.lng
             }

@@ -2,9 +2,17 @@
 
     <app-navbar-detail-component [concept]="concept"></app-navbar-detail-component>
 
+    <button class="btn btn-success" type="button" (click)="modal.show();verSandDance()">
+        VER GRAFICO
+    </button>
+
     <div style="height: 100%;">
         <agm-map style="height: 100%;" [latitude]="lat" [longitude]="lng" [zoom]="zoom" (mapReady)="onMap($event)">
         </agm-map>
     </div>
 
+    <ui-modal #modal>
+        <iframe #frame style="height:95vh;width:95vw;border:none"
+                src="https://sanddance.js.org/embed/v1/sanddance-embed.html"></iframe>
+    </ui-modal>
 </ng-container>

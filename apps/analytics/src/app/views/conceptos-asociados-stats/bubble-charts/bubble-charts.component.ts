@@ -32,8 +32,8 @@ export class AppBubbleChartsView {
         const diameter = 600;
         // const color: any = d3.scaleOrdinal(this.data.map(d => d.label))
         const svg = d3.select(this.contenedor.nativeElement).append('svg')
-            .attr('width', 600)
-            .attr('height', 600)
+            .attr('width', window.innerWidth * 80 / 100)
+            .attr('height', window.innerHeight * 80 / 100)
             .attr("font-family", "sans-serif")
             .attr("text-anchor", "middle");
 
@@ -43,7 +43,7 @@ export class AppBubbleChartsView {
         svg.call(zoom);
 
         const bubble = d3.pack()
-            .size([diameter, diameter])
+            .size([window.innerWidth * 80 / 100, window.innerHeight * 80 / 100])
             // .value(function (d: any) { return d.size; })
             // .sort(function(a, b) {
             // 	return -(a.value - b.value)
@@ -58,10 +58,23 @@ export class AppBubbleChartsView {
             .join("g")
             .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`);
 
+
+
+        function hex(c) {
+            var s = "0123456789abcdef";
+            var i = parseInt(c);
+            if (i == 0 || isNaN(c))
+                return "00";
+            i = Math.round(Math.min(Math.max(0, i), 255));
+            return s.charAt((i - i % 16) / 16) + s.charAt(i % 16);
+        }
         vis.append('circle')
             .attr("r", (d: any) => d.r)
             .attr("fill-opacity", 0.7)
-            .attr("fill", (d: any) => '#aa0011');
+            .attr("fill", (d: any) => {
+                const h = hex(d.r);
+                return '#' + h + 'A';
+            });
 
         vis.append("text")
             .style("font-size", function (d) {

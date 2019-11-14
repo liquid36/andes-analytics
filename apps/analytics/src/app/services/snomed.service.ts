@@ -6,7 +6,7 @@ import { QueryOptionsService } from './query-filter.service';
 import { SnomedHTTP } from '@andes-analytics/snomed';
 import { cache } from '../operators';
 
-type VISULIZATION = 'unique' | 'count' | 'value';
+type VISULIZATION = 'unique' | 'count' | 'value' | 'raw';
 
 @Injectable({
     providedIn: 'root',
@@ -170,6 +170,10 @@ export class SnomedAPI {
 
     organizaciones(search) {
         return this.api.organizaciones({ search });
+    }
+
+    organizaciones2() {
+        return this.api.organizaciones2();
     }
 
     public conceptosNumericos$ = this.api.conceptosNumerticos().pipe(

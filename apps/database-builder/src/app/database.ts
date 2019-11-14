@@ -70,4 +70,9 @@ export async function createPrestacionTx() {
         'organizacion.id': 1,
         'profesional.id': 1
     });
+    PrestacionTx.ensureIndex({
+        "registros.paciente.id": 1,
+        "concepto.semanticTag": 1,
+        "concepto.conceptId": 1
+    });
 }

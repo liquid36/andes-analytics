@@ -1,9 +1,10 @@
 
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectID } from 'mongodb';
 
 const mongoConnection = process.env['ANDES_DB_CONN'] || process.env['MONGO_DB_CONN'] || "localhost:27017";
 const databases = {};
 
+export const ObjectId = ObjectID;
 
 export const getConnection = async function () {
     const name = 'andes';
