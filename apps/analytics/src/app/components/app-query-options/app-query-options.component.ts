@@ -11,6 +11,7 @@ import * as moment from 'moment';
     styleUrls: ['./app-query-options.component.scss']
 })
 export class AppQueryOptionsComponent {
+    public selected;
 
     organizations$: Observable<any[]>;
     orgInput$ = new Subject<string>();
