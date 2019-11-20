@@ -52,7 +52,6 @@ export class AppMapsStatsView {
             this.map$
         ).pipe(
             map(([data, map]) => {
-                debugger
                 const org2 = data[1];
                 const realOrg = data[2];
                 data[0] = (data[0] as any).map((item) => {
@@ -87,25 +86,5 @@ export class AppMapsStatsView {
         this.map.next(map);
     }
 
-    @ViewChild('frame', { static: false }) element;
-    verSandDance() {
-        this.concept$.pipe(
-            switchMap((c: any) => this.snomed.analytics(c.conceptId, 'raw', 'organizacion')),
-            map((data: any) => {
-                return data.map((item) => {
-                    debugger
-                    item.value.concepto = item.value.concepto.substring(0, 40).replace(/\ /g, '_');
-                    item.value.profesionalNombre = item.value.profesionalNombre.replace(/\ /g, '_');
-                    item.value.organizacionNombre = item.value.organizacionNombre.replace(/\ /g, '_');
-                    item.value.tipoPrestacion = item.value.tipoPrestacion.replace(/\ /g, '_');
-                    return item.value;
-                })
-            })
-        ).subscribe((m) => {
-            setTimeout(() => {
-                this.element.nativeElement.contentWindow.postMessage(m, '*');
-            }, 500)
-        })
 
-    }
 }

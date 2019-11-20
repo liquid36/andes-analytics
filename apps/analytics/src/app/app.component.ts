@@ -17,6 +17,7 @@ export class AppComponent {
         { key: 'prestaciones', label: 'Prestaciones' },
         { key: 'asociados', label: 'Conceptos Asociados' },
         { key: 'mapa', label: 'Mapa' },
+        { key: 'bi', label: 'BI' },
     ];
 
     constructor(public appService: AppService, private router: Router) {

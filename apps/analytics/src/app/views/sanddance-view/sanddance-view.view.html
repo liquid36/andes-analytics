@@ -1,0 +1,15 @@
+<ng-container *ngIf="concept$ | async as concept">
+
+    <div class="sanddance-contenedor">
+        <app-navbar-detail-component [concept]="concept">
+            <button class="btn btn-outline-danger" type="button" (click)="cerrar()">
+                X
+            </button>
+        </app-navbar-detail-component>
+
+        <iframe #frame style="height:calc(100% - 58px); width:100%;border:none"
+                src="https://sanddance.js.org/embed/v1/sanddance-embed.html"></iframe>
+    </div>
+
+
+</ng-container>

@@ -31,6 +31,7 @@ import { AppPrestacionesStatsView } from './views/prestaciones-stats/prestacione
 import { AppConceptosAsociadosStatsView } from './views/conceptos-asociados-stats/conceptos-asociados-stats.view';
 import { AppMapsStatsView } from './views/maps-stats/maps-stats.view';
 import { AppBubbleChartsView } from './views/conceptos-asociados-stats/bubble-charts/bubble-charts.component';
+import { AppSandDanceView } from './views/sanddance-view/sanddance-view.view';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { AppBubbleChartsView } from './views/conceptos-asociados-stats/bubble-ch
     AppProfesionalesStatsView,
     AppPrestacionesStatsView,
     AppConceptosAsociadosStatsView,
-    AppMapsStatsView
+    AppMapsStatsView,
+    AppSandDanceView
   ],
   imports: [
     HttpClientModule,
@@ -70,7 +72,7 @@ import { AppBubbleChartsView } from './views/conceptos-asociados-stats/bubble-ch
       { path: 'concept/:id/prestaciones', component: AppPrestacionesStatsView },
       { path: 'concept/:id/asociados', component: AppConceptosAsociadosStatsView },
       { path: 'concept/:id/mapa', component: AppMapsStatsView },
-
+      { path: 'concept/:id/bi', component: AppSandDanceView },
       { path: 'home', component: AppHomeView },
       { path: '**', redirectTo: '/home' }
 
