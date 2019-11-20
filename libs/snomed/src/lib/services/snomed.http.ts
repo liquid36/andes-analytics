@@ -15,7 +15,7 @@ export class SnomedHTTP {
     }
 
     private database = 'es-edition';
-    private version = 'v20190722';
+    private version = 'v20191115';
     private path = '/snomed';
 
     descriptions(params) {
