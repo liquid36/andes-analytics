@@ -121,7 +121,7 @@ function parseFilter(filter) {
     const end = getDate(filter.end, 'end');
     let params: any = {
     };
-    FILTER_AVAILABLE.forEach((t) => {
+    FILTER_AVAILABLE.forEach((t: any) => {
         const name = t.name;
         const defaultValue = t.default;
         const transform: any = t.transform || ((v) => v);
