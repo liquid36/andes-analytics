@@ -2,6 +2,19 @@
 
     <div class="fullscreen">
         <app-navbar-detail-component [concept]="concept">
+            <span ngbDropdown>
+                <button ngbDropdownToggle class="btn btn-info dropdown-toggle btn-sm mr-3" type="button">
+                    Cambiar grafico
+                </button>
+                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button ngbDropdownItem (click)="changeInsight('piramide')">
+                        Piramide poblacional
+                    </button>
+                    <button ngbDropdownItem (click)="changeInsight('pormes')">
+                        Registros por mes
+                    </button>
+                </div>
+            </span>
             <button class="btn btn-outline-danger btn-sm" type="button" (click)="cerrar()">
                 X
             </button>
