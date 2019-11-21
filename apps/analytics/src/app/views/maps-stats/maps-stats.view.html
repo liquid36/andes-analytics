@@ -1,10 +1,20 @@
 <ng-container *ngIf="concept$ | async as concept">
 
-    <app-navbar-detail-component [concept]="concept"></app-navbar-detail-component>
+    <div class="maps-contenedor">
+        <app-navbar-detail-component [concept]="concept">
+            <button [class.active]="showOrganizaciones" class="btn btn-success mr-1 btn-sm"
+                    (click)="onToggleEfectores()">
+                EFECTORES
+            </button>
+            <button class="btn btn-outline-danger btn-sm" type="button" (click)="cerrar()">
+                X
+            </button>
+        </app-navbar-detail-component>
 
-    <div style="height: 100%;">
-        <agm-map style="height: 100%;" [latitude]="lat" [longitude]="lng" [zoom]="zoom" (mapReady)="onMap($event)">
-        </agm-map>
+        <div style="height:calc(100% - 58px); width:100%;">
+            <agm-map style="height: 100%;" [latitude]="lat" [longitude]="lng" [zoom]="zoom" (mapReady)="onMap($event)">
+            </agm-map>
+        </div>
     </div>
 
 </ng-container>
