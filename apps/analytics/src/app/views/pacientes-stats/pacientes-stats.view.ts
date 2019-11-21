@@ -13,8 +13,8 @@ import { cache, combineDataset } from '../../operators';
 export class AppPacientesStatsView {
     public loading = false;
 
-    public nacional = [0, 1, 2, 6, 10, 15, 50];
-    public provincial = [0, 1, 5, 15, 20, 40, 70];
+    public nacional = [0, 1, 2, 6, 10, 15, 50, 100];
+    public provincial = [0, 1, 5, 15, 20, 40, 70, 100];
 
     public rango = new BehaviorSubject(this.nacional);
     public rango$ = this.rango.asObservable();
