@@ -3,7 +3,7 @@ import { SnomedAPI } from '../../services/snomed.service';
 import { QueryOptionsService } from '../../services/query-filter.service';
 import { Observable } from 'rxjs';
 import { tap, pluck, switchAll, switchMap, map } from 'rxjs/operators';
-import { ActivationEnd, ActivatedRoute } from '@angular/router';
+import { ActivationEnd, ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-concept-detail-view',
@@ -22,7 +22,8 @@ export class AppConceptDetailView {
     constructor(
         private snomed: SnomedAPI,
         public qf: QueryOptionsService,
-        private activeRoute: ActivatedRoute
+        private activeRoute: ActivatedRoute,
+        private router: Router
     ) {
         // this.concept$ = this.qf.onConcept().pipe(
         this.concept$ = this.activeRoute.paramMap.pipe(
@@ -39,4 +40,9 @@ export class AppConceptDetailView {
         );
     }
 
+    onSelected(concept) {
+        const url = this.router.url;
+        const urlParts = url.split('/');
+        this.router.navigate(['concept', concept.conceptId, 'detail'], { queryParamsHandling: 'preserve' });
+    }
 }

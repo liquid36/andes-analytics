@@ -4,23 +4,28 @@
 
     <app-concept-stats [concept]="concept"></app-concept-stats>
 
-    <div class="row">
-        <div class="col-6">
-            <snd-concept-parents [concept]="concept" [iconTemplate]="pillsTemplate"></snd-concept-parents>
+    <div class="ml-3 mr-3">
+        <div class="row">
+            <div class="col-6">
+                <snd-concept-parents [concept]="concept" [iconTemplate]="pillsTemplate"
+                                     (conceptClick)="onSelected($event)">
+                </snd-concept-parents>
+            </div>
+            <div class="col-6">
+                <snd-concept-childrens [concept]="concept" [iconTemplate]="pillsTemplate"
+                                       (conceptClick)="onSelected($event)"></snd-concept-childrens>
+            </div>
         </div>
-        <div class="col-6">
-            <snd-concept-childrens [concept]="concept" [iconTemplate]="pillsTemplate"></snd-concept-childrens>
-        </div>
+
+        <ng-template #pillsTemplate let-concept="concept">
+            <concept-count-pill [concept]="concept"></concept-count-pill>
+            <!-- <span>HOLA</span> -->
+        </ng-template>
+
+        <snd-concept-desc-table [concept]="concept" [refSetLanguage]="refSetLanguage" [terms$]="term$">
+        </snd-concept-desc-table>
+
+        <snd-concept-diagram [concept]="concept"></snd-concept-diagram>
     </div>
-
-    <ng-template #pillsTemplate let-concept="concept">
-        <concept-count-pill [concept]="concept"></concept-count-pill>
-        <!-- <span>HOLA</span> -->
-    </ng-template>
-
-    <snd-concept-desc-table [concept]="concept" [refSetLanguage]="refSetLanguage" [terms$]="term$">
-    </snd-concept-desc-table>
-
-    <snd-concept-diagram [concept]="concept"></snd-concept-diagram>
 
 </ng-container>

@@ -11,6 +11,7 @@ import { cache, combineDataset } from '../../operators';
     templateUrl: './conceptos-asociados-stats.view.html'
 })
 export class AppConceptosAsociadosStatsView {
+    public showGrafico = false;
     public loading = false;
     public concept$;
     public asociados$;

@@ -1,6 +1,5 @@
-import { Component, Input, Output, TemplateRef } from '@angular/core';
+import { Component, Input, Output, TemplateRef, EventEmitter } from '@angular/core';
 import { SnomedHTTP } from '../../services/snomed.http';
-import { EventEmitter } from 'events';
 
 @Component({
     selector: 'snd-concept-parents',

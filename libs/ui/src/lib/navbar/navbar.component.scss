@@ -2,3 +2,11 @@
     // height: var(--navbar-height);
     padding: 0 1rem;
 }
+
+.nav-item {
+    cursor: pointer;
+
+    &:hover {
+        background-color: #165897
+    }
+}

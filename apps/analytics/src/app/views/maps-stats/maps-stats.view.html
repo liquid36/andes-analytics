@@ -1,6 +1,6 @@
 <ng-container *ngIf="concept$ | async as concept">
 
-    <div class="maps-contenedor">
+    <div class="fullscreen">
         <app-navbar-detail-component [concept]="concept">
             <button [class.active]="showOrganizaciones" class="btn btn-success mr-1 btn-sm"
                     (click)="onToggleEfectores()">

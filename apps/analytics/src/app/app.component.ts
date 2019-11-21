@@ -20,7 +20,10 @@ export class AppComponent {
         { key: 'bi', label: 'BI' },
     ];
 
-    constructor(public appService: AppService, private router: Router) {
+    constructor(
+        public appService: AppService,
+        private router: Router
+    ) {
         this.appService.setNavbarState(true);
     }
 
