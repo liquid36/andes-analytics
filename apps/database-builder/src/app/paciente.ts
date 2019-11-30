@@ -17,7 +17,7 @@ export async function getCoordenadas(paciente) {
             };
         }
         if (d.ubicacion && d.ubicacion.localidad) {
-            const loc = await localidadesCollection.findOne({ nombre: d.ubicacion.localidad.nombre.toLowerCase() });
+            const loc = await localidadesCollection.findOne({ localidad: d.ubicacion.localidad.nombre });
             if (loc) {
                 return { ...loc.location, aprox: true };
             }

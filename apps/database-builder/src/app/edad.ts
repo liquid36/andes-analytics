@@ -6,6 +6,6 @@ export function calcularEdad(fechaNacimiento, fechaActual) {
 
     return {
         edad: fechaActual.diff(fechaNacimiento, 'years'),
-        ano: fechaActual.diff(fechaNacimiento, 'week')
+        semanas: fechaActual.diff(fechaNacimiento, 'week')
     };
 }

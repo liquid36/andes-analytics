@@ -4,6 +4,7 @@ import { calcularEdad } from './edad';
 import { findSnomed, getConcept } from './snomed'
 import { flatPrestacion } from './prestaciones';
 import { getCoordenadas, getLocalidad, findPaciente } from './paciente';
+import { searchGeocode } from './localidades';
 
 async function addBucket(item) {
     item.organizacion.id = item.organizacion.id.toString();
@@ -151,6 +152,7 @@ async function nextBatch(cursor) {
 
 export async function run() {
     let total = 0;
+    await searchGeocode();
     await createPrestacionTx();
     const Prestacion = await getPrestaciones();
 
