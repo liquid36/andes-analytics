@@ -5,7 +5,7 @@ const googleMapsClient = require('@google/maps').createClient({
     key: environment.GOOGLE_KEY
 });
 
-async function geocode(address) {
+async function geocode(address): Promise<any[]> {
     return new Promise((resolve, reject) => {
         googleMapsClient.geocode({ address: address }, function (err, response) {
             if (err) { return reject(err) };
@@ -41,19 +41,23 @@ export async function searchGeocode() {
         const localidadInDB = await localidadesDB.findOne({ localidad: localidad.localidad });
         if (!localidadInDB) {
             const response = await geocode(`${localidad.localidad}, ${localidad.provincia}, argentina`);
+            if (response.length > 0) {
+                const location = response[0].geometry.location;
 
-            const location = response[0].geometry.location;
+                const LocalidadDTO = {
+                    localidad: localidad.localidad,
+                    provincia: localidad.provincia,
+                    pais: localidad.pais,
+                    location
+                }
 
-            const LocalidadDTO = {
-                localidad: localidad.localidad,
-                provincia: localidad.provincia,
-                pais: localidad.pais,
-                location
+                console.log(localidad.localidad, localidad.provincia, localidad.pais, location.lat, location.lng);
+
+                await localidadesDB.insert(LocalidadDTO);
+
+            } else {
+                console.log('SIN GEOLOCALIZACION', localidad.localidad);
             }
-
-            console.log(localidad.localidad, localidad.provincia, localidad.pais, location.lat, location.lng);
-
-            await localidadesDB.insert(LocalidadDTO);
         }
     });
     await Promise.all(prs);

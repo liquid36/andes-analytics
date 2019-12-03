@@ -1,3 +1,4 @@
-import { run } from './app';
+require('dotenv').config();
+const { run } = require('./app');
 
 run();
