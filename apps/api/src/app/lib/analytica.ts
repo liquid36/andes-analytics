@@ -72,7 +72,7 @@ async function execQueryByConcept(queryData, conceptId, periodos, cache, params,
     });
 
     const resultList = await Promise.all(ps);
-    let result: any = resultList.reduce(groupReducer(queryData), []);
+    let result: any = groupReducer(queryData, resultList);
     if (queryData.transform) {
         result = result.map(item => {
             return {

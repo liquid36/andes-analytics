@@ -25,7 +25,7 @@
     "help": "nx help",
     "database": "nx build database-builder && node dist/apps/database-builder/main.js",
     "api": " npm run start api",
-    "app": "npx nx run analytics",
+    "app": "npx nx serve analytics",
     "build:prod": "npx nx build analytics --configuration=production"
   },
   "private": true,

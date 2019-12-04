@@ -46,15 +46,15 @@ export class AppSandDanceView implements AfterViewInit {
     ngAfterViewInit() {
         this.concept$.pipe(
             switchMap((c: any) => {
-                return this.snomed.analytics(c.conceptId, 'raw', 'organizacion')
+                return this.snomed.analytics(c.conceptId, 'raw')
             }),
             map((data: any) => {
-                return data.map((item) => {
-                    item.value.concepto = item.value.concepto.substring(0, 40).replace(/\ /g, '_');
-                    item.value.profesionalNombre = item.value.profesionalNombre.replace(/\ /g, '_');
-                    item.value.organizacionNombre = item.value.organizacionNombre.replace(/\ /g, '_');
-                    item.value.tipoPrestacion = item.value.tipoPrestacion.replace(/\ /g, '_');
-                    return item.value;
+                return data.value.map((item) => {
+                    item.concepto = item.concepto.substring(0, 40).replace(/\ /g, '_');
+                    item.profesionalNombre = item.profesionalNombre.replace(/\ /g, '_');
+                    item.organizacionNombre = item.organizacionNombre.replace(/\ /g, '_');
+                    item.tipoPrestacion = item.tipoPrestacion.replace(/\ /g, '_');
+                    return item;
                 })
             })
         ).subscribe((m) => {

@@ -138,16 +138,17 @@ export function hash(id) {
     return base64.encode(JSON.stringify(id));
 }
 
-export function groupReducer(metadata) {
-    return (acc, value) => {
-        value.forEach(e => {
-            const e_acc = acc.find(i => i.hashId === e.hashId);
-            if (e_acc) {
-                e_acc.value = metadata.reducer(e_acc.value, e.value);
+export function groupReducer(metadata, resultados) {
+    const mapping = {};
+    resultados.forEach((bucket) => {
+        bucket.forEach(item => {
+            if (!mapping[item.hashId]) {
+                mapping[item.hashId] = item;
+                mapping[item.hashId].value = metadata.reducer(metadata.initial(), item.value);
             } else {
-                acc.push(e);
+                mapping[item.hashId].value = metadata.reducer(mapping[item.hashId].value, item.value)
             }
-        });
-        return acc;
-    }
+        })
+    });
+    return Object.values(mapping);
 }

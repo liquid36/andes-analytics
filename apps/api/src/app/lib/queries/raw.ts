@@ -8,15 +8,15 @@ async function query(conceptId, periodo, params, group) {
     const self = conceptId.startsWith('!');
     conceptId = self ? conceptId.substr(1) : conceptId;
 
-    const { pipeline, needUnwind } = makeBasePipeline(conceptId, periodo, params, { forceUnwind: !!group, self });
-    const metadataID = createIdMetadata(group);
-    const addOns = group ? createAddOn(group, params) : [];
+    const { pipeline, needUnwind } = makeBasePipeline(conceptId, periodo, params, { forceUnwind: true, self });
+    // const metadataID = createIdMetadata(group);
+    // const addOns = group ? createAddOn(group, params) : [];
 
     const countKey = needUnwind ? 1 : '$total';
 
     const $pipeline = [
         ...pipeline,
-        ...addOns,
+        // ...addOns,
         // {
         //     $group: {
         //         ...metadataID,
@@ -44,29 +44,22 @@ async function query(conceptId, periodo, params, group) {
                     localidad: '$registros.paciente.localidad',
                     latitud: '$registros.paciente.coordenadas.lat',
                     longitud: '$registros.paciente.coordenadas.lng',
-
-
                 }
             }
         }
     ];
     const results = await PrestacionesTx.aggregate($pipeline, { allowDiskUse: true }).toArray();
     results.forEach(r => {
-        r.hashId = String(new ObjectId());
+        r.hashId = 'null';
     });
     return results;
 }
 
-const initial = () => ({
-    exact: 0,
-    total: 0
-})
+const initial = () => []
 
 const reducer = (acc, value) => {
-    return {
-        total: acc.total + value.total,
-        exact: acc.exact + value.exact
-    };
+    acc.push(value);
+    return acc;
 }
 
 const transform = (value) => {
@@ -80,7 +73,7 @@ export const QUERY = {
     reducer,
     initial,
     transform,
-    cache: true,
+    cache: false,
     unwind: true,
     split: true
 }
