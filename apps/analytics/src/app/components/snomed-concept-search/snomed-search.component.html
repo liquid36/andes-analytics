@@ -31,7 +31,7 @@
         <ul class="list-group m-1" *ngIf="results.length > 0">
             <li class="list-group-item d-flex justify-content-between align-items-center"
                 *ngFor="let concept of results" (click)="onClick(concept)">
-                <div>
+                <div class="font-sm">
                     <div>
                         <concept-definition-status-icon [concept]="concept"></concept-definition-status-icon>
                         {{ concept.term }}
