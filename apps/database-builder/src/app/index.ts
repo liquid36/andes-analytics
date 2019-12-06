@@ -9,7 +9,7 @@ import { searchGeocode } from './localidades';
 async function addBucket(item) {
     item.organizacion.id = item.organizacion.id.toString();
     item.profesional.id = item.profesional.id.toString();
-    item.registroId = item.registroId.toString();
+    item.registroId = item.registroId && item.registroId.toString();
     item.prestacionId = item.prestacionId.toString();
     if (item.paciente) {
         item.paciente.id = item.paciente.id.toString();
@@ -112,7 +112,9 @@ async function processPrestacion(prestacion) {
             ...tx,
             concepto: tipoPrestacion,
             valor: null,
-            term: tipoPrestacion.term
+            term: tipoPrestacion.term,
+            prestacionId: prestacion._id,
+            registroId: null
         });
     }
 
@@ -166,8 +168,12 @@ export async function run() {
             $eq: 'validada'
         },
         'ejecucion.fecha': {
-            $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
-            $lte: moment('2019-06-30 23:59:59.926Z').toDate()
+            // $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
+            // $lte: moment('2019-06-30 23:59:59.926Z').toDate()
+            // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
+            // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
+            $gte: moment('2019-09-30 23:59:59.926Z').toDate()
+            // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
         },
     }, { batchSize: 1000 });
     while (await cursor.hasNext()) {
