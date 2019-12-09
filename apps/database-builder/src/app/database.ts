@@ -24,9 +24,19 @@ export async function getPrestacionTx() {
     return db.collection('prestacionTx');
 }
 
+export async function getMetadata() {
+    const db = await getConnection('andes', environment.ANDES_DB);
+    return db.collection('metadata');
+}
+
 export async function getLocalidades() {
     const db = await getConnection('andes', environment.ANDES_DB);
     return db.collection('localidades');
+}
+
+export async function getConceptosNumericos() {
+    const db = await getConnection('andes', environment.ANDES_DB);
+    return db.collection('conceptos_numericos');
 }
 
 export async function getPrestaciones() {

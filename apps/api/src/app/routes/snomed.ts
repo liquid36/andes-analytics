@@ -32,8 +32,10 @@ router.get('/:db/:collection/concepts/:sctid', async (req, res) => {
 });
 
 router.get('/:db/:collection/concepts/:sctid/descriptions/:descriptionId?', async (req, res) => {
-    let descId = false;
-    if (req.params.descriptionId) descId = req.params.descriptionId;
+    let descId = null;
+    if (req.params.descriptionId) {
+        descId = req.params.descriptionId;
+    }
     const options = getOptions(req);
     const docs = await snomedLib.getDescriptions(req.params.db, req.params.collection, req.params.sctid, descId, options);
     res.status(200);

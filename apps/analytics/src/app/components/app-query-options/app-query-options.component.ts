@@ -13,33 +13,60 @@ import * as moment from 'moment';
 export class AppQueryOptionsComponent {
     public selected;
 
-    organizations$: Observable<any[]>;
-    orgInput$ = new Subject<string>();
+    filtrosSelect$: Observable<any[]>;
+    typeahead$ = new Subject<string>();
     selectedOrganizations: any[] = [];
 
     ranges: any = {
-        'Today': [moment(), moment()],
-        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-        'This Month': [moment().startOf('month'), moment().endOf('month')],
-        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        'Este mes': [
+            moment().startOf('month'),
+            moment().endOf('month')
+        ],
+        'Mes pasado': [
+            moment().subtract(1, 'month').startOf('month'),
+            moment().subtract(1, 'month').endOf('month')
+        ],
+        'Ultimos 6 meses': [
+            moment().subtract(6, 'month'),
+            moment().endOf('month')
+        ],
+        'Este año': [
+            moment().startOf('year'),
+            moment().endOf('year')
+        ],
+        'Año pasado': [
+            moment().subtract(1, 'year').startOf('year'),
+            moment().subtract(1, 'year').endOf('year')
+        ]
     }
 
     constructor(
         private snomed: SnomedAPI,
         public qf: QueryOptionsService
     ) {
-        this.organizations$ = concat(
+        this.filtrosSelect$ = concat(
             of([]), // default items
-            this.orgInput$.pipe(
+            this.typeahead$.pipe(
                 debounceTime(200),
                 distinctUntilChanged(),
-                switchMap(term => this.snomed.organizaciones(term).pipe(
-                    catchError(() => of([])),
-                ))
+                switchMap(term => {
+                    const type = this.filtrosRestantes();
+                    const params = { search: term, type };
+                    return this.snomed.filtros(params).pipe(
+                        catchError(() => of([]))
+                    )
+                })
             )
         );
+    }
+
+    filtrosRestantes() {
+        const types = {
+            'prestacion': true, 'organizacion': true, 'profesional': true, 'localidad': true, 'sexo': true
+        };
+        this.selectedOrganizations.forEach(data => types[data.type] = false);
+        return Object.keys(types).filter(key => types[key]).join(',');
+
     }
 
     trackByFn(item: any) {
@@ -62,8 +89,10 @@ export class AppQueryOptionsComponent {
         this.qf.set('end', date);
     }
 
-    onOrgSelect($event) {
-        this.qf.set('organizacion', $event);
+    onFiltrosChange($event) {
+        const types = {};
+        $event.forEach(data => types[data.type] = data);
+        this.qf.setAll(types);
     }
 
     setRelationshipMode(type) {

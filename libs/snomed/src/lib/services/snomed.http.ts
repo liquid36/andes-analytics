@@ -54,10 +54,6 @@ export class SnomedHTTP {
         return this.http.post(`/andes/analytics/${query.visualization}`, query);
     }
 
-    demografia(params) {
-        return this.http.post(`/andes/rup/demografia`, params);
-    }
-
     cluster(sctid, semanticTags) {
         return this.http.post(`/andes/rup/cluster`, { conceptId: sctid, semanticTags });
     }
@@ -89,6 +85,9 @@ export class SnomedHTTP {
         return this.http.get('/andes/organizaciones', { params: search });
     }
 
+    filtros(search) {
+        return this.http.get('/andes/filtros', { params: search });
+    }
 
     organizaciones2() {
         return this.http.get('/andes/organizaciones2', {});
@@ -96,9 +95,5 @@ export class SnomedHTTP {
 
     conceptosNumerticos() {
         return this.http.get('/andes/conceptos-numericos', { params: {} });
-    }
-
-    semanticTags(search) {
-        return this.http.get('/andes/semanticTags', { params: { search } });
     }
 }

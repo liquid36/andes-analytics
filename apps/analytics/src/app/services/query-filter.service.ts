@@ -6,7 +6,7 @@ import { pluck, tap } from 'rxjs/operators';
 import { SnomedHTTP } from '../../../../../libs/snomed/src/lib/services/snomed.http';
 import { Router, ActivatedRoute } from '@angular/router';
 
-type IFILTER = 'start' | 'end' | 'organizacion' | 'profesional' | 'relationship';
+type IFILTER = 'start' | 'end' | 'organizacion' | 'profesional' | 'relationship' | 'sexo' | 'prestacion' | 'localidad';
 
 @Injectable({
     providedIn: 'root',
@@ -38,6 +38,16 @@ export class QueryOptionsService {
         this.filstrosParams.next({ [name]: value });
     }
 
+    public setAll(values: any) {
+        const filtrosKey = ['prestacion', 'organizacion', 'profesional', 'localidad', 'sexo'];
+        filtrosKey.forEach((key) => {
+            if (!values[key]) {
+                values[key] = null;
+            }
+        });
+        this.filstrosParams.next(values);
+    }
+
     public getFilter(name: IFILTER) {
         return this.filstrosParams$.pipe(pluck(name));
     }
@@ -48,11 +58,6 @@ export class QueryOptionsService {
 
     selectConcept(conceptId: string) {
         this.router.navigate(['concept', conceptId, 'detail'], { queryParamsHandling: 'preserve' });
-        // if (conceptId) {
-        //     this.snomed.concept(conceptId).subscribe((snomed) => {
-        //         this.conceptSelected.next(snomed);
-        //     });
-        // }
     }
 
     onConcept() {

@@ -5,44 +5,22 @@
                (datesUpdated)="datesUpdated($event)" [showClearButton]="true" />
     </div>
     <div>
-        <ng-select [items]="organizations$ | async" bindLabel="nombre" [trackByFn]="trackByFn" [typeahead]="orgInput$"
-                   [(ngModel)]="selectedOrganizations" (change)="onOrgSelect($event)"
-                   placeholder="Seleccione una organización...">
+        <ng-select [items]="filtrosSelect$ | async" bindLabel="nombre" [trackByFn]="trackByFn" [typeahead]="typeahead$"
+                   [(ngModel)]="selectedOrganizations" (change)="onFiltrosChange($event)"
+                   placeholder="Escriba para establecer filtros" [multiple]="true">
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                {{ item | label }}
+                <b>
+                    ({{ item.type }})
+                </b>
+            </ng-template>
+            <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                {{ item | label }}
+                <b>
+                    ({{ item.type }})
+                </b>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+            </ng-template>
         </ng-select>
     </div>
-    <!-- <div class="form-group pr-2 col-3">
-        <div class="input-group">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary calendar" (click)="dd.toggle()" type="button">
-                    <i class="mdi mdi-calendar"></i>
-                </button>
-                <input class="form-control" placeholder="Desde" name="dp" (dateSelect)="onStartDate($event)"
-                       ngbDatepicker #dd="ngbDatepicker">
-            </div>
-        </div>
-    </div>
-    <div class="form-group col-3">
-        <div class="input-group">
-            <input class="form-control" placeholder="Hasta" name="dph" (dateSelect)="onEndDate($event)" ngbDatepicker
-                   #dh="ngbDatepicker">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" (click)="dh.toggle()" type="button">
-                    <i class="mdi mdi-calendar"></i>
-                </button>
-            </div>
-        </div>
-    </div> -->
-    <!-- <div ngbDropdown>
-        <button ngbDropdownToggle class="btn btn-block dropdown-toggle" type="button">
-            {{ qf.relationship$ | async }}
-        </button>
-        <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <button ngbDropdownItem (click)="setRelationshipMode('stated')">
-                Stated Relationship
-            </button>
-            <button ngbDropdownItem (click)="setRelationshipMode('inferred')">
-                Inferred Relationship
-            </button>
-        </div>
-    </div> -->
 </div>

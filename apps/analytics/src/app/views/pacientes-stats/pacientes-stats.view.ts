@@ -108,20 +108,4 @@ export class AppPacientesStatsView {
     setMetrica(metrica) {
         this.metrica.next(metrica);
     }
-
-    // @ViewChild('frame', { static: false }) element;
-    // verSandDance() {
-    //     setTimeout(() => {
-    //         debugger
-    //         const m = this.demografiaCache.map(i => {
-    //             return {
-    //                 sexo: i._id.sexo,
-    //                 decada: i._id.decada,
-    //                 total: i.value.total,
-    //                 exact: i.value.exact
-    //             }
-    //         });
-    //         this.element.nativeElement.contentWindow.postMessage(m, '*');
-    //     }, 500)
-    // }
 }

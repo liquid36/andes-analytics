@@ -1,13 +1,19 @@
-import * as moment from 'moment';
-import { ObjectID } from 'bson';
-
 import { application, authenticate, checkPermission } from '../application';
-
-export const router = application.router();
-
 import { execQuery } from '../lib/analytica';
 import { makePattern } from '../lib/util';
 import { getConnection, MAIN_DB } from '../lib/database';
+
+export const router = application.router();
+
+function fullAccess(req) {
+    if (req.user) {
+        const permisos = checkPermission(req, 'analytics:full');
+        if (permisos.length === 0) {
+            return false;
+        }
+    }
+    return true;
+}
 
 function toArray(item) {
     return Array.isArray(item) ? item : [item];
@@ -19,12 +25,9 @@ router.post('/analytics/:visualization', authenticate(), async function (req, re
     group = group && toArray(group);
     filter = filter || {};
 
-    if (req.user) {
-        const permisos = checkPermission(req, 'analytics:full');
-        if (permisos.length === 0) {
-            const profesional = req.user.profesional.id;
-            filter.profesional = profesional;
-        }
+    if (!fullAccess(req)) {
+        const profesional = req.user.profesional.id;
+        filter.profesional = profesional;
     }
 
     visualization = req.params.visualization;
@@ -40,12 +43,6 @@ router.post('/analytics/:visualization', authenticate(), async function (req, re
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
-
-function getDate(date) {
-    return date ? moment(date) : null;
-}
-
-
 router.get('/organizaciones', async function (req, res) {
     const search = req.query.search;
     const expWord = makePattern(search);
@@ -57,9 +54,6 @@ router.get('/organizaciones', async function (req, res) {
 });
 
 router.get('/organizaciones2', async function (req, res) {
-    // const search = req.query.search;
-    // const expWord = makePattern(search);
-
     const db = await getConnection();
     const Organizaciones = db.collection('org_2');
     const orgs = await Organizaciones.find({}).toArray();
@@ -69,293 +63,39 @@ router.get('/organizaciones2', async function (req, res) {
 
 router.get('/conceptos-numericos', async function (req, res) {
     const db = await getConnection();
-    const Organizaciones = db.collection('conceptos_numericos');
-    const orgs = await Organizaciones.find({}, { conceptId: 1, term: 1, fsn: 1 }).toArray();
+    const ConceptosNumericos = db.collection('conceptos_numericos');
+    const orgs = await ConceptosNumericos.find({}, { conceptId: 1, term: 1, fsn: 1 }).toArray();
     return res.json(orgs);
 });
 
-router.get('/semanticTags', async function (req, res) {
+router.get('/filtros', async function (req, res) {
     const search = req.query.search;
+    const type: string = req.query.type;
     const expWord = makePattern(search);
+    const $match = {};
+
+    if (type) {
+        const types = type.split(',');
+        $match['type'] = { $in: types.map(str => str.trim()) };
+    }
 
     const db = await getConnection();
-    const semanticTags = db.collection('semanticTags');
-    const items = await semanticTags.find({ _id: { $regex: expWord, $options: 'i' } }).toArray();
+    const Metadata = db.collection('metadata');
+    const items = await Metadata.find({
+        nombre: { $regex: expWord, $options: 'i' },
+        ...$match
+    }).toArray();
+
     return res.json(items);
 });
 
-router.post('/rup/demografia', authenticate(), async function (req, res) {
-    const db = await getConnection();
-    const PrestacionesTx = db.collection('prestaciontx2');
-    const conceptId = req.body.conceptId;
-    const rangoEtario = req.body.rango;
 
-    const filtros = {};
-    const postFiltros = {};
-    const start = getDate(req.body.start);
-    const end = getDate(req.body.end);
-    const organizacion = req.body.organizacion ? new ObjectID(req.body.organizacion) : null;
-
-    if (organizacion) {
-        filtros['organizacion.id'] = organizacion;
-    }
-    if (start) {
-        filtros['start'] = { $gte: start.startOf('month').toDate() };
-        postFiltros['start'] = { $gte: start.startOf('day').toDate() };
-    }
-
-    if (end) {
-        filtros['end'] = { $lte: end.endOf('month').toDate() };
-        postFiltros['end'] = { $lte: end.endOf('day').toDate() };
-    }
-
-    const pipeline = [
-        {
-            $match: {
-                ...filtros,
-                $or: [
-                    { 'concepto.conceptId': conceptId },
-                    { 'concepto.statedAncestors': conceptId }
-                ]
-
-            }
-        },
-        { $unwind: '$registros' },
-        { $match: postFiltros },
-        {
-            $facet: {
-                rangoEtario: [
-                    {
-                        $bucket: {
-                            groupBy: "$registros.paciente.edad.edad",
-                            boundaries: rangoEtario, // [0, 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90],
-                            default: 100,
-                            output: {
-                                "pacientes": { $push: "$registros.paciente" },
-                            }
-                        }
-                    },
-                    { $unwind: '$pacientes' },
-                    { $group: { _id: { decada: '$_id', sexo: '$pacientes.sexo' }, count: { $sum: 1 } } },
-                    {
-                        $project: {
-                            _id: 0,
-                            decada: '$_id.decada',
-                            sexo: '$_id.sexo',
-                            count: '$count'
-                        }
-                    }
-                ],
-                localidades: [
-                    {
-                        $group: {
-                            _id: '$registros.paciente.localidad',
-                            count: { $sum: 1 },
-                            exact: {
-                                $sum: {
-                                    $cond: { if: { $eq: ['$concepto.conceptId', conceptId] }, then: 1, else: 0 }
-                                }
-                            },
-                        }
-                    },
-                    {
-                        $project: {
-                            _id: 1,
-                            nombre: '$_id',
-                            count: 1,
-                            exact: 1
-                        }
-                    },
-                    { $sort: { count: -1 } }
-                ],
-                profesionales: [
-                    {
-                        $group: {
-                            _id: '$registros.profesional.id',
-                            count: { $sum: 1 },
-                            exact: {
-                                $sum: {
-                                    $cond: { if: { $eq: ['$concepto.conceptId', conceptId] }, then: 1, else: 0 }
-                                }
-                            },
-                            profesional: { $first: '$registros.profesional' }
-                        }
-                    },
-                    {
-                        $project: {
-                            _id: 1,
-                            nombre: { $concat: ['$profesional.apellido', ' ', '$profesional.nombre'] },
-                            count: 1,
-                            exact: 1
-                        }
-                    },
-                    { $sort: { count: -1 } }
-                ],
-                profesionales_primera: [
-                    {
-                        $group: {
-                            _id: '$registros.paciente.id',
-                            profesional: { $first: '$registros.profesional' }
-                        },
-                    },
-                    {
-                        $group: {
-                            _id: '$profesional.id',
-                            primera: { $sum: 1 }
-                        }
-                    },
-
-                ],
-                profesionales_paciente: [
-                    {
-                        $group: {
-                            _id: '$registros.profesional.id',
-                            pacientes: { $addToSet: '$registros.paciente.id' }
-                        }
-                    },
-                    {
-                        $project: {
-                            _id: true,
-                            pacientes: { $size: '$pacientes' }
-                        }
-                    }
-
-                ],
-                prestacion: [
-                    {
-                        $group: {
-                            _id: '$registros.tipoPrestacion.conceptId',
-                            count: { $sum: 1 },
-                            exact: {
-                                $sum: {
-                                    $cond: { if: { $eq: ['$concepto.conceptId', conceptId] }, then: 1, else: 0 }
-                                }
-                            },
-                            prestacion: { $first: '$registros.tipoPrestacion' }
-                        }
-                    },
-                    { $project: { _id: 1, nombre: '$prestacion.term', count: 1, exact: 1 } },
-                    { $sort: { count: -1 } }
-                ],
-                prestacion_primera: [
-                    {
-                        $group: {
-                            _id: '$registros.paciente.id',
-                            prestacion: { $first: '$registros.tipoPrestacion' }
-                        },
-                    },
-                    {
-                        $group: {
-                            _id: '$prestacion.conceptId',
-                            primera: { $sum: 1 }
-                        }
-                    },
-
-                ],
-                prestacion_paciente: [
-                    {
-                        $group: {
-                            _id: '$registros.tipoPrestacion.conceptId',
-                            pacientes: { $addToSet: '$registros.paciente.id' }
-                        }
-                    },
-                    {
-                        $project: {
-                            _id: true,
-                            pacientes: { $size: '$pacientes' }
-                        }
-                    }
-
-                ],
-                organizaciones: [
-                    {
-                        $group: {
-                            _id: '$organizacion.id',
-                            count: { $sum: 1 },
-                            exact: {
-                                $sum: {
-                                    $cond: { if: { $eq: ['$concepto.conceptId', conceptId] }, then: 1, else: 0 }
-                                }
-                            },
-                            organizacion: { $first: '$organizacion' }
-                        }
-                    },
-                    { $project: { _id: 1, nombre: '$organizacion.nombre', count: 1, exact: 1 } },
-                    { $sort: { count: -1 } }
-                ],
-                organizaciones_primera: [
-                    {
-                        $group: {
-                            _id: '$registros.paciente.id',
-                            organizacion: { $first: '$organizacion' }
-                        },
-                    },
-                    {
-                        $group: {
-                            _id: '$organizacion.id',
-                            primera: { $sum: 1 }
-                        }
-                    },
-
-                ],
-                organizaciones_paciente: [
-                    {
-                        $group: {
-                            _id: '$organizacion.id',
-                            pacientes: { $addToSet: '$registros.paciente.id' }
-                        }
-                    },
-                    {
-                        $project: {
-                            _id: true,
-                            pacientes: { $size: '$pacientes' }
-                        }
-                    }
-
-                ],
-                // fechas: [
-                //     { $addFields: { mes: { $dateToString: { date: '$registros.fecha', format: '%Y-%m' } } } },
-                //     {
-                //         $group: {
-                //             _id: '$mes',
-                //             count: { $sum: 1 },
-                //         }
-                //     },
-                //     { $project: { _id: 1, nombre: '$_id', count: 1 } },
-                //     { $sort: { _id: 1 } }
-
-                // ]
-            }
-        }
-    ];
-    const results = await PrestacionesTx.aggregate(pipeline, { allowDiskUse: true }).toArray();
-    const data = results[0];
-    combine(data.profesionales, data.profesionales_primera, 'primera');
-    combine(data.profesionales, data.profesionales_paciente, 'pacientes');
-
-    combine(data.prestacion, data.prestacion_primera, 'primera');
-    combine(data.prestacion, data.prestacion_paciente, 'pacientes');
-
-    combine(data.organizaciones, data.organizaciones_primera, 'primera');
-    combine(data.organizaciones, data.organizaciones_paciente, 'pacientes');
-
-    delete data['profesionales_primera'];
-    delete data['profesionales_paciente'];
-    delete data['prestacion_primera'];
-    delete data['prestacion_paciente'];
-    delete data['organizaciones_primera'];
-    delete data['organizaciones_paciente'];
-    return res.json(results[0]);
-});
-
-function combine(listA, listB, key) {
-    listA.forEach((item) => {
-        let itemB = listB.find(i => String(i._id) === String(item._id));
-        item[key] = itemB ? itemB[key] : 0;
-    });
-}
 
 router.post('/rup/cluster', authenticate(), async function (req, res) {
+    const $match = {};
+    if (!fullAccess(req)) {
+        $match['profesional.id'] = req.user.profesional.id;
+    }
     const db = await getConnection();
     const PrestacionesTx = db.collection(MAIN_DB);
     const conceptId = req.body.conceptId;
@@ -366,8 +106,8 @@ router.post('/rup/cluster', authenticate(), async function (req, res) {
                 $or: [
                     { 'concepto.conceptId': conceptId },
                     { 'concepto.statedAncestors': conceptId }
-                ]
-
+                ],
+                ...$match
             }
         },
         { $unwind: '$registros' },
@@ -377,7 +117,12 @@ router.post('/rup/cluster', authenticate(), async function (req, res) {
     const ids = results.map(e => e._id);
 
     const pipeline2 = [
-        { $match: { 'registros.paciente.id': { $in: ids } } },
+        {
+            $match: {
+                'registros.paciente.id': { $in: ids },
+                ...$match
+            },
+        },
         {
             $match: {
                 'concepto.semanticTag': { $in: semanticTags },
@@ -401,6 +146,11 @@ router.post('/rup/cluster', authenticate(), async function (req, res) {
 });
 
 router.post('/rup/maps', authenticate(), async function (req, res) {
+    const $match = {};
+    if (!fullAccess(req)) {
+        $match['profesional.id'] = req.user.profesional.id;
+    }
+
     const db = await getConnection();
     const PrestacionesTx = db.collection(MAIN_DB);
     const conceptId = req.body.conceptId;
@@ -411,15 +161,20 @@ router.post('/rup/maps', authenticate(), async function (req, res) {
                 $or: [
                     { 'concepto.conceptId': conceptId },
                     { 'concepto.statedAncestors': conceptId }
-                ]
-
+                ],
+                ...$match
             }
         },
         { $unwind: '$registros' },
         { $match: { 'registros.paciente.coordenadas': { $ne: null } } },
-        { $project: { 'coordenadas': '$registros.paciente.coordenadas', 'localidad': '$registros.paciente.localidad' } }
-
+        {
+            $project: {
+                'coordenadas': '$registros.paciente.coordenadas',
+                'localidad': '$registros.paciente.localidad'
+            }
+        }
     ];
+
     function desvio() {
         return (Math.floor(Math.random() * 40000) - 20000) / 1000000;
     }
@@ -466,19 +221,5 @@ router.post('/rup/maps', authenticate(), async function (req, res) {
 { $sort: { 'fsn': 1 } }
 ])
 
-db.getCollection('prestaciontx2').aggregate([
-{ $group: { _id: '$concepto.semanticTag', 'total': { $sum: 1 } }  },
-{ $out: 'semanticTags' }
-])
 
- */
-
-
-/**
- *
- * PARA LA BASE DE DATOS
- *
- * NO OBJECTID
- * PROFESIONAL NOMBRE TODO JUNTO
- * EDAD PACIENTE EN SEMANAS
  */

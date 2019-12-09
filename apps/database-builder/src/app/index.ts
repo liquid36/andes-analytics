@@ -5,6 +5,7 @@ import { findSnomed, getConcept } from './snomed'
 import { flatPrestacion } from './prestaciones';
 import { getCoordenadas, getLocalidad, findPaciente } from './paciente';
 import { searchGeocode } from './localidades';
+import { createMetaindex, createConceptosNumericos } from './metaindex';
 
 async function addBucket(item) {
     item.organizacion.id = item.organizacion.id.toString();
@@ -186,7 +187,6 @@ export async function run() {
         const ps = prestaciones.map(processPrestacion);
         await Promise.all(ps);
     }
-
-    process.exit(0);
-
+    await createMetaindex();
+    await createConceptosNumericos();
 }

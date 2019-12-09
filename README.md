@@ -7,7 +7,7 @@
 - [X] Georeferenciar las ciudades.  
 - [X] Excluir por el momento las solicitudes.  
 - [ ] Podes elegir desde y hasta.
-- [ ] Crear automáticamente tablas de organizacion, profesionales, prestaciones, localidades.
+- [X] Crear automáticamente tablas de organizacion, profesionales, prestaciones, localidades.
 - [X] Identificar que conceptos tienen números en su valor.
 - [ ] Encriptar IDS antes de importar.
 
@@ -17,8 +17,9 @@
 - [ ] refactor conceptos asociados
 - [ ] refactor mapa de calor
 - [ ] group by edad por semanas 
-- [ ] Boostrap Express
+- [X] Boostrap Express
 - [ ] passport auth
+- [ ] Fields in raw query
 
 #### APP
 - [ ] Componente Table

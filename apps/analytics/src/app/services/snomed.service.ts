@@ -70,11 +70,16 @@ export class SnomedAPI {
     }
 
     getParams() {
+        // [TODO] Filtros hardcoreados
         const start = this.qf.getValue('start');
         const end = this.qf.getValue('end');
-        const organizacion = this.qf.getValue('organizacion') ? this.qf.getValue('organizacion').id : null;
+        const organizacion = this.qf.getValue('organizacion') ? this.qf.getValue('organizacion').key : null;
+        const profesional = this.qf.getValue('profesional') ? this.qf.getValue('profesional').key : null;
+        const prestacion = this.qf.getValue('prestacion') ? this.qf.getValue('prestacion').key : null;
+        const sexo = this.qf.getValue('sexo') ? this.qf.getValue('sexo').key : null;
+        const localidad = this.qf.getValue('localidad') ? this.qf.getValue('localidad').key : null;
         const type = this.qf.getValue('relationship') || 'inferred';
-        return { start, end, organizacion, type };
+        return { start, end, organizacion, type, sexo, localidad, profesional, prestacion };
     }
 
     history(sctids: string[]) {
@@ -142,25 +147,17 @@ export class SnomedAPI {
     }
 
     cluster(sctid, semanticTags) {
-        const start = this.qf.getValue('start');
-        const end = this.qf.getValue('end');
-        const organizacion = this.qf.getValue('organizacion') ? this.qf.getValue('organizacion').id : null;
-
         return this.api.cluster(sctid, semanticTags);
     }
 
     maps(sctid) {
-        const start = this.qf.getValue('start');
-        const end = this.qf.getValue('end');
-        const organizacion = this.qf.getValue('organizacion') ? this.qf.getValue('organizacion').id : null;
-
         return this.api.maps(sctid);
     }
 
     terms(sctid) {
         const start = this.qf.getValue('start');
         const end = this.qf.getValue('end');
-        const organizacion = this.qf.getValue('organizacion') ? this.qf.getValue('organizacion').id : null;
+        const organizacion = this.qf.getValue('organizacion') ? this.qf.getValue('organizacion').key : null;
         return this.api.terms(sctid, {
             start,
             end,
@@ -172,6 +169,10 @@ export class SnomedAPI {
         return this.api.organizaciones({ search });
     }
 
+    filtros(params) {
+        return this.api.filtros(params);
+    }
+
     organizaciones2() {
         return this.api.organizaciones2();
     }
@@ -180,7 +181,4 @@ export class SnomedAPI {
         cache()
     )
 
-    semanticTags(search) {
-        return this.api.semanticTags({ search });
-    }
 }

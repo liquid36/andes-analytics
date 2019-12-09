@@ -36,6 +36,7 @@ import { AuthView } from './auth/auth.view';
 import { MainView } from './views/main/main.view';
 import { UnauthorizedView } from './auth/unauthorized.view';
 import { RoutingGuard } from './services/app-routing.guard';
+import { NombreFiltrosPipe } from './pipes/nombre-filtros.pipes';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { RoutingGuard } from './services/app-routing.guard';
     AppSandDanceView,
     AuthView,
     MainView,
-    UnauthorizedView
+    UnauthorizedView,
+    NombreFiltrosPipe
   ],
   imports: [
     HttpClientModule,
