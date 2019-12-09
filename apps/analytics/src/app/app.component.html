@@ -1,8 +1,1 @@
-<main [class.open]="appService.navbarState | async">
-    <ui-navbar [menuItems]="menuItems" (itemClick)="navClick($event)"></ui-navbar>
-    <snomed-search></snomed-search>
-    <app-query-options></app-query-options>
-    <div class="main">
-        <router-outlet></router-outlet>
-    </div>
-</main>
+<router-outlet></router-outlet>

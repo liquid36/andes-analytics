@@ -1,26 +1,32 @@
 import * as moment from 'moment';
-import * as express from 'express';
-import { MongoClient } from 'mongodb';
 import { ObjectID } from 'bson';
 
-export const router = express.Router();
+import { application, authenticate, checkPermission } from '../application';
+
+export const router = application.router();
 
 import { execQuery } from '../lib/analytica';
 import { makePattern } from '../lib/util';
 import { getConnection, MAIN_DB } from '../lib/database';
 
-const mongoConnection = process.env['ANDES_DB_CONN'] || process.env['MONGO_DB_CONN'] || "localhost:27017";
-const databases = {};
-
 function toArray(item) {
     return Array.isArray(item) ? item : [item];
 }
 
-router.post('/analytics/:visualization', async function (req, res) {
+router.post('/analytics/:visualization', authenticate(), async function (req, res) {
     let { target, filter, visualization, group } = req.body;
     target = toArray(target);
     group = group && toArray(group);
     filter = filter || {};
+
+    if (req.user) {
+        const permisos = checkPermission(req, 'analytics:full');
+        if (permisos.length === 0) {
+            const profesional = req.user.profesional.id;
+            filter.profesional = profesional;
+        }
+    }
+
     visualization = req.params.visualization;
 
     const rs = await execQuery(visualization, target, filter, group);
@@ -78,7 +84,7 @@ router.get('/semanticTags', async function (req, res) {
     return res.json(items);
 });
 
-router.post('/rup/demografia', async function (req, res) {
+router.post('/rup/demografia', authenticate(), async function (req, res) {
     const db = await getConnection();
     const PrestacionesTx = db.collection('prestaciontx2');
     const conceptId = req.body.conceptId;
@@ -349,7 +355,7 @@ function combine(listA, listB, key) {
     });
 }
 
-router.post('/rup/cluster', async function (req, res) {
+router.post('/rup/cluster', authenticate(), async function (req, res) {
     const db = await getConnection();
     const PrestacionesTx = db.collection(MAIN_DB);
     const conceptId = req.body.conceptId;
@@ -394,7 +400,7 @@ router.post('/rup/cluster', async function (req, res) {
     return res.json(concepts);
 });
 
-router.post('/rup/maps', async function (req, res) {
+router.post('/rup/maps', authenticate(), async function (req, res) {
     const db = await getConnection();
     const PrestacionesTx = db.collection(MAIN_DB);
     const conceptId = req.body.conceptId;

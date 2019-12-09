@@ -32,6 +32,10 @@ import { AppConceptosAsociadosStatsView } from './views/conceptos-asociados-stat
 import { AppMapsStatsView } from './views/maps-stats/maps-stats.view';
 import { AppBubbleChartsView } from './views/conceptos-asociados-stats/bubble-charts/bubble-charts.component';
 import { AppSandDanceView } from './views/sanddance-view/sanddance-view.view';
+import { AuthView } from './auth/auth.view';
+import { MainView } from './views/main/main.view';
+import { UnauthorizedView } from './auth/unauthorized.view';
+import { RoutingGuard } from './services/app-routing.guard';
 
 @NgModule({
   declarations: [
@@ -52,7 +56,10 @@ import { AppSandDanceView } from './views/sanddance-view/sanddance-view.view';
     AppPrestacionesStatsView,
     AppConceptosAsociadosStatsView,
     AppMapsStatsView,
-    AppSandDanceView
+    AppSandDanceView,
+    AuthView,
+    MainView,
+    UnauthorizedView
   ],
   imports: [
     HttpClientModule,
@@ -65,22 +72,34 @@ import { AppSandDanceView } from './views/sanddance-view/sanddance-view.view';
       apiKey: 'AIzaSyC__of8PZKirB_IvkjzI7XTlfYtLieGRh0&libraries=visualization'
     }),
     RouterModule.forRoot([
-      { path: 'concept/:id/detail', component: AppConceptDetailView },
-      { path: 'concept/:id/pacientes', component: AppPacientesStatsView },
-      { path: 'concept/:id/organizaciones', component: AppOrganizacionesStatsView },
-      { path: 'concept/:id/profesionales', component: AppProfesionalesStatsView },
-      { path: 'concept/:id/prestaciones', component: AppPrestacionesStatsView },
-      { path: 'concept/:id/asociados', component: AppConceptosAsociadosStatsView },
-      { path: 'concept/:id/mapa', component: AppMapsStatsView },
-      { path: 'concept/:id/bi', component: AppSandDanceView },
-      { path: 'home', component: AppHomeView },
+      {
+        path: '',
+        component: MainView,
+        canActivate: [RoutingGuard],
+        children: [
+          { path: 'concept/:id/detail', component: AppConceptDetailView },
+          { path: 'concept/:id/pacientes', component: AppPacientesStatsView },
+          { path: 'concept/:id/organizaciones', component: AppOrganizacionesStatsView },
+          { path: 'concept/:id/profesionales', component: AppProfesionalesStatsView },
+          { path: 'concept/:id/prestaciones', component: AppPrestacionesStatsView },
+          { path: 'concept/:id/asociados', component: AppConceptosAsociadosStatsView },
+          { path: 'concept/:id/mapa', component: AppMapsStatsView },
+          { path: 'concept/:id/bi', component: AppSandDanceView },
+          { path: 'home', component: AppHomeView },
+
+        ]
+      },
+      { path: 'auth/login', component: AuthView },
+      { path: 'unauthorized', component: UnauthorizedView },
       { path: '**', redirectTo: '/home' }
 
     ], { initialNavigation: 'enabled' }),
     UiModule,
     SnomedModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    RoutingGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

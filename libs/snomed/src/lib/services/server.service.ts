@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
@@ -17,8 +17,20 @@ const defaultOptions: Options = { params: null, showError: true, showLoader: tru
 })
 export class Server {
     private baseURL: string;
+    private authToken: string;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+        this.authToken = window.sessionStorage.getItem('token');
+    }
+
+    setToken(token) {
+        window.sessionStorage.setItem('token', token);
+        this.authToken = token;
+    }
+
+    getToken() {
+        return this.authToken;
+    }
 
     private parse(data: any): any {
         let dateISO = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[.,]\d+)?Z/i;
@@ -54,11 +66,13 @@ export class Server {
     private prepareOptions(options: Options) {
         const result = {
             headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                // Authorization: window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
+                'Content-Type': 'application/json'
             }),
             params: options ? options.params : null
         };
+        if (this.authToken) {
+            result.headers = result.headers.set('Authorization', 'JWT ' + this.authToken)
+        }
         return result;
     }
 
