@@ -37,6 +37,8 @@ import { MainView } from './views/main/main.view';
 import { UnauthorizedView } from './auth/unauthorized.view';
 import { RoutingGuard } from './services/app-routing.guard';
 import { NombreFiltrosPipe } from './pipes/nombre-filtros.pipes';
+import { SemTagPipe } from './pipes/semtag.pipes';
+import { TermPipe } from './pipes/term.pipes';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,9 @@ import { NombreFiltrosPipe } from './pipes/nombre-filtros.pipes';
     AuthView,
     MainView,
     UnauthorizedView,
-    NombreFiltrosPipe
+    NombreFiltrosPipe,
+    SemTagPipe,
+    TermPipe
   ],
   imports: [
     HttpClientModule,

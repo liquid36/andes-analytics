@@ -1,8 +1,8 @@
 <ng-container *ngIf="(snomed.stats(concept.conceptId) | async) as stats">
     <span class="mr-1" *ngIf="stats.total > 0">
-        <ui-badge [label]="stats.exact" type="info"></ui-badge>
+        <ui-badge [label]="stats.total" type="info"></ui-badge>
     </span>
     <span *ngIf="stats.total > 0">
-        <ui-badge [label]="stats.children" type="warning"></ui-badge>
+        <ui-badge [label]="stats.exact" type="warning"></ui-badge>
     </span>
 </ng-container>

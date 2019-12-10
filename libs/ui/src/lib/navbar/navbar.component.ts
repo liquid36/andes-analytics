@@ -18,6 +18,7 @@ export class NavBarComponent {
         key: 'profesional',
         label: 'Prestaciones'
     }];
+    @Input() active = '';
     @Output() itemClick = new EventEmitter();
 
 

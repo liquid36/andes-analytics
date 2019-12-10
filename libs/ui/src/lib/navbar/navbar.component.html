@@ -8,7 +8,7 @@
     <div class="collapse navbar-collapse justify-content-between" [ngbCollapse]="isCollapsed">
         <div></div>
         <ul class="navbar-nav">
-            <li class="nav-item" *ngFor="let menu of menuItems">
+            <li class="nav-item" *ngFor="let menu of menuItems" [class.active]="menu.key === active">
                 <span class="nav-link text-white" (click)="navClick(menu)"> {{ menu.label }} </span>
             </li>
         </ul>

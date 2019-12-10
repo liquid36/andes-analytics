@@ -6,7 +6,7 @@
 .nav-item {
     cursor: pointer;
 
-    &:hover {
+    &:hover, &.active {
         background-color: #165897
     }
 }

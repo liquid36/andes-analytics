@@ -1,4 +1,4 @@
-<div style="overflow: scroll; height: 100%;">
+<div style="overflow-y: scroll; overflow-x: hidden; height: 100%;">
     <div class="p-1">
         <input uiText [(ngModel)]="text" (write)="onChange($event)" debounce="400" [distinct]="true">
     </div>
@@ -34,9 +34,9 @@
                 <div class="font-sm">
                     <div>
                         <concept-definition-status-icon [concept]="concept"></concept-definition-status-icon>
-                        {{ concept.term }}
+                        <b> {{ concept | term }} </b>
                     </div>
-                    <small> {{concept.fsn}} </small>
+                    <small> {{ concept.conceptId }} | <i> {{ concept | semtag }} </i> </small>
                 </div>
                 <concept-count-pill [concept]="concept"></concept-count-pill>
             </li>

@@ -27,6 +27,15 @@ export class MainView {
         this.appService.setNavbarState(true);
     }
 
+    get activeUrl() {
+        const url = this.router.url;
+        const urlParts = url.split('/');
+        if (urlParts.length > 3) {
+            return urlParts[3];
+        }
+        return '';
+    }
+
     navClick($event) {
         const { key } = $event;
         const url = this.router.url;

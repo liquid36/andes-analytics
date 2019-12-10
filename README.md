@@ -28,3 +28,4 @@
 - [ ] Estilos en pantalla detail.
 - [ ] Configuraciones de rango etario.
 - [ ] Responsive
+- [ ] Google Analytics
