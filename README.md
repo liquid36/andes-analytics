@@ -29,3 +29,5 @@
 - [ ] Configuraciones de rango etario.
 - [ ] Responsive
 - [ ] Google Analytics
+- [ ] Navigation Y Routing
+- [ ] Remove fuillscreen with scape

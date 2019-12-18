@@ -9,6 +9,8 @@ import { Server } from './services/server.service';
 import { SnomedHTTP } from './services/snomed.http';
 import { ConceptParentsComponent } from './components/concept-parents/concept-parents.component';
 import { ConceptChildrensComponent } from './components/concept-childrens/concept-childrens.component';
+import { SemTagPipe } from './pipes/semtag.pipes';
+import { TermPipe } from './pipes/term.pipes';
 
 @NgModule({
     imports: [CommonModule],
@@ -19,14 +21,19 @@ import { ConceptChildrensComponent } from './components/concept-childrens/concep
         ConnectElementComponent,
         SctBoxComponent,
         ConceptParentsComponent,
-        ConceptChildrensComponent
+        ConceptChildrensComponent,
+        SemTagPipe,
+        TermPipe
+
 
     ],
     exports: [
         ConceptDescTableComponent,
         SndGraphNavComponent,
         ConceptParentsComponent,
-        ConceptChildrensComponent
+        ConceptChildrensComponent,
+        SemTagPipe,
+        TermPipe
     ]
 
 })

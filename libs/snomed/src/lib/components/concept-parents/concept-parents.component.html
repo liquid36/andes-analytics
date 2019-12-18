@@ -19,7 +19,7 @@
             </span>
 
             <span style="cursor: pointer;" (dblclick)="onSelect(relacion)">
-                {{ relacion.fullySpecifiedName }}
+                {{ relacion | term }}
             </span>
 
             <ng-container *ngTemplateOutlet="iconTemplate; context: { concept: relacion }"></ng-container>
