@@ -15,7 +15,7 @@
             </button>
 
             <span class="badge alert-warning" style="padding: 3px 7px;border-radius: 10px;">
-                {{ relacion.definitionStatus.conceptId === '900000000000073002' ? '≡' : '&nbsp;&nbsp;' }}
+                {{ relacion.definitionStatus !== 'PRIMITIVE' ? '≡' : '&nbsp;&nbsp;' }}
             </span>
 
             <span style="cursor: pointer;" (dblclick)="onSelect(relacion)">

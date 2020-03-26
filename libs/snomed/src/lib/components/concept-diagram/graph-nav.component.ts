@@ -7,7 +7,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class SndGraphNavComponent {
     @Input() concept: any;
-    @Input() form = '900000000000011006'; // INFERRED;
+    @Input() form = 'INFERRED_RELATIONSHIP';
     @Output() conceptClick = new EventEmitter<any>();
 
     public initialX = 10;
@@ -54,42 +54,42 @@ export class SndGraphNavComponent {
     }
 
     get isPrimitive() {
-        return this.concept.definitionStatus.conceptId !== '900000000000073002';
+        return this.concept.definitionStatus === 'PRIMITIVE';
     }
 
     get isARel() {
         if (this.concept) {
-            return this.concept.relationships.filter((rel) => rel.active && rel.destination)
+            return this.concept.relationships.filter((rel) => rel.active && rel.target)
                 .filter(rel => rel.type.conceptId === '116680003')
-                .filter(rel => rel.characteristicType.conceptId === this.form);
+                .filter(rel => rel.characteristicType === this.form);
         }
         return [];
     }
 
     get zeroAttribute() {
         if (this.concept) {
-            return this.concept.relationships.filter((rel) => rel.active && rel.destination)
+            return this.concept.relationships.filter((rel) => rel.active && rel.target)
                 .filter(rel => rel.type.conceptId !== '116680003')
-                .filter(rel => rel.relationshipGroup === 0)
-                .filter(rel => rel.characteristicType.conceptId === this.form);
+                .filter(rel => rel.groupId === 0)
+                .filter(rel => rel.characteristicType === this.form);
         }
         return [];
     }
 
     get getAttributeGroup() {
         const maxGroup = this.concept.relationships
-            .filter((rel) => rel.active && rel.destination)
+            .filter((rel) => rel.active && rel.target)
             .filter(rel => rel.type.conceptId !== '116680003')
-            .filter(rel => rel.characteristicType.conceptId === this.form)
-            .reduce((a, b) => Math.max(a, b.relationshipGroup), 0);
+            .filter(rel => rel.characteristicType === this.form)
+            .reduce((a, b) => Math.max(a, b.groupId), 0);
         const result = [];
         for (let i = 1; i <= maxGroup; i++) {
             result.push(
                 this.concept.relationships
-                    .filter((rel) => rel.active && rel.destination)
+                    .filter((rel) => rel.active && rel.target)
                     .filter(rel => rel.type.conceptId !== '116680003')
-                    .filter(rel => rel.characteristicType.conceptId === this.form)
-                    .filter(rel => rel.relationshipGroup === i)
+                    .filter(rel => rel.characteristicType === this.form)
+                    .filter(rel => rel.groupId === i)
             );
         }
         return result;

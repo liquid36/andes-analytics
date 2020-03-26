@@ -8,8 +8,8 @@ import { SnomedHTTP } from '../../services/snomed.http';
 })
 export class ConceptChildrensComponent {
     public static ISA = '116680003';
-    public static INFERRED = '900000000000011006';
-    public static STATED = '900000000000010007';
+    public static INFERRED = 'INFERRED_RELATIONSHIP';
+    public static STATED = 'STATED_RELATIONSHIP';
 
     constructor(private snomed: SnomedHTTP) { }
 

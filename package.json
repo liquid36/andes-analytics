@@ -54,6 +54,7 @@
     "core-js": "^2.5.4",
     "d3-hierarchy": "^1.1.8",
     "express": "^4.17.1",
+    "express-http-proxy": "^1.6.0",
     "moment": "^2.24.0",
     "mongodb": "^3.3.2",
     "ngx-daterangepicker-material": "^2.1.8",

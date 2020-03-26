@@ -8,8 +8,8 @@ import { SnomedHTTP } from '../../services/snomed.http';
 })
 export class ConceptParentsComponent {
     public static ISA = '116680003';
-    public static INFERRED = '900000000000011006';
-    public static STATED = '900000000000010007';
+    public static INFERRED = 'INFERRED_RELATIONSHIP';
+    public static STATED = 'STATED_RELATIONSHIP';
 
     constructor(private api: SnomedHTTP) { }
 
@@ -28,9 +28,9 @@ export class ConceptParentsComponent {
         if (this.conceptTemp.relationships) {
             this.relatioships = this.conceptTemp.relationships
                 .filter(e => e.active)
-                .filter(e => e.characteristicType.conceptId === characteristicType)
+                .filter(e => e.characteristicType === characteristicType)
                 .filter(e => e.type.conceptId === ConceptParentsComponent.ISA)
-                .map(e => { e.destination._level = 0; return e.destination; });
+                .map(e => { e.target._level = 0; return e.target; });
         } else {
             this.relatioships = [];
         }

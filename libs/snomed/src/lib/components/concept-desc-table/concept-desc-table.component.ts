@@ -68,17 +68,17 @@ export class ConceptDescTableComponent {
 
     get terms() {
         function checkLang(desc, refset) {
-            return desc.acceptability && !!desc.acceptability.find(i => i.languageReferenceSet.conceptId === refset.conceptId);
+            return desc.acceptabilityMap && !!desc.acceptabilityMap[refset.conceptId];
         }
         const terms: any[] = this.concept.descriptions.filter(desc => checkLang(desc, this.refSetLanguage)).filter(desc => desc.active);
         const t = terms.map(desc => {
             let preferred = false;
             let acceptable = false;
-            const acceptability = desc.acceptability.find(i => i.languageReferenceSet.conceptId === this.refSetLanguage.conceptId);
-            if (acceptability.acceptability.conceptId === '900000000000548007') {
+            const acceptability = desc.acceptabilityMap[this.refSetLanguage.conceptId];
+            if (acceptability === 'PREFERRED') {
                 preferred = true;
             } else {
-                if (acceptability.acceptability.conceptId === '900000000000549004') {
+                if (acceptability === 'ACCEPTABLE') {
                     acceptable = true;
                 }
             }

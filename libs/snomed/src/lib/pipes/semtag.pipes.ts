@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({ name: 'semtag' })
 export class SemTagPipe implements PipeTransform {
     transform(concept: any): any {
-        return getSemanticTagFromFsn(concept.fsn);
+        return getSemanticTagFromFsn(concept.fsn.term);
     }
 }
 

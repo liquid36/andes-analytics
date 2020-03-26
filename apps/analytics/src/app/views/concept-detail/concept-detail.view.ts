@@ -13,8 +13,8 @@ export class AppConceptDetailView {
     public concept$;
 
     public refSetLanguage = {
-        conceptId: '231000013101',
-        term: 'conjunto de referencias de lenguaje para la extensión provincial de Neuquén '
+        conceptId: '450828004',
+        term: 'conjunto de referencias de lenguaje castellano para América Latina'
     };
 
     public term$: Observable<any>;

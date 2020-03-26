@@ -15,13 +15,13 @@
     <tbody>
         <tr *ngFor="let term of terms">
             <td>
-                <span *ngIf="term.type.conceptId === '900000000000003001'">F</span>
-                <span *ngIf="term.type.conceptId === '900000000000013009'">S</span>
-                <span *ngIf="term.type.conceptId === '900000000000550004'">D</span>
+                <span *ngIf="term.typeId === '900000000000003001'">F</span>
+                <span *ngIf="term.typeId === '900000000000013009'">S</span>
+                <span *ngIf="term.typeId === '900000000000550004'">D</span>
 
                 <span *ngIf="term.preferred">
                     <i class="mdi"
-                       [ngClass]="term.type.conceptId === '900000000000003001' ? 'mdi-star-outline' : 'mdi-star'"></i>
+                       [ngClass]="term.typeId === '900000000000003001' ? 'mdi-star-outline' : 'mdi-star'"></i>
                 </span>
                 <span *ngIf="term.acceptable">
                     <i class="mdi mdi-check"></i>

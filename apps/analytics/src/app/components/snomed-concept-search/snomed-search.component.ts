@@ -12,7 +12,7 @@ import { AppService } from '../../services/app.service';
 export class SnomedSearchComponent {
     text = '';
     results$ = this.searchService.getResult('items');
-    semantics$ = this.searchService.getResult('semanticTag');
+    semantics$ = this.searchService.getResult('semanticTags');
     semTagSelected$ = this.searchService.getSearchParams('semanticTag');
 
     constructor(

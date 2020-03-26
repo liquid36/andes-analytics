@@ -66,7 +66,8 @@ export class Server {
     private prepareOptions(options: Options) {
         const result = {
             headers: new HttpHeaders({
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Accept-Language": "es"
             }),
             params: options ? options.params : null
         };

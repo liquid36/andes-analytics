@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({ name: 'term' })
 export class TermPipe implements PipeTransform {
     transform(concept: any): any {
-        return extractSemtagFrom(concept.term || concept.preferredTerm);
+        return extractSemtagFrom(concept.term || concept.preferredTerm || concept.pt.term);
     }
 }
 

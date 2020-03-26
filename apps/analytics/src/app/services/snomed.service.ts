@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, bufferTime, filter, switchMap } from 'rxjs/operators';
 import { of, BehaviorSubject } from 'rxjs';
 import { QueryOptionsService } from './query-filter.service';
-import { SnomedHTTP } from '@andes-analytics/snomed';
+import { SnomedHTTP, DescriptionParams } from '@andes-analytics/snomed';
 import { cache } from '../operators';
 
 type VISULIZATION = 'unique' | 'count' | 'value' | 'raw';
@@ -39,16 +39,12 @@ export class SnomedAPI {
     public fromStats = new BehaviorSubject(null);
     public fromStats$ = this.fromStats.asObservable();
 
-    descriptions(params) {
+    descriptions(params: DescriptionParams) {
         return this.api.descriptions(params);
     }
 
     concept(sctid) {
         return this.api.concept(sctid);
-    }
-
-    concepts(sctids) {
-        return this.api.concepts(sctids);
     }
 
     parents(sctid) {

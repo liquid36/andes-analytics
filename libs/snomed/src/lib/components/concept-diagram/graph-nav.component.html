@@ -25,10 +25,10 @@
    </g>
 
    <ng-container *ngFor="let rel of isARel; let i=index">
-      <g #rect sctBox [x]="initialIsARelX" [y]="initialIsARelY + i * (39 + 25)" [label]="rel.destination.preferredTerm"
-         [sctid]="rel.destination.conceptId"
-         [type]="rel.destination.definitionStatus.conceptId !== '900000000000073002' ? 'sct-primitive-concept' : 'sct-defined-concept'"
-         (click)="selectConcept(rel.destination)">
+      <g #rect sctBox [x]="initialIsARelX" [y]="initialIsARelY + i * (39 + 25)" label="{{rel.target | term}}"
+         [sctid]="rel.target.conceptId"
+         [type]="rel.target.definitionStatus === 'PRIMITIVE' ? 'sct-primitive-concept' : 'sct-defined-concept'"
+         (click)="selectConcept(rel.target)">
       </g>
 
       <g connectElement [from]="circle2.bbox" [to]="rect.bbox" sideFrom="center" sideTo="left"
@@ -42,8 +42,8 @@
       <g connectElement [from]="circle2.bbox" [to]="rectAttr.bbox" sideFrom="center" sideTo="left"></g>
 
       <g #rectTarget sctBox [x]="initialIsARelX + rectAttr.bbox.width + 50" [y]="initialZeroAttributeY + i * (39 + 25) "
-         [label]="rel.destination.preferredTerm" [sctid]="rel.destination.conceptId"
-         [type]="rel.destination.definitionStatus.conceptId !== '900000000000073002' ? 'sct-primitive-concept' : 'sct-defined-concept'">
+         [label]="rel.target.pt.term" [sctid]="rel.target.conceptId"
+         [type]="rel.target.definitionStatus === 'PRIMITIVE' ? 'sct-primitive-concept' : 'sct-defined-concept'">
       </g>
 
       <g connectElement [from]="rectAttr.bbox" [to]="rectTarget.bbox" sideFrom="right" sideTo="left"></g>
@@ -60,15 +60,15 @@
 
       <ng-container *ngFor="let rel of groups; let i=index">
          <g #rectAttr sctBox [x]="initialIsARelX + 85"
-            [y]="initialGroupAttributeY + offsetGroupAttrY(j) + i * (39 + 25) " [label]="rel.type.preferredTerm"
+            [y]="initialGroupAttributeY + offsetGroupAttrY(j) + i * (39 + 25) " [label]="rel.type.pt.term"
             [sctid]="rel.type.conceptId" type="sct-attribute">
          </g>
          <g connectElement [from]="conjunctionNode.bbox" [to]="rectAttr.bbox" sideFrom="center" sideTo="left"></g>
 
          <g #rectTarget sctBox [x]="initialIsARelX + 85 + rectAttr.bbox.width + 30"
-            [y]="initialGroupAttributeY + offsetGroupAttrY(j) + i * (39 + 25) " [label]="rel.destination.preferredTerm"
-            [sctid]="rel.destination.conceptId"
-            [type]="rel.destination.definitionStatus.conceptId !== '900000000000073002' ? 'sct-primitive-concept' : 'sct-defined-concept'">
+            [y]="initialGroupAttributeY + offsetGroupAttrY(j) + i * (39 + 25) " [label]="rel.target.pt.term"
+            [sctid]="rel.target.conceptId"
+            [type]="rel.target.definitionStatus === 'PRIMITIVE' ? 'sct-primitive-concept' : 'sct-defined-concept'">
          </g>
 
          <g connectElement [from]="rectAttr.bbox" [to]="rectTarget.bbox" sideFrom="right" sideTo="left"></g>
