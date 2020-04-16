@@ -17,7 +17,7 @@ export class SnomedHTTP {
 
   private path = '/snomed';
 
-  private branch = 'MAIN/SNOMEDCT-ES/NEUQUEN-2020-03-22';
+  private branch = 'MAIN/SNOMEDCT-ES/NEUQUEN-2020-04-14';
   private snowstormPath = '/snowstorm';
 
   descriptions(params: DescriptionParams): Observable<DescriptionResult> {
