@@ -87,16 +87,12 @@ export class SnomedHTTP {
     );
   }
 
-  organizaciones(search) {
-    return this.http.get('/andes/organizaciones', { params: search });
-  }
-
   filtros(search) {
     return this.http.get('/andes/filtros', { params: search });
   }
 
-  organizaciones2() {
-    return this.http.get('/andes/organizaciones2', {});
+  organizaciones() {
+    return this.http.get('/andes/organizaciones', {});
   }
 
   conceptosNumerticos() {

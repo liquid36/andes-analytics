@@ -161,16 +161,12 @@ export class SnomedAPI {
         });
     }
 
-    organizaciones(search) {
-        return this.api.organizaciones({ search });
-    }
-
     filtros(params) {
         return this.api.filtros(params);
     }
 
-    organizaciones2() {
-        return this.api.organizaciones2();
+    organizaciones() {
+        return this.api.organizaciones();
     }
 
     public conceptosNumericos$ = this.api.conceptosNumerticos().pipe(

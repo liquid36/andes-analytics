@@ -5,7 +5,7 @@ import { findSnomed, getConcept } from './snomed'
 import { flatPrestacion } from './prestaciones';
 import { getCoordenadas, getLocalidad, findPaciente } from './paciente';
 import { searchGeocode } from './localidades';
-import { createMetaindex, createConceptosNumericos } from './metaindex';
+import { createMetaindex, createConceptosNumericos, populateConceptos } from './metaindex';
 
 async function addBucket(item) {
     item.organizacion.id = item.organizacion.id.toString();
@@ -95,37 +95,32 @@ async function processPrestacion(prestacion) {
     }
 
 
-    const items = flatPrestacion(prestacion);
-    const ids = [...items.map(i => i.concepto.conceptId), prestacion.solicitud.tipoPrestacion.conceptId];
-
-    await findSnomed(ids);
-
-
     let tipoPrestacion = prestacion.solicitud.tipoPrestacion;
-    const prestacionConcept = getConcept(tipoPrestacion.conceptId);
+    // const prestacionConcept = getConcept(tipoPrestacion.conceptId);
 
-    if (prestacionConcept) {
-        tipoPrestacion.inferredAncestors = prestacionConcept.inferredAncestors;
-        tipoPrestacion.statedAncestors = prestacionConcept.statedAncestors;
-        // tipoPrestacion.relationships = prestacionConcept.relationships.filter(r => r.active);
-        const a = await addBucket({
-            esPrestacion: true,
-            ...tx,
-            concepto: tipoPrestacion,
-            valor: null,
-            term: tipoPrestacion.term,
-            prestacionId: prestacion._id,
-            registroId: null
-        });
-    }
+    // if (prestacionConcept) {
+    // tipoPrestacion.inferredAncestors = prestacionConcept.inferredAncestors;
+    // tipoPrestacion.statedAncestors = prestacionConcept.statedAncestors;
+    // tipoPrestacion.relationships = prestacionConcept.relationships.filter(r => r.active);
+    const a = await addBucket({
+        esPrestacion: true,
+        ...tx,
+        concepto: tipoPrestacion,
+        valor: null,
+        term: tipoPrestacion.term,
+        prestacionId: prestacion._id,
+        registroId: null
+    });
+    // }
+
+    const items = flatPrestacion(prestacion);
 
     const ps = items.map(async item => {
-        const itemConcept = getConcept(item.concepto.conceptId);
-        if (itemConcept) {
-            item.concepto.inferredAncestors = itemConcept.inferredAncestors;
-            item.concepto.statedAncestors = itemConcept.statedAncestors;
-            // item.concepto.relationships = itemConcept.relationships.filter(r => r.active);
-        }
+        // const itemConcept = getConcept(item.concepto.conceptId);
+        // if (itemConcept) {
+        //     item.concepto.inferredAncestors = itemConcept.inferredAncestors;
+        //     item.concepto.statedAncestors = itemConcept.statedAncestors;
+        // }
         let valorType: string = typeof item.valor;
         if (!item.valor) { valorType = 'null'; }
         if (item.valor && Array.isArray(item.valor)) { valorType = 'array'; }
@@ -144,7 +139,7 @@ async function processPrestacion(prestacion) {
 }
 
 async function nextBatch(cursor) {
-    const BATCH_SIZE = 10;
+    const BATCH_SIZE = 30;
     const items = [];
     for (let i = 0; i < BATCH_SIZE; i++) {
         if (await cursor.hasNext()) {
@@ -171,22 +166,28 @@ export async function run() {
         'ejecucion.fecha': {
             // $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
             // $lte: moment('2019-06-30 23:59:59.926Z').toDate()
+
             // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
-            // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
-            $gte: moment('2019-09-30 23:59:59.926Z').toDate()
+            // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
+
+            $gt: moment('2019-12-31 23:59:59.926Z').toDate()
+
+            // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
             // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
         },
-    }, { batchSize: 1000 });
+    }, { batchSize: 3000 });
     while (await cursor.hasNext()) {
-        total += 10;
-        if (total % 1000 === 0) {
+        total += 30;
+        if (total % 3000 === 0) {
             console.log(total);
         }
 
         const prestaciones = await nextBatch(cursor);
+
         const ps = prestaciones.map(processPrestacion);
         await Promise.all(ps);
     }
     await createMetaindex();
     await createConceptosNumericos();
+    await populateConceptos();
 }

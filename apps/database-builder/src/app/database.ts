@@ -49,11 +49,6 @@ export async function getPacientes() {
     return db.collection('paciente');
 }
 
-export async function getSnomed() {
-    const db = await getConnection('es-edition', environment.SNOMED_DB);
-    return db.collection(environment.SNOMED_COLLECTION);
-}
-
 export async function createPrestacionTx() {
     const db = await getConnection('andes', environment.ANDES_DB);
     await db.createCollection('prestacionTx');

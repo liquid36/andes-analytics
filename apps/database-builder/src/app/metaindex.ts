@@ -1,4 +1,5 @@
 import { getPrestacionTx, getMetadata, getConceptosNumericos } from './database';
+import { getConcepts, toDBStore } from './snomed';
 
 export async function createMetaindex() {
     const PrestacionTx = await getPrestacionTx();
@@ -128,6 +129,39 @@ export async function createConceptosNumericos() {
     ]).toArray();
 
     console.log('end conceptos numericos');
+}
 
+export async function populateConceptos() {
+    console.log('start populate conceptos');
+    const PrestacionTx = await getPrestacionTx();
+    let count = 0;
+    while (true) {
 
+        const conceptos = await PrestacionTx.aggregate([
+            { $match: { 'concepto.statedAncestors': { $exists: false } } },
+            { $group: { _id: '$concepto.conceptId', concepto: { $first: '$concepto' } } },
+            { $replaceRoot: { newRoot: '$concepto' } },
+            { $limit: 100 }
+        ]).toArray();
+
+        const cps = conceptos.filter(c => c.conceptId !== '12811000013118').map(c => c.conceptId);
+        if (cps.length === 0) { break; }
+
+        let realConcept = await getConcepts(cps)
+        realConcept = realConcept.map(toDBStore)
+
+        console.log(count, conceptos.length, realConcept.length);
+
+        const ps = realConcept.map(concepto => {
+            return PrestacionTx.updateMany(
+                { 'concepto.conceptId': concepto.conceptId },
+                {
+                    $set: { concepto }
+                }
+            );
+        })
+        await Promise.all(ps);
+        count++;
+    }
+    console.log('end populate conceptos');
 }

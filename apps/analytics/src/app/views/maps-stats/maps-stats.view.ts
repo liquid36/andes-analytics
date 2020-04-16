@@ -57,7 +57,7 @@ export class AppMapsStatsView {
                 switchMap((concept: any) => {
                     return forkJoin(
                         this.snomed.maps(concept.conceptId),
-                        this.snomed.organizaciones2(),
+                        this.snomed.organizaciones(),
                         this.snomed.analytics(concept.conceptId, 'count', 'organizacion'),
                         // this.snomed.analytics(concept.conceptId, 'raw'),
                     );

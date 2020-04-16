@@ -44,18 +44,8 @@ router.post('/analytics/:visualization', authenticate(), async function (req, re
 //--------------------------------------------------------------------------
 
 router.get('/organizaciones', async function (req, res) {
-    const search = req.query.search;
-    const expWord = makePattern(search);
-
     const db = await getConnection();
     const Organizaciones = db.collection('organizaciones');
-    const orgs = await Organizaciones.find({ nombre: { $regex: expWord, $options: 'i' } }).toArray();
-    return res.json(orgs);
-});
-
-router.get('/organizaciones2', async function (req, res) {
-    const db = await getConnection();
-    const Organizaciones = db.collection('org_2');
     const orgs = await Organizaciones.find({}).toArray();
     return res.json(orgs);
 });

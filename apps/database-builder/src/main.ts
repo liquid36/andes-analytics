@@ -1,7 +1,9 @@
+
+
 require('dotenv').config();
 const { run } = require('./app');
 
-const { createMetaindex, createConceptosNumericos } = require('./app/metaindex');
+const { createMetaindex, createConceptosNumericos, populateConceptos } = require('./app/metaindex');
 
 
 async function main() {
@@ -9,7 +11,8 @@ async function main() {
     if (index && index === '--index') {
         await Promise.all([
             createMetaindex(),
-            createConceptosNumericos()
+            createConceptosNumericos(),
+            populateConceptos()
         ]);
     } else {
         await run();
