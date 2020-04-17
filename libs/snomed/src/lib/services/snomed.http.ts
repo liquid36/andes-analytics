@@ -12,12 +12,7 @@ export class SnomedHTTP {
     this.http.setBaseURL(environment.API_URL);
   }
 
-  private database = 'es-edition';
-  private version = 'v20191115';
-
-  private path = '/snomed';
-
-  private branch = 'MAIN/SNOMEDCT-ES/NEUQUEN-2020-04-16';
+  private branch = 'MAIN/SNOMEDCT-ES/NEUQUEN-2020-04-17';
   private snowstormPath = '/snowstorm';
 
   descriptions(params: DescriptionParams): Observable<DescriptionResult> {
