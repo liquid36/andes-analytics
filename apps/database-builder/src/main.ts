@@ -10,8 +10,8 @@ async function main() {
     const index = process.argv[2];
     if (index && index === '--index') {
         await Promise.all([
-            createMetaindex(),
-            createConceptosNumericos(),
+            // createMetaindex(),
+            // createConceptosNumericos(),
             populateConceptos()
         ]);
     } else {

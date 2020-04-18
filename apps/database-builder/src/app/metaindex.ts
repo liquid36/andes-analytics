@@ -1,5 +1,5 @@
 import { getPrestacionTx, getMetadata, getConceptosNumericos } from './database';
-import { getConcepts, toDBStore } from './snomed';
+import { getConcepts, toDBStore, getConceptsAncestors } from './snomed';
 
 export async function createMetaindex() {
     const PrestacionTx = await getPrestacionTx();
@@ -131,6 +131,11 @@ export async function createConceptosNumericos() {
     console.log('end conceptos numericos');
 }
 
+/**
+ * A FUTURO TENER EN CUENTA LOS CONCEPTOS QUE SE DESACTIVARON 
+ * NO ESTAN MAS EN ELASTIC PRE CALCULADOS
+ */
+
 export async function populateConceptos() {
     console.log('start populate conceptos');
     const PrestacionTx = await getPrestacionTx();
@@ -140,23 +145,35 @@ export async function populateConceptos() {
         const conceptos = await PrestacionTx.aggregate([
             { $match: { 'concepto.statedAncestors': { $exists: false } } },
             { $group: { _id: '$concepto.conceptId', concepto: { $first: '$concepto' } } },
+            { $limit: 100 },
             { $replaceRoot: { newRoot: '$concepto' } },
-            { $limit: 100 }
         ]).toArray();
-
-        const cps = conceptos.filter(c => c.conceptId !== '12811000013118').map(c => c.conceptId);
+        12811000013118
+        const cps = conceptos
+            .filter(c => c.conceptId !== '12811000013118')
+            .filter(c => c.conceptId !== '32780001')
+            .map(c => c.conceptId);
         if (cps.length === 0) { break; }
 
-        let realConcept = await getConcepts(cps)
-        realConcept = realConcept.map(toDBStore)
+        let realConcept = await getConceptsAncestors(cps)
 
-        console.log(count, conceptos.length, realConcept.length);
+        console.log(count, conceptos.length, Object.keys(realConcept).length);
 
-        const ps = realConcept.map(concepto => {
+        const ps = conceptos.map(concepto => {
+            if (!realConcept[concepto.conceptId]) {
+                console.log(concepto);
+                return;
+            }
+
+            const value = realConcept[concepto.conceptId];
+
             return PrestacionTx.updateMany(
                 { 'concepto.conceptId': concepto.conceptId },
                 {
-                    $set: { concepto }
+                    $set: {
+                        'concepto.statedAncestors': value.statedAncestors,
+                        'concepto.inferredAncestors': value.inferredAncestors,
+                    }
                 }
             );
         })
@@ -165,3 +182,11 @@ export async function populateConceptos() {
     }
     console.log('end populate conceptos');
 }
+
+/**
+ *
+db.getCollection('prestacionTx').updateMany(
+    {  'concepto.statedAncestors': { $exists: true} } ,
+    { $unset: { 'concepto.statedAncestors': "",  'concepto.inferredAncestors': ""  } }
+)
+ */
