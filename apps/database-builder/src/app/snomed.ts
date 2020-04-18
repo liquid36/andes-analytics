@@ -37,9 +37,9 @@ export async function getConceptsAncestors(conceptsIds) {
         const id = elem.conceptIdForm.slice(0, -2);
         if (!mapping[id]) { mapping[id] = {} };
         if (elem.stated) {
-            mapping[id].statedAncestors = elem.ancestors;
+            mapping[id].statedAncestors = elem.ancestors.map(id => String(id));
         } else {
-            mapping[id].inferredAncestors = elem.ancestors;
+            mapping[id].inferredAncestors = elem.ancestors.map(id => String(id));
         }
     })
     return mapping;
