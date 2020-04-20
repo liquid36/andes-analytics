@@ -26,6 +26,6 @@ export const checkPermission = (req: any, permiso: string) => {
     if (req.user && req.user.permisos) {
         const shiro = shiroTrie.new();
         shiro.add((req as any).user.permisos);
-        return shiro.permissions(permiso);
+        return shiro.check(permiso);
     }
 }
