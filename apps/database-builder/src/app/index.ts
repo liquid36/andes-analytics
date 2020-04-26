@@ -170,7 +170,7 @@ export async function run() {
             // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
             // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
 
-            $gt: moment('2019-12-31 23:59:59.926Z').toDate()
+            $gt: moment('2020-04-01T00:00:00').startOf('d').toDate()
 
             // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
             // $lte: moment('2019-09-30 23:59:59.926Z').toDate()

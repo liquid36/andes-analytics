@@ -160,10 +160,6 @@ export async function populateConceptos() {
         console.log(count, conceptos.length, Object.keys(realConcept).length);
 
         const ps = conceptos.map(concepto => {
-            if (!realConcept[concepto.conceptId]) {
-                console.log(concepto);
-                return;
-            }
 
             const value = realConcept[concepto.conceptId];
 
