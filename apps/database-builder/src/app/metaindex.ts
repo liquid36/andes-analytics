@@ -148,7 +148,7 @@ export async function populateConceptos() {
             { $limit: 100 },
             { $replaceRoot: { newRoot: '$concepto' } },
         ]).toArray();
-        12811000013118
+
         const cps = conceptos
             .filter(c => c.conceptId !== '12811000013118')
             .filter(c => c.conceptId !== '32780001')
@@ -167,8 +167,8 @@ export async function populateConceptos() {
                 { 'concepto.conceptId': concepto.conceptId },
                 {
                     $set: {
-                        'concepto.statedAncestors': value.statedAncestors,
-                        'concepto.inferredAncestors': value.inferredAncestors,
+                        'concepto.statedAncestors': value && value.statedAncestors,
+                        'concepto.inferredAncestors': value && value.inferredAncestors,
                     }
                 }
             );
