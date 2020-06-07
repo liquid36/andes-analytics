@@ -14,7 +14,7 @@
       </marker>
    </defs>
 
-   <g #elConcept sctBox [x]="initialX" [y]="initialY" [label]="concept.preferredTerm" [sctid]="concept.conceptId"
+   <g #elConcept sctBox [x]="initialX" [y]="initialY" [label]="concept.fsn.term" [sctid]="concept.conceptId"
       [type]="isPrimitive ? 'sct-primitive-concept' : 'sct-defined-concept'"></g>
 
    <g #circle1 circleNode [type]="isPrimitive ? 'subsumed-by' : 'equivalent'" [x]="circle1X" [y]="circle1Y"></g>
@@ -36,8 +36,8 @@
    </ng-container>
 
    <ng-container *ngFor="let rel of zeroAttribute; let i=index">
-      <g #rectAttr sctBox [x]="initialIsARelX" [y]="initialZeroAttributeY + i * (39 + 25) "
-         [label]="rel.type.preferredTerm" [sctid]="rel.type.conceptId" type="sct-attribute">
+      <g #rectAttr sctBox [x]="initialIsARelX" [y]="initialZeroAttributeY + i * (39 + 25) " [label]="rel.type.fsn.term"
+         [sctid]="rel.type.conceptId" type="sct-attribute">
       </g>
       <g connectElement [from]="circle2.bbox" [to]="rectAttr.bbox" sideFrom="center" sideTo="left"></g>
 

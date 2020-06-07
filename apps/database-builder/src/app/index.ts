@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { getPrestacionTx, createPrestacionTx, getPrestaciones } from './database';
+import { getPrestacionTx, createPrestacionTx, getPrestaciones, getListaEspera } from './database';
 import { calcularEdad } from './edad';
 import { findSnomed, getConcept } from './snomed'
 import { flatPrestacion } from './prestaciones';
@@ -9,17 +9,21 @@ import { createMetaindex, createConceptosNumericos, populateConceptos } from './
 
 async function addBucket(item) {
     item.organizacion.id = item.organizacion.id.toString();
-    item.profesional.id = item.profesional.id.toString();
+    item.profesional.id = item.profesional.id && item.profesional.id.toString();
     item.registroId = item.registroId && item.registroId.toString();
-    item.prestacionId = item.prestacionId.toString();
+    item.prestacionId = item.prestacionId && item.prestacionId.toString();
     if (item.paciente) {
         item.paciente.id = item.paciente.id.toString();
         delete item.paciente['nombre'];
         delete item.paciente['apellido'];
         delete item.paciente['documento'];
     }
-    delete item.tipoPrestacion['id'];
-    delete item.tipoPrestacion['_id'];
+
+    if (item.tipoPrestacion) {
+        delete item.tipoPrestacion['id'];
+        delete item.tipoPrestacion['_id'];
+    }
+
     delete item.concepto['_id'];
     delete item.concepto['id'];
 
@@ -37,7 +41,7 @@ async function addBucket(item) {
             start,
             end,
             'organizacion.id': item.organizacion.id,
-            'profesional.id': item.profesional.id
+            'profesional.id': item.profesional && item.profesional.id
         },
         {
             $inc: inc,
@@ -96,12 +100,6 @@ async function processPrestacion(prestacion) {
 
 
     let tipoPrestacion = prestacion.solicitud.tipoPrestacion;
-    // const prestacionConcept = getConcept(tipoPrestacion.conceptId);
-
-    // if (prestacionConcept) {
-    // tipoPrestacion.inferredAncestors = prestacionConcept.inferredAncestors;
-    // tipoPrestacion.statedAncestors = prestacionConcept.statedAncestors;
-    // tipoPrestacion.relationships = prestacionConcept.relationships.filter(r => r.active);
     const a = await addBucket({
         esPrestacion: true,
         ...tx,
@@ -116,11 +114,6 @@ async function processPrestacion(prestacion) {
     const items = flatPrestacion(prestacion);
 
     const ps = items.map(async item => {
-        // const itemConcept = getConcept(item.concepto.conceptId);
-        // if (itemConcept) {
-        //     item.concepto.inferredAncestors = itemConcept.inferredAncestors;
-        //     item.concepto.statedAncestors = itemConcept.statedAncestors;
-        // }
         let valorType: string = typeof item.valor;
         if (!item.valor) { valorType = 'null'; }
         if (item.valor && Array.isArray(item.valor)) { valorType = 'array'; }
@@ -152,42 +145,141 @@ async function nextBatch(cursor) {
     return items;
 }
 
-export async function run() {
-    let total = 0;
-    await searchGeocode();
-    await createPrestacionTx();
-    const Prestacion = await getPrestaciones();
 
-    const cursor = Prestacion.find({
-        'estados.tipo': {
-            $ne: 'modificada',
-            $eq: 'validada'
-        },
-        'ejecucion.fecha': {
-            // $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
-            // $lte: moment('2019-06-30 23:59:59.926Z').toDate()
-
-            // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
-            // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
-
-            $gt: moment('2020-04-01T00:00:00').startOf('d').toDate()
-
-            // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
-            // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
-        },
-    }, { batchSize: 3000 });
+async function processBatch(cursor, callback, progressCallback) {
     while (await cursor.hasNext()) {
-        total += 30;
-        if (total % 3000 === 0) {
-            console.log(total);
-        }
+        progressCallback && progressCallback(30);
 
-        const prestaciones = await nextBatch(cursor);
+        const items = await nextBatch(cursor);
 
-        const ps = prestaciones.map(processPrestacion);
+        const ps = items.map(callback);
         await Promise.all(ps);
     }
+}
+
+export async function run() {
+
+    // let total = 0;
+    // await searchGeocode();
+    // await createPrestacionTx();
+    // const Prestacion = await getPrestaciones();
+
+    // const cursor = Prestacion.find({
+    //     'estados.tipo': {
+    //         $ne: 'modificada',
+    //         $eq: 'validada'
+    //     },
+    //     'ejecucion.fecha': {
+    //         // $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
+    //         // $lte: moment('2019-06-30 23:59:59.926Z').toDate()
+
+    //         // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
+    //         // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
+
+    //         $gt: moment('2020-04-01T00:00:00').startOf('d').toDate()
+
+    //         // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
+    //         // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
+    //     },
+    // }, { batchSize: 3000 });
+    // while (await cursor.hasNext()) {
+    //     total += 30;
+    //     if (total % 3000 === 0) {
+    //         console.log(total);
+    //     }
+
+    //     const prestaciones = await nextBatch(cursor);
+
+    //     const ps = prestaciones.map(processPrestacion);
+    //     await Promise.all(ps);
+    // }
+    await listaEspera();
     await createMetaindex();
     await createConceptosNumericos();
     await populateConceptos();
+}
+
+export async function listaEspera() {
+    console.log('Starting lista espera');
+
+    let total = 0;
+    const ListaEspera = await getListaEspera();
+
+    const cursor = ListaEspera.find({
+        paciente: { $exists: true },
+        fecha: { $gte: moment('2020-04-01T00:00:00').startOf('d').toDate() }
+    });
+
+    const lsitaEsperaAction = async (item) => {
+
+        const getProfesional = (item) => {
+            if (item.profesional) {
+                return {
+                    id: item.profesional.id,
+                    nombre: `${item.profesional.apellido} ${item.profesional.nombre}`
+                }
+            }
+            return { id: null, nombre: 'SIN PROFESIONAL' }
+        }
+
+        const getPrestacion = (item) => {
+            if (item.tipoPrestacion) {
+                return {
+                    semanticTag: item.tipoPrestacion.semanticTag,
+                    fsn: item.tipoPrestacion.fsn,
+                    term: item.tipoPrestacion.term,
+                    conceptId: item.tipoPrestacion.conceptId,
+                }
+            }
+            return { conceptId: null, term: 'SIN ESPECIFICAR', fsn: 'SIN ESPECIFICAR', semanticTag: '' }
+        }
+
+        const tx = {
+            prestacionId: null,
+            paciente: item.paciente,
+            tipoPrestacion: getPrestacion(item),
+            organizacion: item.organizacion,
+            profesional: getProfesional(item),
+            fecha: {
+                ejecucion: item.fecha
+            }
+        };
+        if (tx.paciente) {
+            const pac: any = await findPaciente(item.paciente.id);
+            tx.paciente['fechaNacimiento'] = pac.fechaNacimiento;
+            tx.paciente['sexo'] = pac.sexo;
+            tx.paciente['edad'] = calcularEdad(tx.paciente.fechaNacimiento, tx.fecha.ejecucion);
+            tx.paciente['coordenadas'] = await getCoordenadas(pac);
+            tx.paciente['localidad'] = getLocalidad(pac);
+        }
+
+
+        const concepto = {
+            conceptId: '6901000013109',
+            fsn: 'demanda no satisfecha (situación)',
+            term: 'demanda no satisfecha',
+            semanticTag: 'situación'
+        }
+
+        await addBucket({
+            esPrestacion: false,
+            ...tx,
+            concepto: concepto,
+            valor: null,
+            term: concepto.term,
+            prestacionId: null,
+            registroId: null
+        });
+    }
+
+    const progreso = (amount) => {
+        total += amount;
+        if (total % 3000 === 0) {
+            console.log(total);
+        }
+    }
+
+    await processBatch(cursor, lsitaEsperaAction, progreso);
+
+    console.log('end lista espera');
 }

@@ -44,6 +44,11 @@ export async function getPrestaciones() {
     return db.collection('prestaciones');
 }
 
+export async function getListaEspera() {
+    const db = await getConnection('andes', environment.ANDES_DB);
+    return db.collection('listaEspera');
+}
+
 export async function getPacientes() {
     const db = await getConnection('andes', environment.ANDES_DB);
     return db.collection('paciente');

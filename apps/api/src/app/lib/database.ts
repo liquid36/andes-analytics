@@ -32,7 +32,7 @@ async function ensureIndex() {
         start: 1,
         hash_key: 1
     });
-    cache.ensureIndex({ 'lastUse': 1 }, { expireAfterSeconds: 86400 });
+    cache.ensureIndex({ 'lastUse': 1 }, { expireAfterSeconds: 2592000 }); // 1 mes
 }
 
 ensureIndex();
