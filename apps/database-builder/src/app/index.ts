@@ -74,6 +74,10 @@ async function addBucket(item) {
 
 
 async function processPrestacion(prestacion) {
+    if (prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada') {
+        return;
+    }
+
     const estEjecucion = prestacion.estados.find(i => i.tipo === 'ejecucion');
     const estValidacion = prestacion.estados.find(i => i.tipo === 'validada');
     const tx = {
@@ -159,40 +163,40 @@ async function processBatch(cursor, callback, progressCallback) {
 
 export async function run() {
 
-    // let total = 0;
-    // await searchGeocode();
-    // await createPrestacionTx();
-    // const Prestacion = await getPrestaciones();
+    let total = 0;
+    await searchGeocode();
+    await createPrestacionTx();
+    const Prestacion = await getPrestaciones();
 
-    // const cursor = Prestacion.find({
-    //     'estados.tipo': {
-    //         $ne: 'modificada',
-    //         $eq: 'validada'
-    //     },
-    //     'ejecucion.fecha': {
-    //         // $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
-    //         // $lte: moment('2019-06-30 23:59:59.926Z').toDate()
+    const cursor = Prestacion.find({
+        'estados.tipo': {
+            $ne: 'modificada',
+            $eq: 'validada'
+        },
+        'ejecucion.fecha': {
+            // $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
+            // $lte: moment('2019-06-30 23:59:59.926Z').toDate()
 
-    //         // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
-    //         // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
+            // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
+            // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
 
-    //         $gt: moment('2020-04-01T00:00:00').startOf('d').toDate()
+            $gt: moment('2020-05-01T00:00:00').startOf('d').toDate()
 
-    //         // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
-    //         // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
-    //     },
-    // }, { batchSize: 3000 });
-    // while (await cursor.hasNext()) {
-    //     total += 30;
-    //     if (total % 3000 === 0) {
-    //         console.log(total);
-    //     }
+            // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
+            // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
+        },
+    }, { batchSize: 3000 });
+    while (await cursor.hasNext()) {
+        total += 30;
+        if (total % 3000 === 0) {
+            console.log(total);
+        }
 
-    //     const prestaciones = await nextBatch(cursor);
+        const prestaciones = await nextBatch(cursor);
 
-    //     const ps = prestaciones.map(processPrestacion);
-    //     await Promise.all(ps);
-    // }
+        const ps = prestaciones.map(processPrestacion);
+        await Promise.all(ps);
+    }
     await listaEspera();
     await createMetaindex();
     await createConceptosNumericos();
@@ -207,7 +211,7 @@ export async function listaEspera() {
 
     const cursor = ListaEspera.find({
         paciente: { $exists: true },
-        fecha: { $gte: moment('2020-04-01T00:00:00').startOf('d').toDate() }
+        fecha: { $gte: moment('2020-05-01T00:00:00').startOf('d').toDate() }
     });
 
     const lsitaEsperaAction = async (item) => {
