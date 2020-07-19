@@ -90,49 +90,94 @@ router.post('/rup/cluster', authenticate(), async function (req, res) {
     const PrestacionesTx = db.collection(MAIN_DB);
     const conceptId = req.body.conceptId;
     const semanticTags = req.body.semanticTags || ['trastorno'];
-    const pipeline = [
-        {
-            $match: {
-                $or: [
-                    { 'concepto.conceptId': conceptId },
-                    { 'concepto.statedAncestors': conceptId }
-                ],
-                ...$match
-            }
-        },
-        { $unwind: '$registros' },
-        { $group: { '_id': '$registros.paciente.id' } }
-    ];
-    const results = await PrestacionesTx.aggregate(pipeline).toArray()
-    const ids = results.map(e => e._id);
+    const tipoAsociacion = req.body.tipoAsociacion || 'paciente';
 
-    const pipeline2 = [
-        {
-            $match: {
-                'registros.paciente.id': { $in: ids },
-                ...$match
+    if (tipoAsociacion === 'paciente') {
+        const pipeline = [
+            {
+                $match: {
+                    $or: [
+                        { 'concepto.conceptId': conceptId },
+                        { 'concepto.statedAncestors': conceptId }
+                    ],
+                    ...$match
+                }
             },
-        },
-        {
-            $match: {
-                'concepto.semanticTag': { $in: semanticTags },
-                'concepto.conceptId': { $ne: conceptId }
-            }
-        },
-        { $unwind: '$registros' },
-        { $match: { 'registros.paciente.id': { $in: ids } } },
-        {
-            $group: {
-                '_id': '$concepto.conceptId',
-                'label': { $first: '$concepto.term' },
-                total: { $sum: 1 }
-            }
-        },
-        { $sort: { total: -1 } }
-    ];
-    const concepts = await PrestacionesTx.aggregate(pipeline2).toArray();
+            { $unwind: '$registros' },
+            { $group: { '_id': '$registros.paciente.id' } }
+        ];
+        const results = await PrestacionesTx.aggregate(pipeline).toArray()
+        const ids = results.map(e => e._id);
 
-    return res.json(concepts);
+        const pipeline2 = [
+            {
+                $match: {
+                    'registros.paciente.id': { $in: ids },
+                    ...$match
+                },
+            },
+            {
+                $match: {
+                    'concepto.semanticTag': { $in: semanticTags },
+                    'concepto.conceptId': { $ne: conceptId }
+                }
+            },
+            { $unwind: '$registros' },
+            { $match: { 'registros.paciente.id': { $in: ids } } },
+            {
+                $group: {
+                    '_id': '$concepto.conceptId',
+                    'label': { $first: '$concepto.term' },
+                    total: { $sum: 1 }
+                }
+            },
+            { $sort: { total: -1 } }
+        ];
+        const concepts = await PrestacionesTx.aggregate(pipeline2).toArray();
+
+        return res.json(concepts);
+    } else if (tipoAsociacion === 'prestacion') {
+        const pipeline = [
+            {
+                $match: {
+                    $or: [
+                        { 'concepto.conceptId': conceptId },
+                        { 'concepto.statedAncestors': conceptId }
+                    ],
+                    ...$match
+                }
+            },
+            { $unwind: '$tipoPrestacion' },
+            { $group: { '_id': null, tipoPrestacion: { $addToSet: '$tipoPrestacion' } } }
+        ];
+        const results = await PrestacionesTx.aggregate(pipeline).toArray()
+        const prestaciones = results[0].tipoPrestacion;
+
+        const pipeline2 = [
+            {
+                $match: {
+                    'tipoPrestacion': { $in: prestaciones },
+                    'concepto.semanticTag': { $in: semanticTags },
+                    'concepto.conceptId': { $ne: conceptId },
+                    ...$match
+                },
+            },
+            { $unwind: '$registros' },
+            { $match: { 'registros.tipoPrestacion.conceptId': { $in: prestaciones } } },
+            {
+                $group: {
+                    '_id': '$concepto.conceptId',
+                    'label': { $first: '$concepto.term' },
+                    total: { $sum: 1 }
+                }
+            },
+            { $sort: { total: -1 } }
+        ];
+        const concepts = await PrestacionesTx.aggregate(pipeline2).toArray();
+
+        return res.json(concepts);
+
+    }
 });
 
 router.post('/rup/maps', authenticate(), async function (req, res) {

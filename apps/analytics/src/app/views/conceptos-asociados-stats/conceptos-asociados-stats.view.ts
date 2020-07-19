@@ -26,6 +26,9 @@ export class AppConceptosAsociadosStatsView {
     public semanticCluster = new BehaviorSubject<string>('trastorno');
     public semanticCluster$ = this.semanticCluster.asObservable();
 
+    public tipoAsociacionCluster = new BehaviorSubject<string>('paciente');
+    public tipoAsociacionCluster$ = this.tipoAsociacionCluster.asObservable();
+
     constructor(
         private snomed: SnomedAPI,
         private qf: QueryOptionsService,
@@ -41,11 +44,12 @@ export class AppConceptosAsociadosStatsView {
         this.asociados$ = combineLatest(
             this.concept$,
             this.semanticCluster$,
+            this.tipoAsociacionCluster$,
             this.qf.filstrosParams$.pipe(startWith({}))
         ).pipe(
             tap(() => this.loading = true),
-            switchMap(([concept, semantics, _]: [any, any, any]) => {
-                return this.snomed.cluster(concept.conceptId, this.semanticTags[semantics]);
+            switchMap(([concept, semantics, asociacion, _]: [any, any, any, any]) => {
+                return this.snomed.cluster(concept.conceptId, this.semanticTags[semantics], asociacion);
             }),
             tap(() => this.loading = false),
         );

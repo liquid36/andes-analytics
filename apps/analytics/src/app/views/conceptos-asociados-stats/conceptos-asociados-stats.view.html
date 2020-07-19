@@ -24,6 +24,21 @@
                 </button>
             </div>
         </span>
+
+        <span ngbDropdown class="ml-3">
+            <button ngbDropdownToggle class="btn btn-info dropdown-toggle btn-sm" type="button">
+                Asociar según: {{ tipoAsociacionCluster$ | async }}
+            </button>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <button ngbDropdownItem (click)="tipoAsociacionCluster.next('paciente')">
+                    Paciente
+                </button>
+                <button ngbDropdownItem (click)="tipoAsociacionCluster.next('prestacion')">
+                    Prestacion
+                </button>
+            </div>
+        </span>
+
     </app-navbar-detail-component>
 
     <ng-container *ngIf="asociados$ | async as asociados">

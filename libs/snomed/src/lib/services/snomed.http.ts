@@ -52,10 +52,11 @@ export class SnomedHTTP {
     return this.http.post(`/andes/analytics/${query.visualization}`, query);
   }
 
-  cluster(sctid, semanticTags) {
+  cluster(sctid, semanticTags, asociacion: string) {
     return this.http.post(`/andes/rup/cluster`, {
       conceptId: sctid,
-      semanticTags
+      semanticTags,
+      tipoAsociacion: asociacion
     });
   }
 

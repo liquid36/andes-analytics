@@ -144,8 +144,8 @@ export class SnomedAPI {
         return this.api.analytics(body).pipe(map(data => data[sctid]));
     }
 
-    cluster(sctid, semanticTags) {
-        return this.api.cluster(sctid, semanticTags);
+    cluster(sctid, semanticTags, asociacion: string) {
+        return this.api.cluster(sctid, semanticTags, asociacion);
     }
 
     maps(sctid) {
