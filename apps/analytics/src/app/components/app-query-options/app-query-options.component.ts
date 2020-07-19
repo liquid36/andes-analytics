@@ -62,7 +62,7 @@ export class AppQueryOptionsComponent {
 
     filtrosRestantes() {
         const types = {
-            'prestacion': true, 'organizacion': true, 'profesional': true, 'localidad': true, 'sexo': true
+            'prestacion': true, 'organizacion': true, 'profesional': true, 'localidad': true, 'sexo': true, 'ambito': true, 'turno': true
         };
         this.selectedOrganizations.forEach(data => types[data.type] = false);
         return Object.keys(types).filter(key => types[key]).join(',');

@@ -74,8 +74,10 @@ export class SnomedAPI {
         const prestacion = this.qf.getValue('prestacion') ? this.qf.getValue('prestacion').key : null;
         const sexo = this.qf.getValue('sexo') ? this.qf.getValue('sexo').key : null;
         const localidad = this.qf.getValue('localidad') ? this.qf.getValue('localidad').key : null;
+        const ambito = this.qf.getValue('ambito') ? this.qf.getValue('ambito').key : null;
+        const turno = this.qf.getValue('turno') ? this.qf.getValue('turno').key : null;
         const type = this.qf.getValue('relationship') || 'inferred';
-        return { start, end, organizacion, type, sexo, localidad, profesional, prestacion };
+        return { start, end, organizacion, type, sexo, localidad, profesional, prestacion, ambito, turno };
     }
 
     history(sctids: string[]) {

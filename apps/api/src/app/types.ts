@@ -11,3 +11,5 @@ export type Periodo = { start: Moment, end?: Moment };
 export type PeriodoList = Periodo[];
 
 export type Params = Record<string, any>;
+
+export type GroupList = string[];

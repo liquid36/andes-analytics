@@ -50,9 +50,10 @@ export function makeBasePipeline(concept: ConceptId, periodo: Periodo, params: P
         const isQueriable = filter.query;
 
         if (isQueriable && params[name] && filter.field) {
-            $match[filter.field] = params[name];
+            const value = filter.transform ? filter.transform(params[name]) : params[name];
+            $match[filter.field] = value;
             if (filter.unwind) {
-                $unwindMatch[filter.field] = params[name];
+                $unwindMatch[filter.field] = value;
             }
         }
     });

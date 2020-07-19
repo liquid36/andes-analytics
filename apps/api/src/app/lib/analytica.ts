@@ -21,7 +21,7 @@ minmaxDate();
 export const execQuery = async function (metrica: string, conceptsIds, filters, group) {
     let cache = {};
     const queryData = require('./queries/' + metrica).QUERY;
-    const cacheActive = queryData.cache && !group;
+    const cacheActive = queryData.cache;
     if (!queryData) {
         throw new Error('Visualization not found!');
     }
@@ -29,7 +29,7 @@ export const execQuery = async function (metrica: string, conceptsIds, filters, 
     const periods = splitTimeline(start, end);
 
     if (cacheActive) {
-        cache = await restoreFromCacheV2(metrica, conceptsIds, periods, params);
+        cache = await restoreFromCacheV2(metrica, conceptsIds, periods, params, group);
     }
 
     const results = {};
@@ -48,14 +48,14 @@ async function execQueryByConcept(queryData, conceptId: ConceptId, periodos: Per
         throw new Error(`Visualization [${queryData.name}] not have query function`);
     }
 
-    const cacheActive = queryData.cache && !group;
+    const cacheActive = queryData.cache;
     const ps = periodos.map(async periodo => {
         if (periodo.end) {
 
             return await queryData.query(conceptId, periodo, params, group);
 
         } else {
-            const key = createCacheKey(queryData.name, conceptId, periodo, params);
+            const key = createCacheKey(queryData.name, conceptId, periodo, params, group);
             const inCache = cache[key];
             if (inCache) {
                 touchCache(inCache);
@@ -63,7 +63,7 @@ async function execQueryByConcept(queryData, conceptId: ConceptId, periodos: Per
             } else {
                 const qs = await queryData.query(conceptId, periodo, params, group);
                 if (cacheActive) {
-                    storeInCacheV2(queryData.name, conceptId, periodo, params, qs);
+                    storeInCacheV2(queryData.name, conceptId, periodo, params, group, qs);
                 }
                 return qs;
             }
@@ -123,12 +123,12 @@ function parseFilter(filter) {
     FILTER_AVAILABLE.forEach((t: any) => {
         const name = t.name;
         const defaultValue = t.default;
-        const transform: any = t.transform || ((v) => v);
+        // const transform: any = t.transform || ((v) => v);
 
         if (filter[name] === undefined || filter[name] === null) {
             params[name] = defaultValue;
         } else {
-            params[name] = transform(filter[name]);
+            params[name] = filter[name];
         }
     });
     return { start, end, params };

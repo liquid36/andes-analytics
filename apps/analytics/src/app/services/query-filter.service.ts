@@ -6,7 +6,7 @@ import { pluck, tap } from 'rxjs/operators';
 import { SnomedHTTP } from '../../../../../libs/snomed/src/lib/services/snomed.http';
 import { Router, ActivatedRoute } from '@angular/router';
 
-type IFILTER = 'start' | 'end' | 'organizacion' | 'profesional' | 'relationship' | 'sexo' | 'prestacion' | 'localidad';
+type IFILTER = 'start' | 'end' | 'organizacion' | 'profesional' | 'relationship' | 'sexo' | 'prestacion' | 'localidad' | 'turno' | 'ambito';
 
 @Injectable({
     providedIn: 'root',
@@ -39,7 +39,7 @@ export class QueryOptionsService {
     }
 
     public setAll(values: any) {
-        const filtrosKey = ['prestacion', 'organizacion', 'profesional', 'localidad', 'sexo'];
+        const filtrosKey = ['prestacion', 'organizacion', 'profesional', 'localidad', 'sexo', 'ambito', 'turno'];
         filtrosKey.forEach((key) => {
             if (!values[key]) {
                 values[key] = null;

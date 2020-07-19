@@ -1,5 +1,3 @@
-import { ObjectID } from 'bson';
-
 export const TIME_UNIT = 'month';
 
 export const FILTER_AVAILABLE = [
@@ -53,7 +51,7 @@ export const FILTER_AVAILABLE = [
     },
     {
         name: 'term',
-        query: true,
+        query: false,
         field: 'registros.term',
         label: 'registros.term',
         unwind: true
@@ -71,6 +69,7 @@ export const FILTER_AVAILABLE = [
         field: 'registros.turno',
         label: 'registros.turno',
         unwind: true,
+        transform: (value) => (value === 'true' ? true : false)
     },
     {
         name: 'rangoEtario',

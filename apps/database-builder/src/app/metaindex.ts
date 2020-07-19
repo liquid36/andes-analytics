@@ -108,7 +108,23 @@ export async function createMetaindex() {
         { key: 'masculino', nombre: 'Masculino', type: 'sexo' },
         { key: 'femenino', nombre: 'Femenino', type: 'sexo' }
     ]);
-    console.log('end sexo')
+    console.log('end sexo');
+
+    console.log('start ambito')
+    await Metadata.insertMany([
+        { key: 'internacion', nombre: 'Internacion', type: 'ambito' },
+        { key: 'ambulatorio', nombre: 'Ambulatorio', type: 'ambito' }
+    ]);
+    console.log('end ambito');
+
+
+    console.log('start turno')
+    await Metadata.insertMany([
+        { key: 'true', nombre: 'Con turno', type: 'turno' },
+        { key: 'false', nombre: 'Sin turno', type: 'turno' }
+    ]);
+    console.log('end turno');
+
 
 }
 
