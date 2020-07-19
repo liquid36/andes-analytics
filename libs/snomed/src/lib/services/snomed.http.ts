@@ -12,7 +12,7 @@ export class SnomedHTTP {
     this.http.setBaseURL(environment.API_URL);
   }
 
-  private branch = 'MAIN/SNOMEDCT-ES/NEUQUEN-20200618-0850';
+  private branch = 'MAIN/ODONTO/NEUQUEN-20200715-1130';
   private snowstormPath = '/snowstorm';
 
   descriptions(params: DescriptionParams): Observable<DescriptionResult> {

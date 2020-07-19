@@ -54,6 +54,16 @@ export async function getPacientes() {
     return db.collection('paciente');
 }
 
+export async function getOrganizacion() {
+    const db = await getConnection('andes', environment.ANDES_DB);
+    return db.collection('organizacion');
+}
+
+export async function getOrganizaciones() {
+    const db = await getConnection('andes', environment.ANDES_DB);
+    return db.collection('organizaciones');
+}
+
 export async function createPrestacionTx() {
     const db = await getConnection('andes', environment.ANDES_DB);
     await db.createCollection('prestacionTx');
@@ -85,4 +95,9 @@ export async function createPrestacionTx() {
         "concepto.semanticTag": 1,
         "concepto.conceptId": 1
     });
+    PrestacionTx.ensureIndex({
+        "tipoPrestacion": 1,
+        "concepto.semanticTag": 1
+    });
+
 }

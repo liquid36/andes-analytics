@@ -1,13 +1,31 @@
-import { getPrestacionTx, getMetadata, getConceptosNumericos } from './database';
+import { getPrestacionTx, getMetadata, getConceptosNumericos, getOrganizacion, getOrganizaciones } from './database';
 import { getConcepts, toDBStore, getConceptsAncestors } from './snomed';
 
 export async function createMetaindex() {
     const PrestacionTx = await getPrestacionTx();
     const Metadata = await getMetadata();
+    const Organizacion = await getOrganizacion();
+    const Organizaciones = await getOrganizaciones();
 
     // Clean DATA.
     console.log('clean metadata')
     await Metadata.remove();
+    await Organizaciones.remove();
+
+    await Organizacion.aggregate([
+        {
+            $project: {
+                _id: { $toString: '$_id' },
+                id: { $toString: '$_id' },
+                nombre: 1,
+                direccion: 1
+            }
+        },
+        {
+            $out: 'organizaciones'
+        }
+    ], { allowDiskUse: true }).toArray();
+
 
     // Organizaciones
     console.log('start organizaciones')
@@ -160,6 +178,7 @@ export async function populateConceptos() {
 
         const conceptos = await PrestacionTx.aggregate([
             { $match: { 'concepto.statedAncestors': { $exists: false } } },
+            { $limit: 200 },
             { $group: { _id: '$concepto.conceptId', concepto: { $first: '$concepto' } } },
             { $limit: 100 },
             { $replaceRoot: { newRoot: '$concepto' } },
@@ -177,7 +196,7 @@ export async function populateConceptos() {
 
         const ps = conceptos.map(concepto => {
 
-            const value = realConcept[concepto.conceptId];
+            const value = realConcept[concepto.conceptId] || null;
 
             return PrestacionTx.updateMany(
                 { 'concepto.conceptId': concepto.conceptId },
@@ -185,6 +204,7 @@ export async function populateConceptos() {
                     $set: {
                         'concepto.statedAncestors': value && value.statedAncestors,
                         'concepto.inferredAncestors': value && value.inferredAncestors,
+                        'concepto.activo': !!value
                     }
                 }
             );

@@ -79,7 +79,7 @@ async function addBucket(item) {
                     turno: item.turno
                 }
             },
-            $addToSet: { tipoPrestacion: item.tipoPrestacion.conceptId }
+            $addToSet: { tipoPrestacion: item.tipoPrestacion.conceptId, pacientes: item.paciente && item.paciente.id },
         },
         {
             upsert: true
