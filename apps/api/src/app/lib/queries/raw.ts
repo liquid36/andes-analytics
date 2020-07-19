@@ -1,14 +1,12 @@
 import { getConnection, MAIN_DB, ObjectId } from '../database';
 import { makeBasePipeline, createAddOn, createIdMetadata, hash, createLabelMetadata } from './helpers';
+import { ConceptId, Periodo, Params } from '../../types';
 
-async function query(conceptId, periodo, params, group) {
+async function query(conceptId: ConceptId, periodo: Periodo, params: Params, group) {
     const db = await getConnection();
     const PrestacionesTx = db.collection(MAIN_DB);
 
-    const self = conceptId.startsWith('!');
-    conceptId = self ? conceptId.substr(1) : conceptId;
-
-    const { pipeline, needUnwind } = makeBasePipeline(conceptId, periodo, params, { forceUnwind: true, self });
+    const { pipeline, needUnwind } = makeBasePipeline(conceptId, periodo, params, { forceUnwind: true });
     // const metadataID = createIdMetadata(group);
     // const addOns = group ? createAddOn(group, params) : [];
 

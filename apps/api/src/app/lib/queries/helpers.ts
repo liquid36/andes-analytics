@@ -1,6 +1,13 @@
 import * as base64 from 'base-64';
 import { FILTER_AVAILABLE, TIME_UNIT, getFilterField } from '../util';
+import { ConceptId, Params, Periodo } from '../../types';
 
+
+export function matchConceptExpression(conceptId: ConceptId) {
+    const self = conceptId.startsWith('!');
+    const concept = self ? conceptId.substr(1) : conceptId;
+    return { self, conceptId: concept };
+}
 
 export function selfOrDescendant(conceptId, type, self) {
     const $or: any[] = [
@@ -30,9 +37,11 @@ export function initialMatch(conceptId, type, periodo, self) {
     }
 }
 
-export function makeBasePipeline(concept, periodo, params, options: any = {}) {
-    const { forceUnwind, self } = options;
-    const $match = initialMatch(concept, params.type, periodo, self);
+export function makeBasePipeline(concept: ConceptId, periodo: Periodo, params: Params, options: any = {}) {
+    const { forceUnwind } = options;
+    const { self, conceptId } = matchConceptExpression(concept);
+
+    const $match = initialMatch(conceptId, params.type, periodo, self);
     const $unwindMatch = {}
     const extrasStage = [];
 

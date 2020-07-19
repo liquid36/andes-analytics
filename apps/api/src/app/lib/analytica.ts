@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import { getConnection, MAIN_DB } from './database';
 import { TIME_UNIT, FILTER_AVAILABLE } from './util';
 import { touchCache, restoreFromCacheV2, createCacheKey, storeInCacheV2 } from './cache';
-import { groupReducer } from './queries/helpers';
+import { groupReducer, matchConceptExpression } from './queries/helpers';
 import { ConceptId, PeriodoList, Params } from '../types';
 
 let date_min = moment('2018-01-01T00:00:00.000-03:00').startOf(TIME_UNIT);
@@ -29,14 +29,12 @@ export const execQuery = async function (metrica: string, conceptsIds, filters, 
     const periods = splitTimeline(start, end);
 
     if (cacheActive) {
-        // cache = await restoreFromCache(metrica, conceptsIds, start, end, params);
         cache = await restoreFromCacheV2(metrica, conceptsIds, periods, params);
     }
 
     const results = {};
     const ps = conceptsIds.map(async conceptId => {
-        const self = conceptId.startsWith('!');
-        const concept = self ? conceptId.substr(1) : conceptId;
+        const { self, conceptId: concept } = matchConceptExpression(conceptId);
         results[concept] = await execQueryByConcept(queryData, conceptId, periods, cache, params, group);
     });
 
@@ -136,7 +134,7 @@ function parseFilter(filter) {
     return { start, end, params };
 }
 
-function splitTimeline(start, end) {
+function splitTimeline(start, end): PeriodoList {
     const _isStartOf = isStartOf(start);
     const _isEndOf = isEndOf(end);
     const _isSamePeriod = isSamePeriod(start, end);

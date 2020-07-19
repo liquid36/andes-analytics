@@ -2,7 +2,7 @@ import { Moment } from 'moment';
 
 export type Metrica = string;
 
-export type ConceptId = string[];
+export type ConceptId = string;
 
 export type ConceptIds = ConceptId[];
 

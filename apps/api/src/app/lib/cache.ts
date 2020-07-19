@@ -11,20 +11,6 @@ export async function touchCache(item) {
     cache.update({ _id: item._id }, { $set: { lastUse: new Date() }, $inc: { used: 1 } });
 }
 
-function hash(params) {
-    const hashTarget = {};
-    FILTER_AVAILABLE.forEach(filter => {
-        const name = filter.name;
-        hashTarget[name] = params[name];
-    });
-    return base64.encode(JSON.stringify(hashTarget));
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-
-
-
 export function createCacheKey(metrica: Metrica, conceptId: ConceptId, periodo: Periodo, params: Params) {
     const start = '' + periodo.start.toDate().getTime();
     const end = periodo.end ? '' + periodo.end.toDate().getTime() : 'null';
