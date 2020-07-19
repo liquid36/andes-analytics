@@ -27,9 +27,6 @@ async function ensureIndex() {
     const db = await getConnection();
     const cache = db.collection('cache');
     cache.ensureIndex({
-        conceptId: 1,
-        cache_type: 1,
-        start: 1,
         hash_key: 1
     });
     cache.ensureIndex({ 'lastUse': 1 }, { expireAfterSeconds: 2592000 }); // 1 mes

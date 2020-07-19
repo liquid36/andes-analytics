@@ -35,9 +35,12 @@ export function makeBasePipeline(concept, periodo, params, options: any = {}) {
     const $match = initialMatch(concept, params.type, periodo, self);
     const $unwindMatch = {}
     const extrasStage = [];
+
     FILTER_AVAILABLE.forEach(filter => {
         const name = filter.name;
-        if (params[name] && filter.field) {
+        const isQueriable = filter.query;
+
+        if (isQueriable && params[name] && filter.field) {
             $match[filter.field] = params[name];
             if (filter.unwind) {
                 $unwindMatch[filter.field] = params[name];

@@ -5,36 +5,42 @@ export const TIME_UNIT = 'month';
 export const FILTER_AVAILABLE = [
     {
         name: 'profesional',
+        query: true,
         unwind: false,
         field: 'profesional.id',
         label: 'profesional.nombre',
     },
     {
         name: 'prestacion',
+        query: true,
         unwind: true,
         field: 'registros.tipoPrestacion.conceptId',
         label: 'registros.tipoPrestacion.term',
     },
     {
         name: 'organizacion',
+        query: true,
         unwind: false,
         field: 'organizacion.id',
         label: 'organizacion.nombre',
     },
     {
         name: 'sexo',
+        query: true,
         unwind: true,
         field: 'registros.paciente.sexo',
         label: 'registros.paciente.sexo',
     },
     {
         name: 'decada',
+        query: false,
         unwind: true,
         field: 'registros.paciente.edad.edad',
         label: 'registros.paciente.edad.edad',
     },
     {
         name: 'localidad',
+        query: true,
         unwind: true,
         field: 'registros.paciente.localidad',
         label: 'registros.paciente.localidad',
@@ -42,13 +48,33 @@ export const FILTER_AVAILABLE = [
     },
     {
         name: 'type',
+        query: true,
         default: 'stated'
     },
     {
         name: 'term',
+        query: true,
         field: 'registros.term',
         label: 'registros.term',
         unwind: true
+    },
+    {
+        name: 'ambito',
+        query: true,
+        field: 'registros.ambito',
+        label: 'registros.ambito',
+        unwind: true
+    },
+    {
+        name: 'turno',
+        query: true,
+        field: 'registros.turno',
+        label: 'registros.turno',
+        unwind: true,
+    },
+    {
+        name: 'rangoEtario',
+        query: false
     }
 ];
 

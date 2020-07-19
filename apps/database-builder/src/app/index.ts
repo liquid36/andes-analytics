@@ -7,6 +7,18 @@ import { getCoordenadas, getLocalidad, findPaciente } from './paciente';
 import { searchGeocode } from './localidades';
 import { createMetaindex, createConceptosNumericos, populateConceptos } from './metaindex';
 
+function removeDuplicate(items): any[] {
+    const deduplicado = items.reduce((acc, current) => {
+        if (!acc[current.concepto.conceptId]) {
+            acc[current.concepto.conceptId] = current;
+        }
+        return acc;
+    }, {});
+    return Object.values(deduplicado);
+}
+
+
+
 async function addBucket(item) {
     item.organizacion.id = item.organizacion.id.toString();
     item.profesional.id = item.profesional.id && item.profesional.id.toString();
@@ -63,8 +75,11 @@ async function addBucket(item) {
                     valor: item.valor,
                     valorType: item.valorType,
                     fecha: item.fecha.ejecucion,
+                    ambito: item.ambito,
+                    turno: item.turno
                 }
-            }
+            },
+            $addToSet: { tipoPrestacion: item.tipoPrestacion.conceptId }
         },
         {
             upsert: true
@@ -85,6 +100,8 @@ async function processPrestacion(prestacion) {
         paciente: prestacion.paciente,
         tipoPrestacion: prestacion.solicitud.tipoPrestacion,
         organizacion: prestacion.solicitud.organizacion,
+        ambito: prestacion.solicitud.ambitoOrigen,
+        turno: !!prestacion.solicitud.turno,
         profesional: {
             id: estEjecucion.createdBy.id || prestacion.solicitud.profesional.id,
             nombre: `${estEjecucion.createdBy.apellido} ${estEjecucion.createdBy.nombre}`
@@ -115,7 +132,7 @@ async function processPrestacion(prestacion) {
     });
     // }
 
-    const items = flatPrestacion(prestacion);
+    const items = removeDuplicate(flatPrestacion(prestacion));
 
     const ps = items.map(async item => {
         let valorType: string = typeof item.valor;
@@ -174,13 +191,13 @@ export async function run() {
             $eq: 'validada'
         },
         'ejecucion.fecha': {
-            // $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
+            $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
             // $lte: moment('2019-06-30 23:59:59.926Z').toDate()
 
             // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
             // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
 
-            $gt: moment('2020-05-01T00:00:00').startOf('d').toDate()
+            // $gt: moment('2020-04-01T00:00:00').startOf('d').toDate()
 
             // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
             // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
@@ -211,7 +228,8 @@ export async function listaEspera() {
 
     const cursor = ListaEspera.find({
         paciente: { $exists: true },
-        fecha: { $gte: moment('2020-05-01T00:00:00').startOf('d').toDate() }
+        // fecha: { $gte: moment('2020-05-01T00:00:00').startOf('d').toDate() }
+        fecha: { $gte: moment('2020-04-01T00:00:00').startOf('d').toDate() }
     });
 
     const lsitaEsperaAction = async (item) => {

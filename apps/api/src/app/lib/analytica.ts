@@ -2,11 +2,12 @@ import * as moment from 'moment';
 
 import { getConnection, MAIN_DB } from './database';
 import { TIME_UNIT, FILTER_AVAILABLE } from './util';
-import { storeInCache, restoreFromCache, touchCache } from './cache';
+import { touchCache, restoreFromCacheV2, createCacheKey, storeInCacheV2 } from './cache';
 import { groupReducer } from './queries/helpers';
+import { ConceptId, PeriodoList, Params } from '../types';
 
 let date_min = moment('2018-01-01T00:00:00.000-03:00').startOf(TIME_UNIT);
-let date_max = moment('2019-08-31T00:00:00.000-03:00').endOf(TIME_UNIT);
+let date_max = moment('2020-08-31T00:00:00.000-03:00').endOf(TIME_UNIT);
 
 async function minmaxDate() {
     const db = await getConnection();
@@ -17,54 +18,54 @@ async function minmaxDate() {
 
 minmaxDate();
 
-export const execQuery = async function (name, conceptsIds, filters, group) {
+export const execQuery = async function (metrica: string, conceptsIds, filters, group) {
     let cache = {};
-    const queryData = require('./queries/' + name).QUERY;
+    const queryData = require('./queries/' + metrica).QUERY;
     const cacheActive = queryData.cache && !group;
     if (!queryData) {
-        throw new Error('Visuzlization not found!');
+        throw new Error('Visualization not found!');
     }
     const { start, end, params } = parseFilter(filters);
     const periods = splitTimeline(start, end);
 
     if (cacheActive) {
-        cache = await restoreFromCache(name, conceptsIds, start, end, params);
+        // cache = await restoreFromCache(metrica, conceptsIds, start, end, params);
+        cache = await restoreFromCacheV2(metrica, conceptsIds, periods, params);
     }
 
     const results = {};
     const ps = conceptsIds.map(async conceptId => {
         const self = conceptId.startsWith('!');
         const concept = self ? conceptId.substr(1) : conceptId;
-        results[concept] = await execQueryByConcept(queryData, conceptId, periods, cache[concept] || [], params, group);
+        results[concept] = await execQueryByConcept(queryData, conceptId, periods, cache, params, group);
     });
 
     await Promise.all(ps);
     return results;
 }
 
-async function execQueryByConcept(queryData, conceptId, periodos, cache, params, group) {
+async function execQueryByConcept(queryData, conceptId: ConceptId, periodos: PeriodoList, cache, params: Params, group) {
+
+    if (!queryData.query) {
+        throw new Error(`Visualization [${queryData.name}] not have query function`);
+    }
+
     const cacheActive = queryData.cache && !group;
     const ps = periodos.map(async periodo => {
         if (periodo.end) {
-            if (!queryData.query) {
-                throw new Error(`Visualization [${queryData.name}] not have longQuery function`);
-            }
+
             return await queryData.query(conceptId, periodo, params, group);
+
         } else {
-            const inCache = cache.find(c => periodo.start.isSame(c.start));
+            const key = createCacheKey(queryData.name, conceptId, periodo, params);
+            const inCache = cache[key];
             if (inCache) {
-                if (cacheActive) {
-                    touchCache(inCache);
-                }
+                touchCache(inCache);
                 return inCache.value;
             } else {
-                if (!queryData.query) {
-                    throw new Error(`Visualization [${queryData.name}] not have longQuery function`);
-                }
-
                 const qs = await queryData.query(conceptId, periodo, params, group);
                 if (cacheActive) {
-                    storeInCache(queryData.name, conceptId, periodo.start, params, qs);
+                    storeInCacheV2(queryData.name, conceptId, periodo, params, qs);
                 }
                 return qs;
             }
@@ -119,7 +120,7 @@ function isSamePeriod(start, end, unit = TIME_UNIT) {
 function parseFilter(filter) {
     const start = getDate(filter.start, 'start');
     const end = getDate(filter.end, 'end');
-    let params: any = {
+    const params: any = {
     };
     FILTER_AVAILABLE.forEach((t: any) => {
         const name = t.name;
@@ -132,9 +133,6 @@ function parseFilter(filter) {
             params[name] = transform(filter[name]);
         }
     });
-    if (filter.rangoEtario) {
-        params.rangoEtario = filter.rangoEtario;
-    }
     return { start, end, params };
 }
 
