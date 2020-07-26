@@ -191,13 +191,13 @@ export async function run() {
             $eq: 'validada'
         },
         'ejecucion.fecha': {
-            $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
+            // $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
             // $lte: moment('2019-06-30 23:59:59.926Z').toDate()
 
             // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
             // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
 
-            // $gt: moment('2020-04-01T00:00:00').startOf('d').toDate()
+            $gt: moment('2020-06-01T00:00:00').startOf('d').toDate()
 
             // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
             // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
@@ -229,7 +229,7 @@ export async function listaEspera() {
     const cursor = ListaEspera.find({
         paciente: { $exists: true },
         // fecha: { $gte: moment('2020-05-01T00:00:00').startOf('d').toDate() }
-        fecha: { $gte: moment('2020-04-01T00:00:00').startOf('d').toDate() }
+        fecha: { $gte: moment('2020-06-01T00:00:00').startOf('d').toDate() }
     });
 
     const lsitaEsperaAction = async (item) => {
