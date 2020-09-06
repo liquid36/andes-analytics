@@ -19,6 +19,7 @@ export class MainView {
         { key: 'asociados', label: 'Conceptos Asociados' },
         { key: 'mapa', label: 'Mapa' },
         { key: 'bi', label: 'BI' },
+        { key: 'grafo', label: 'Grafo' },
     ];
 
     constructor(

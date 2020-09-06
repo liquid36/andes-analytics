@@ -2,6 +2,13 @@ export const TIME_UNIT = 'month';
 
 export const FILTER_AVAILABLE = [
     {
+        name: 'paciente',
+        query: true,
+        unwind: true,
+        field: 'registros.paciente.id',
+        label: 'registros.paciente.id',
+    },
+    {
         name: 'profesional',
         query: true,
         unwind: false,

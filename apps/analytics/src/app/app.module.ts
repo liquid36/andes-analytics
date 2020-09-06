@@ -41,6 +41,7 @@ import { AppLocalidadesStatsView } from './views/localidades-stats/localidades-s
 
 // import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule, PlotlyViaWindowModule } from 'angular-plotly.js';
+import { AppGrafoView } from './views/grafo-view/grafo.view';
 // PlotlyModule.plotlyjs = PlotlyJS;
 
 
@@ -65,6 +66,7 @@ import { PlotlyModule, PlotlyViaWindowModule } from 'angular-plotly.js';
     AppLocalidadesStatsView,
     AppMapsStatsView,
     AppSandDanceView,
+    AppGrafoView,
     AuthView,
     MainView,
     UnauthorizedView,
@@ -96,6 +98,7 @@ import { PlotlyModule, PlotlyViaWindowModule } from 'angular-plotly.js';
           { path: 'concept/:id/asociados', component: AppConceptosAsociadosStatsView },
           { path: 'concept/:id/mapa', component: AppMapsStatsView },
           { path: 'concept/:id/bi', component: AppSandDanceView },
+          { path: 'concept/:id/grafo', component: AppGrafoView },
           { path: 'home', component: AppHomeView },
 
         ]
