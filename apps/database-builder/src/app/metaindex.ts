@@ -9,8 +9,8 @@ export async function createMetaindex() {
 
     // Clean DATA.
     console.log('clean metadata')
-    await Metadata.remove();
-    await Organizaciones.remove();
+    await Metadata.deleteMany({});
+    await Organizaciones.deleteMany({});
 
     await Organizacion.aggregate([
         {
@@ -153,7 +153,7 @@ export async function createConceptosNumericos() {
 
     console.log('start conceptos numericos');
 
-    await ConceptosNumericos.remove();
+    await ConceptosNumericos.deleteMany({});
 
     await PrestacionTx.aggregate([
         { $match: { 'registros.valorType': 'number' } },

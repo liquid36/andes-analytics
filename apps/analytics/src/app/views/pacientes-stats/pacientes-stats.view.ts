@@ -13,17 +13,13 @@ import { cache, combineDataset } from '../../operators';
 export class AppPacientesStatsView {
     public loading = false;
 
-    public nacional = [0, 1, 2, 6, 10, 15, 50, 100];
-    public provincial = [0, 1, 5, 15, 20, 40, 70, 100];
-
-    public rango = new BehaviorSubject(this.nacional);
+    public rango = new BehaviorSubject('nacional');
     public rango$ = this.rango.asObservable();
 
     public metrica = new BehaviorSubject('count');
     public metrica$ = this.metrica.asObservable();
 
     public concept$;
-    public localidades$;
     public data$;
 
 
@@ -71,34 +67,6 @@ export class AppPacientesStatsView {
             }),
             cache()
         )
-
-
-        this.localidades$ = combineLatest(
-            this.concept$,
-            this.qf.filstrosParams$.pipe(startWith({}))
-        ).pipe(
-            tap(() => this.loading = true),
-            map(([concept, _]) => concept),
-            switchMap((concept: any) => {
-                return forkJoin(
-                    this.snomed.analytics(concept.conceptId, 'count', 'localidad'),
-                    this.snomed.analytics(concept.conceptId, 'unique', 'localidad')
-                )
-            }),
-            map(([dataA, dataB]) => {
-                return combineDataset(dataA, dataB, (valueA, valueB) => {
-                    valueA.pacientes = valueB;
-                    return { ...valueA };
-                }).map((item: any) => {
-                    return {
-                        _id: item._id.localidad || 'SIN LOCALIDAD',
-                        label: item.label.localidad || 'SIN LOCALIDAD',
-                        ...item.value
-                    }
-                })
-            }),
-            tap(() => this.loading = false),
-        );
     }
 
     changeRangoEtario(rango) {

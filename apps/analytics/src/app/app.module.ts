@@ -37,6 +37,7 @@ import { MainView } from './views/main/main.view';
 import { UnauthorizedView } from './auth/unauthorized.view';
 import { RoutingGuard } from './services/app-routing.guard';
 import { NombreFiltrosPipe } from './pipes/nombre-filtros.pipes';
+import { AppLocalidadesStatsView } from './views/localidades-stats/localidades-stats.view';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { NombreFiltrosPipe } from './pipes/nombre-filtros.pipes';
     AppProfesionalesStatsView,
     AppPrestacionesStatsView,
     AppConceptosAsociadosStatsView,
+    AppLocalidadesStatsView,
     AppMapsStatsView,
     AppSandDanceView,
     AuthView,
@@ -81,6 +83,7 @@ import { NombreFiltrosPipe } from './pipes/nombre-filtros.pipes';
         children: [
           { path: 'concept/:id/detail', component: AppConceptDetailView },
           { path: 'concept/:id/pacientes', component: AppPacientesStatsView },
+          { path: 'concept/:id/localidades', component: AppLocalidadesStatsView },
           { path: 'concept/:id/organizaciones', component: AppOrganizacionesStatsView },
           { path: 'concept/:id/profesionales', component: AppProfesionalesStatsView },
           { path: 'concept/:id/prestaciones', component: AppPrestacionesStatsView },

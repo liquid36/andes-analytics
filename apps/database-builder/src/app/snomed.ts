@@ -62,7 +62,7 @@ export async function getConcepts(conceptsId) {
 
 const cacheSnomed = {};
 
-function getSemanticTagFromFsn(fsn: String) {
+export function getSemanticTagFromFsn(fsn: String) {
     const startAt = fsn.lastIndexOf('(');
     const endAt = fsn.lastIndexOf(')');
     return fsn.substring(startAt + 1, endAt);

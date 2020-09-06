@@ -132,7 +132,7 @@ export function createLabelMetadata(groups) {
 }
 
 const addOnField = {
-    'decada': addOnQueryEdad
+    // 'decada': addOnQueryEdad
 }
 
 export function createAddOn(groups, params) {

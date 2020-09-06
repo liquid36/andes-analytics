@@ -33,8 +33,22 @@ export const FILTER_AVAILABLE = [
         name: 'decada',
         query: false,
         unwind: true,
-        field: 'registros.paciente.edad.edad',
-        label: 'registros.paciente.edad.edad',
+        field: 'registros.paciente.edad.decada',
+        label: 'registros.paciente.edad.decada',
+    },
+    {
+        name: 'nacional',
+        query: false,
+        unwind: true,
+        field: 'registros.paciente.edad.nacional',
+        label: 'registros.paciente.edad.nacional',
+    },
+    {
+        name: 'provincial',
+        query: false,
+        unwind: true,
+        field: 'registros.paciente.edad.provincial',
+        label: 'registros.paciente.edad.provincial',
     },
     {
         name: 'localidad',
@@ -71,10 +85,10 @@ export const FILTER_AVAILABLE = [
         unwind: true,
         transform: (value) => (value === 'true' ? true : false)
     },
-    {
-        name: 'rangoEtario',
-        query: false
-    }
+    // {
+    //     name: 'rangoEtario',
+    //     query: false
+    // }
 ];
 
 export function getFilterField(name) {

@@ -12,6 +12,7 @@ export class MainView {
     menuItems = [
         { key: 'detail', label: 'Detalle' },
         { key: 'pacientes', label: 'Pacientes' },
+        { key: 'localidades', label: 'Localidades' },
         { key: 'organizaciones', label: 'Organizaciones' },
         { key: 'profesionales', label: 'Profesionales' },
         { key: 'prestaciones', label: 'Prestaciones' },

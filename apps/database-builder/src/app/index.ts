@@ -79,7 +79,7 @@ async function addBucket(item) {
                     turno: item.turno
                 }
             },
-            $addToSet: { tipoPrestacion: item.tipoPrestacion.conceptId, pacientes: item.paciente && item.paciente.id },
+            // $addToSet: { tipoPrestacion: item.tipoPrestacion.conceptId, pacientes: item.paciente && item.paciente.id },
         },
         {
             upsert: true
@@ -181,15 +181,12 @@ async function processBatch(cursor, callback, progressCallback) {
 export async function run() {
 
     let total = 0;
-    await searchGeocode();
+    // await searchGeocode();
     await createPrestacionTx();
     const Prestacion = await getPrestaciones();
 
     const cursor = Prestacion.find({
-        'estados.tipo': {
-            $ne: 'modificada',
-            $eq: 'validada'
-        },
+        'estadoActual.tipo': 'validada',
         'ejecucion.fecha': {
             // $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
             // $lte: moment('2019-06-30 23:59:59.926Z').toDate()
@@ -197,10 +194,13 @@ export async function run() {
             // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
             // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
 
-            $gt: moment('2020-06-01T00:00:00').startOf('d').toDate()
+            // $gt: moment('2020-06-01T00:00:00').startOf('d').toDate()
 
             // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
             // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
+
+            $gte: moment('2022-06-30 23:59:59.926Z').toDate(),
+
         },
     }, { batchSize: 3000 });
     while (await cursor.hasNext()) {
@@ -214,7 +214,9 @@ export async function run() {
         const ps = prestaciones.map(processPrestacion);
         await Promise.all(ps);
     }
+
     await listaEspera();
+
     await createMetaindex();
     await createConceptosNumericos();
     await populateConceptos();
@@ -228,8 +230,8 @@ export async function listaEspera() {
 
     const cursor = ListaEspera.find({
         paciente: { $exists: true },
-        // fecha: { $gte: moment('2020-05-01T00:00:00').startOf('d').toDate() }
-        fecha: { $gte: moment('2020-06-01T00:00:00').startOf('d').toDate() }
+        fecha: { $gte: moment('2020-05-01T00:00:00').startOf('d').toDate() }
+        // fecha: { $gte: moment('2020-06-01T00:00:00').startOf('d').toDate() }
     });
 
     const lsitaEsperaAction = async (item) => {
@@ -268,6 +270,9 @@ export async function listaEspera() {
         };
         if (tx.paciente) {
             const pac: any = await findPaciente(item.paciente.id);
+            if (!pac) {
+                return;
+            }
             tx.paciente['fechaNacimiento'] = pac.fechaNacimiento;
             tx.paciente['sexo'] = pac.sexo;
             tx.paciente['edad'] = calcularEdad(tx.paciente.fechaNacimiento, tx.fecha.ejecucion);

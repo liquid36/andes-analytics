@@ -38,10 +38,10 @@
                 Cambiar escala
             </button>
             <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <button ngbDropdownItem (click)="changeRangoEtario(nacional)">
+                <button ngbDropdownItem (click)="changeRangoEtario('nacional')">
                     Rango Etario Nacional
                 </button>
-                <button ngbDropdownItem (click)="changeRangoEtario(provincial)">
+                <button ngbDropdownItem (click)="changeRangoEtario('provincial')">
                     Rango Etario Provincial
                 </button>
             </div>
@@ -50,8 +50,4 @@
 
     <app-demografia-table [data]="data$ | async" [metrica]="metrica$ | async" [rangoEtario]="rango$ | async">
     </app-demografia-table>
-
-    <ng-container *ngIf="localidades$ | async as localidades">
-        <ui-table [values]="localidades" *ngIf="!loading"></ui-table>
-    </ng-container>
 </ng-container>

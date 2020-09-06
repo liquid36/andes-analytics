@@ -1,0 +1,8 @@
+<ng-container *ngIf="concept$ | async as concept">
+
+    <app-navbar-detail-component [concept]="concept"></app-navbar-detail-component>
+
+    <ng-container *ngIf="localidades$ | async as localidades">
+        <ui-table [values]="localidades" *ngIf="!loading"></ui-table>
+    </ng-container>
+</ng-container>

@@ -124,17 +124,16 @@ export class SnomedAPI {
             visualization: type,
             target: sctid,
             filter: {
-                ...filter,
-                rangoEtario
+                ...filter
             },
-            group: ['sexo', 'decada']
+            group: ['sexo', rangoEtario]
         };
 
         return this.api.analytics(body).pipe(map(data => data[sctid]));
     }
 
-    analytics(sctid, visualization: VISULIZATION, group = null) {
-        const filter = this.getParams();
+    analytics(sctid, visualization: VISULIZATION, group = null, filters = {}) {
+        const filter = { ...this.getParams(), ...filters };
         const body = {
             visualization,
             target: sctid,

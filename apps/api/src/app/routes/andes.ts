@@ -147,8 +147,8 @@ router.post('/rup/cluster', authenticate(), async function (req, res) {
                     ...$match
                 }
             },
-            { $unwind: '$tipoPrestacion' },
-            { $group: { '_id': null, tipoPrestacion: { $addToSet: '$tipoPrestacion' } } }
+            { $unwind: '$registros' },
+            { $group: { '_id': null, tipoPrestacion: { $addToSet: '$registros.tipoPrestacion.conceptId' } } }
         ];
         const results = await PrestacionesTx.aggregate(pipeline).toArray()
         const prestaciones = results[0].tipoPrestacion;
@@ -156,7 +156,7 @@ router.post('/rup/cluster', authenticate(), async function (req, res) {
         const pipeline2 = [
             {
                 $match: {
-                    'tipoPrestacion': { $in: prestaciones },
+                    'registros.tipoPrestacion.conceptId': { $in: prestaciones },
                     'concepto.semanticTag': { $in: semanticTags },
                     'concepto.conceptId': { $ne: conceptId },
                     ...$match

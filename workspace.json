@@ -14,10 +14,13 @@
             "outputPath": "dist/apps/database-builder",
             "main": "apps/database-builder/src/main.ts",
             "tsConfig": "apps/database-builder/tsconfig.app.json",
-            "assets": ["apps/database-builder/src/assets"]
+            "assets": [
+              "apps/database-builder/src/assets"
+            ]
           },
           "configurations": {
             "production": {
+              "sourceMap": "true",
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
@@ -45,7 +48,10 @@
               "apps/database-builder/tsconfig.app.json",
               "apps/database-builder/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/database-builder/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/database-builder/**"
+            ]
           }
         },
         "test": {
@@ -70,7 +76,9 @@
             "outputPath": "dist/apps/api",
             "main": "apps/api/src/main.ts",
             "tsConfig": "apps/api/tsconfig.app.json",
-            "assets": ["apps/api/src/assets"]
+            "assets": [
+              "apps/api/src/assets"
+            ]
           },
           "configurations": {
             "production": {
@@ -101,7 +109,10 @@
               "apps/api/tsconfig.app.json",
               "apps/api/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/api/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/api/**"
+            ]
           }
         },
         "test": {
@@ -126,7 +137,10 @@
               "libs/ui/tsconfig.lib.json",
               "libs/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ui/**"
+            ]
           }
         },
         "test": {
@@ -168,7 +182,9 @@
               "apps/analytics/src/favicon.ico",
               "apps/analytics/src/assets"
             ],
-            "styles": ["apps/analytics/src/styles.scss"],
+            "styles": [
+              "apps/analytics/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -227,7 +243,10 @@
               "apps/analytics/tsconfig.app.json",
               "apps/analytics/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/analytics/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/analytics/**"
+            ]
           }
         },
         "test": {
@@ -261,8 +280,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/analytics-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/analytics-e2e/**"]
+            "tsConfig": [
+              "apps/analytics-e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/analytics-e2e/**"
+            ]
           }
         }
       }
@@ -280,7 +304,10 @@
               "libs/snomed/tsconfig.lib.json",
               "libs/snomed/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/snomed/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/snomed/**"
+            ]
           }
         },
         "test": {

@@ -3,6 +3,8 @@
 require('dotenv').config();
 const { run } = require('./app');
 
+// const { calcularArbolSnomed } = require("./app/experimental");
+
 const { createMetaindex, createConceptosNumericos, populateConceptos } = require('./app/metaindex');
 
 
@@ -16,6 +18,7 @@ async function main() {
         ]);
     } else {
         await run();
+        // await calcularArbolSnomed();
     }
     process.exit();
 }

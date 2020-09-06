@@ -60,6 +60,7 @@
     "mongodb": "^3.3.2",
     "ngx-daterangepicker-material": "^2.1.8",
     "passport": "^0.4.0",
+    "plotly.js-dist": "^1.55.1",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
     "rxjs": "~6.4.0",
