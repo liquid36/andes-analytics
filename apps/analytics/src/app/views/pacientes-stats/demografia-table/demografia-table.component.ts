@@ -2,13 +2,25 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angu
 
 @Component({
     selector: 'app-demografia-table',
-    templateUrl: './demografia-table.component.html'
+    templateUrl: './demografia-table.component.html',
+    styles: [
+        `
+            .click:hover {
+                text-decoration: underline;
+                cursor: pointer;    
+            }
+        `
+    ]
 })
 export class DemografiaTableComponent implements OnInit, OnChanges {
 
     @Input() data;
     @Input() rangoEtario = 'nacional';
     @Input() metrica;
+
+    @Output() select = new EventEmitter();
+
+    @Input() isClick: boolean = false;
 
     public escalas = {
         nacional: [0, 1, 2, 6, 10, 15, 50, 100],
@@ -75,5 +87,10 @@ export class DemografiaTableComponent implements OnInit, OnChanges {
 
     }
 
+    emit(sexo: string, key: number) {
+        if (this.isClick) {
+            this.select.emit({ sexo, key: this.escalas[this.rangoEtario][key] });
+        }
+    }
 
 }

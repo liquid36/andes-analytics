@@ -42,11 +42,14 @@ async function query(conceptId: ConceptId, periodo: Periodo, params: Params, gro
                     localidad: '$registros.paciente.localidad',
                     latitud: '$registros.paciente.coordenadas.lat',
                     longitud: '$registros.paciente.coordenadas.lng',
+                    valor: '$registros.valor'
                 }
             }
         }
     ];
+
     const results = await PrestacionesTx.aggregate($pipeline, { allowDiskUse: true }).toArray();
+
     results.forEach(r => {
         r.hashId = 'null';
     });

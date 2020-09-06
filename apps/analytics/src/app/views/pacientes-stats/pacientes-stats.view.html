@@ -48,6 +48,30 @@
         </div>
     </div>
 
-    <app-demografia-table [data]="data$ | async" [metrica]="metrica$ | async" [rangoEtario]="rango$ | async">
+    <app-demografia-table [data]="data$ | async" [metrica]="metrica$ | async" [rangoEtario]="rango$ | async"
+                          (select)="onClick($event)" [isClick]="concept.isNumeric">
     </app-demografia-table>
+
+    <div class="d-flex">
+        <ng-container *ngIf="masculinoBarChart$ |async as dataM">
+            <ng-container *ngIf="femeninoBarChart$ |async as dataF">
+                <plotly-plot [data]="[dataM, dataF]" [layout]="graph.layout"></plotly-plot>
+            </ng-container>
+            <!-- <plotly-plot [data]="data" [layout]="graph.layout"></plotly-plot> -->
+        </ng-container>
+
+    </div>
+
+
+    <div class="fullscreen" *ngIf="boxplot">
+        <app-navbar-detail-component [concept]="concept">
+            <button class="btn btn-outline-danger btn-sm" type="button" (click)="boxplot = null">
+                X
+            </button>
+        </app-navbar-detail-component>
+
+
+        <plotly-plot [data]="[boxplot]" [layout]="graph.boxplot"></plotly-plot>
+
+    </div>
 </ng-container>

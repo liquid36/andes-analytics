@@ -38,14 +38,14 @@ export const FILTER_AVAILABLE = [
     },
     {
         name: 'nacional',
-        query: false,
+        query: true,
         unwind: true,
         field: 'registros.paciente.edad.nacional',
         label: 'registros.paciente.edad.nacional',
     },
     {
         name: 'provincial',
-        query: false,
+        query: true,
         unwind: true,
         field: 'registros.paciente.edad.provincial',
         label: 'registros.paciente.edad.provincial',

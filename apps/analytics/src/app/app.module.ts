@@ -39,6 +39,11 @@ import { RoutingGuard } from './services/app-routing.guard';
 import { NombreFiltrosPipe } from './pipes/nombre-filtros.pipes';
 import { AppLocalidadesStatsView } from './views/localidades-stats/localidades-stats.view';
 
+// import * as PlotlyJS from 'plotly.js/dist/plotly.js';
+import { PlotlyModule, PlotlyViaWindowModule } from 'angular-plotly.js';
+// PlotlyModule.plotlyjs = PlotlyJS;
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -75,6 +80,7 @@ import { AppLocalidadesStatsView } from './views/localidades-stats/localidades-s
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyC__of8PZKirB_IvkjzI7XTlfYtLieGRh0&libraries=visualization'
     }),
+    PlotlyViaWindowModule,
     RouterModule.forRoot([
       {
         path: '',

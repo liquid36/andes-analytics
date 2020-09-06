@@ -11,17 +11,21 @@
             <tbody>
                 <tr>
                     <td>Masculino</td>
-                    <td *ngFor="let j of indices">
+                    <td *ngFor="let j of indices" [class.click]="isClick" (click)="emit('masculino', j)">
                         {{ tableDemografia[0][j] | number }}
                     </td>
-                    <td> {{ tableDemografia[0][numCols] | number }} </td>
+                    <td [class.click]="isClick" (click)="emit('masculino', -1)">
+                        {{ tableDemografia[0][numCols] | number }}
+                    </td>
                 </tr>
                 <tr>
                     <td>Femenino</td>
-                    <td *ngFor="let j of indices">
+                    <td *ngFor="let j of indices" [class.click]="isClick" (click)="emit('femenino', j)">
                         {{ tableDemografia[1][j] | number }}
                     </td>
-                    <td> {{ tableDemografia[1][numCols] | number }} </td>
+                    <td [class.click]="isClick" (click)="emit('femenino', -1)">
+                        {{ tableDemografia[1][numCols] | number }}
+                    </td>
                 </tr>
                 <tr>
                     <td>Total</td>

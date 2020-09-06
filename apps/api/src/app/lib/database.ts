@@ -12,7 +12,7 @@ export const getConnection = async function () {
         if (databases[name]) {
             return databases[name];
         } else {
-            const conn = await MongoClient.connect(mongoConnection);
+            const conn = await MongoClient.connect(mongoConnection, { poolSize: 24 });
             const db = conn.db(name);
             databases[name] = db;
             return db;
