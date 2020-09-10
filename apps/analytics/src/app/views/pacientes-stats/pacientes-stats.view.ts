@@ -1,10 +1,10 @@
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component } from '@angular/core';
 import { SnomedAPI } from '../../services/snomed.service';
 import { QueryOptionsService } from '../../services/query-filter.service';
-import { combineLatest, BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { pluck, switchMap, map, startWith, tap, take } from 'rxjs/operators';
+import { combineLatest, BehaviorSubject, forkJoin, Observable, Subject } from 'rxjs';
+import { pluck, switchMap, map, startWith, tap, take, publishReplay, refCount, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { cache, combineDataset } from '../../operators';
+import { cache } from '../../operators';
 
 @Component({
     selector: 'app-pacientes-stats-view',
@@ -30,7 +30,7 @@ export class AppPacientesStatsView {
 
     public graph = {
         layout: { width: 320 * 3, height: 240 * 2, barmode: 'overlay' },
-        boxplot: { width: 320 * 4, height: 240 * 4 },
+        boxplot: { width: window.innerWidth * 0.8, height: window.innerHeight * 0.8 },
     };
 
 
@@ -109,10 +109,17 @@ export class AppPacientesStatsView {
         this.metrica.next(metrica);
     }
 
+
+    dataRaw$: Observable<any>;
+    conceptos$: Observable<any>;
+    boxplotData$: Observable<any>;
+    takeUntil$ = new Subject();
+    conceptosSelected = new BehaviorSubject<any>({});
+
+    conceptos: any[];
     onClick($event) {
         const { sexo, key } = $event;
-
-        combineLatest(
+        this.dataRaw$ = combineLatest(
             this.concept$,
             this.rango$
         ).pipe(
@@ -122,15 +129,56 @@ export class AppPacientesStatsView {
                     sexo
                 })
             }),
+            publishReplay(1),
+            refCount(),
+            takeUntil(this.takeUntil$)
+        );
+
+        this.conceptos$ = this.dataRaw$.pipe(
             map((data) => {
-                return data.value.filter(item => item.valor).map(item => item.valor);
+                return [
+                    ...data.value.reduce(
+                        (acc: Set<string>, curr) => {
+                            acc.add(curr.concepto);
+                            return acc
+                        },
+                        new Set()
+                    )
+                ]
             }),
-            take(1)
-        ).subscribe((data) => {
-            this.boxplot = { y: data.sort(), type: 'box' };
-        });
+            tap((conceptos: string[]) => {
+                const c = {};
+                conceptos.forEach((s) => c[s] = true);
+                this.conceptosSelected.next(c);
+            })
+        );
+
+        this.boxplotData$ = combineLatest(
+            this.dataRaw$,
+            this.conceptosSelected
+        ).pipe(
+            map(([data, conceptos]) => {
+                return data.value.filter(item => item.valor && conceptos[item.concepto]).map(item => item.valor);
+            }),
+            map((data) => {
+                return [{ y: data.sort(), type: 'box' }];
+            })
+        );
+
     }
 
-    boxplot;
+    onCloseFullscreen() {
+        this.takeUntil$.next()
+        this.takeUntil$.complete();
+        this.boxplotData$ = null;
+        this.conceptos$ = null;
+        this.dataRaw$ = null;
+    }
+
+    onItemClick(c: string) {
+        const selecteds = this.conceptosSelected.getValue();
+        selecteds[c] = !selecteds[c];
+        this.conceptosSelected.next(selecteds);
+    }
 
 }

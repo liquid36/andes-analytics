@@ -63,15 +63,24 @@
     </div>
 
 
-    <div class="fullscreen" *ngIf="boxplot">
+    <div class="fullscreen" *ngIf="dataRaw$">
         <app-navbar-detail-component [concept]="concept">
-            <button class="btn btn-outline-danger btn-sm" type="button" (click)="boxplot = null">
+            <button class="btn btn-outline-danger btn-sm" type="button" (click)="onCloseFullscreen()">
                 X
             </button>
         </app-navbar-detail-component>
 
+        <div class="d-flex">
+            <plotly-plot [data]="boxplotData$ | async" [layout]="graph.boxplot"></plotly-plot>
+            <div class="list-group" *ngIf="conceptosSelected | async as selecteds">
+                <button class="list-group-item list-group-item-action" [class.active]="selecteds[c]"
+                        *ngFor="let c of conceptos$ | async " (click)="onItemClick(c)">
+                    {{ c }}
+                </button>
+            </div>
 
-        <plotly-plot [data]="[boxplot]" [layout]="graph.boxplot"></plotly-plot>
+        </div>
+
 
     </div>
 </ng-container>

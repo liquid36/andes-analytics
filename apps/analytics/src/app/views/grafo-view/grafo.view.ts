@@ -68,6 +68,9 @@ export class AppGrafoView {
                 });
             })
 
+            if (this.Graph) {
+                this.Graph._destructor();
+            }
             this.Graph = ForceGraph()(dom)
                 .backgroundColor('#101020')
                 .nodeRelSize(6)
