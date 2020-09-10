@@ -2,68 +2,92 @@
 
     <div class="fullscreen">
         <app-navbar-detail-component [concept]="concept">
+            <div class="d-flex">
 
-            <span ngbDropdown class="mr-2">
-                <button ngbDropdownToggle class="btn btn-info dropdown-toggle btn-sm" type="button">
-                    {{ key1$ | async | uppercase }}
-                </button>
-                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <button ngbDropdownItem (click)="key1$.next('prestacion')">
-                        Prestacion
+                <div ngbDropdown class="mr-2">
+                    <button ngbDropdownToggle class="btn btn-info dropdown-toggle btn-sm d-flex align-items-center"
+                            type="button">
+                        <ng-container *ngIf="key1$ | async as key">
+                            <span class="cuadrado mr-1" [style.background-color]="colores[key]"></span>
+                            {{  key | uppercase }}
+                        </ng-container>
                     </button>
-                    <button ngbDropdownItem (click)="key1$.next('profesional')">
-                        Profesional
-                    </button>
-                    <button ngbDropdownItem (click)="key1$.next('organizacion')">
-                        Organizacion
-                    </button>
-                    <button ngbDropdownItem (click)="key1$.next('paciente')">
-                        Paciente
-                    </button>
-                    <button ngbDropdownItem (click)="key1$.next('localidad')">
-                        Localidad
-                    </button>
-                    <button ngbDropdownItem (click)="key1$.next('decada')">
-                        Sexo
-                    </button>
-                    <button ngbDropdownItem (click)="key1$.next('decada')">
-                        Decada
-                    </button>
+                    <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <button ngbDropdownItem (click)="key1$.next('prestacion')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['prestacion']"></span>
+                            Prestacion
+                        </button>
+                        <button ngbDropdownItem (click)="key1$.next('profesional')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['profesional']"></span>
+                            Profesional
+                        </button>
+                        <button ngbDropdownItem (click)="key1$.next('organizacion')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['organizacion']"></span>
+                            Organizacion
+                        </button>
+                        <button ngbDropdownItem (click)="key1$.next('paciente')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['paciente']"></span>
+                            Paciente
+                        </button>
+                        <button ngbDropdownItem (click)="key1$.next('localidad')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['localidad']"></span>
+                            Localidad
+                        </button>
+                        <button ngbDropdownItem (click)="key1$.next('sexo')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['sexo']"></span>
+                            Sexo
+                        </button>
+                        <button ngbDropdownItem (click)="key1$.next('decada')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['decada']"></span>
+                            Decada
+                        </button>
+                    </div>
                 </div>
-            </span>
 
-            <span ngbDropdown class="mr-2">
-                <button ngbDropdownToggle class="btn btn-info dropdown-toggle btn-sm" type="button">
-                    {{ key2$ | async | uppercase }}
-                </button>
-                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <button ngbDropdownItem (click)="key2$.next('prestacion')">
-                        Prestacion
+                <div ngbDropdown class="mr-2">
+                    <button ngbDropdownToggle class="btn btn-info dropdown-toggle btn-sm d-flex align-items-center"
+                            type="button">
+                        <ng-container *ngIf="key2$ | async as key">
+                            <span class="cuadrado mr-1" [style.background-color]="colores[key]"></span>
+                            {{  key | uppercase }}
+                        </ng-container>
                     </button>
-                    <button ngbDropdownItem (click)="key2$.next('profesional')">
-                        Profesional
-                    </button>
-                    <button ngbDropdownItem (click)="key2$.next('organizacion')">
-                        Organizacion
-                    </button>
-                    <button ngbDropdownItem (click)="key2$.next('paciente')">
-                        Paciente
-                    </button>
-                    <button ngbDropdownItem (click)="key2$.next('localidad')">
-                        Localidad
-                    </button>
-                    <button ngbDropdownItem (click)="key2$.next('decada')">
-                        Sexo
-                    </button>
-                    <button ngbDropdownItem (click)="key2$.next('decada')">
-                        Decada
-                    </button>
+                    <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <button ngbDropdownItem (click)="key2$.next('prestacion')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['prestacion']"></span>
+                            Prestacion
+                        </button>
+                        <button ngbDropdownItem (click)="key2$.next('profesional')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['profesional']"></span>
+                            Profesional
+                        </button>
+                        <button ngbDropdownItem (click)="key2$.next('organizacion')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['organizacion']"></span>
+                            Organizacion
+                        </button>
+                        <button ngbDropdownItem (click)="key2$.next('paciente')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['paciente']"></span>
+                            Paciente
+                        </button>
+                        <button ngbDropdownItem (click)="key2$.next('localidad')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['localidad']"></span>
+                            Localidad
+                        </button>
+                        <button ngbDropdownItem (click)="key2$.next('sexo')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['sexo']"></span>
+                            Sexo
+                        </button>
+                        <button ngbDropdownItem (click)="key2$.next('decada')">
+                            <span class="cuadrado mr-1" [style.background-color]="colores['decada']"></span>
+                            Decada
+                        </button>
+                    </div>
                 </div>
-            </span>
 
-            <button class="btn btn-outline-danger btn-sm" type="button" (click)="cerrar()">
-                X
-            </button>
+                <button class="btn btn-outline-danger btn-sm" type="button" (click)="cerrar()">
+                    X
+                </button>
+            </div>
         </app-navbar-detail-component>
 
         <div #grafo> </div>

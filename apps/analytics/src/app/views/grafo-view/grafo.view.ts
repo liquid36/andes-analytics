@@ -10,7 +10,14 @@ import ForceGraph, { ForceGraphInstance } from 'force-graph';
 
 @Component({
     selector: 'app-grafo-view',
-    templateUrl: './grafo.view.html'
+    templateUrl: './grafo.view.html',
+    styles: [`
+        .cuadrado {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+        }
+    `]
 })
 export class AppGrafoView {
     public concept$: Observable<any>;
@@ -18,6 +25,17 @@ export class AppGrafoView {
 
     public key1$ = new BehaviorSubject<string>('prestacion');
     public key2$ = new BehaviorSubject<string>('profesional');
+
+    public colores = {
+        prestacion: 'red',
+        profesional: 'blue',
+        organizacion: 'green',
+        paciente: '#ffc41ee6',
+        localidad: '#1effe0e6',
+        sexo: '#ff1ef8e6',
+        decada: '#361effe6'
+    }
+
 
     constructor(
         private snomed: SnomedAPI,
@@ -52,13 +70,15 @@ export class AppGrafoView {
                 if (!nodes['k1' + elem._id[key1]]) {
                     nodes['k1' + elem._id[key1]] = {
                         id: 'k1' + elem._id[key1],
-                        label: elem.label[key1]
+                        label: elem.label[key1],
+                        key: key1
                     };
                 }
                 if (!nodes['k2' + elem._id[key2]]) {
                     nodes['k2' + elem._id[key2]] = {
                         id: 'k2' + elem._id[key2],
-                        label: elem.label[key2]
+                        label: elem.label[key2],
+                        key: key2
                     };
                 }
                 edge.push({
@@ -76,7 +96,7 @@ export class AppGrafoView {
                 .nodeRelSize(6)
                 .nodeAutoColorBy('user')
                 .nodeLabel((node: any) => `${node.label}`)
-                .nodeColor((node: { id: string }) => node.id.startsWith('k2') ? 'rgba(125,125,255,0.9)' : 'rgba(255,125,125,0.9)')
+                .nodeColor((node: { id: string, key: string }) => this.colores[node.key])
                 .linkColor((node) => 'rgba(255,255,255,0.2)')
                 .graphData({
                     nodes: Object.values(nodes),
