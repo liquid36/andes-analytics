@@ -5,7 +5,7 @@ $andes-verde: #8bc43f;
 .contenedor-datos-principales {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     
     // Styling
     margin: auto;
@@ -13,10 +13,16 @@ $andes-verde: #8bc43f;
     height: 200px;
     width: 500px;
   
+    > hr.divisor-vertical {
+        height: 100%;
+        border: solid black 0.01rem;
+        background: black;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
  
     .bloque-numerico-principal {
         align-self: center;
-        border-right: solid 1px black;
         h1 {
             margin: 0;
             font-size: 5rem;

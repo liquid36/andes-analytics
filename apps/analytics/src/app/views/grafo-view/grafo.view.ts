@@ -27,15 +27,14 @@ export class AppGrafoView {
     public key2$ = new BehaviorSubject<string>('profesional');
 
     public colores = {
-        prestacion: 'red',
-        profesional: 'blue',
-        organizacion: 'green',
-        paciente: '#ffc41ee6',
-        localidad: '#1effe0e6',
-        sexo: '#ff1ef8e6',
-        decada: '#361effe6'
+        prestacion: '#f4a03b',
+        profesional: '#2CA2DA',
+        organizacion: 'yellowgreen',
+        paciente: '#63c7b7',
+        localidad: '#982f98',
+        sexo: '#EA1E79',
+        decada: '#63c7b7'
     }
-
 
     constructor(
         private snomed: SnomedAPI,

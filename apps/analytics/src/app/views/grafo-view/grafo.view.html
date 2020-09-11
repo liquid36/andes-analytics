@@ -3,9 +3,8 @@
     <div class="fullscreen">
         <app-navbar-detail-component [concept]="concept">
             <div class="d-flex">
-
                 <div ngbDropdown class="mr-2">
-                    <button ngbDropdownToggle class="btn btn-info dropdown-toggle btn-sm d-flex align-items-center"
+                    <button ngbDropdownToggle class="btn btn-default dropdown-toggle btn-sm d-flex align-items-center"
                             type="button">
                         <ng-container *ngIf="key1$ | async as key">
                             <span class="cuadrado mr-1" [style.background-color]="colores[key]"></span>
@@ -45,7 +44,7 @@
                 </div>
 
                 <div ngbDropdown class="mr-2">
-                    <button ngbDropdownToggle class="btn btn-info dropdown-toggle btn-sm d-flex align-items-center"
+                    <button ngbDropdownToggle class="btn btn-default dropdown-toggle btn-sm d-flex align-items-center"
                             type="button">
                         <ng-container *ngIf="key2$ | async as key">
                             <span class="cuadrado mr-1" [style.background-color]="colores[key]"></span>
@@ -84,7 +83,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-outline-danger btn-sm" type="button" (click)="cerrar()">
+                <button class="btn btn-danger btn-sm" type="button" (click)="cerrar()">
                     X
                 </button>
             </div>
