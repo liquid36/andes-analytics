@@ -12,11 +12,10 @@ let date_max = moment('2020-08-31T00:00:00.000-03:00').endOf(TIME_UNIT);
 async function minmaxDate() {
     const db = await getConnection();
     // const list = await db.collection(MAIN_DB).aggregate([{ $group: { _id: null, max: { $max: '$start' }, min: { $min: "$start" } } }]).toArray();
-    const min = await db.collection(MAIN_DB).find({}).sort({ start: 1 }).limit(1);
-    const max = await db.collection(MAIN_DB).find({}).sort({ start: -1 }).limit(1);
-
-    date_max = moment(max.start).endOf(TIME_UNIT);
-    date_min = moment(min.start).startOf(TIME_UNIT);
+    const min = await db.collection(MAIN_DB).find({}).sort({ start: 1 }).limit(1).toArray();
+    const max = await db.collection(MAIN_DB).find({}).sort({ start: -1 }).limit(1).toArray();
+    date_min = moment(min[0].start).startOf(TIME_UNIT);
+    date_max = moment(max[0].start).endOf(TIME_UNIT);
 }
 
 minmaxDate();
