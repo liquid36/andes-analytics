@@ -104,5 +104,8 @@ export async function createPrestacionTx() {
         "registros.tipoPrestacion.conceptId": 1,
         "concepto.semanticTag": 1
     });
+    PrestacionTx.createIndex({
+        start: 1
+    });
 
 }
