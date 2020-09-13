@@ -1,19 +1,26 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Server } from './server.service';
-import { map } from 'rxjs/operators';
-import { environment } from '../../../../../apps/analytics/src/environments/environment';
+import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class SnomedHTTP {
-  constructor(private http: Server) {
-    this.http.setBaseURL(environment.API_URL);
-  }
+  constructor(
+    private http: Server
+  ) { }
 
   private branch = 'MAIN/ODONTO/NEUQUEN-20200721-1318';
   private snowstormPath = '/snowstorm';
+
+  load() {
+    return this.http.get('/config.json').pipe(
+      map(res => res.branch),
+      tap(branch => this.branch = branch)
+    ).toPromise()
+  }
 
   descriptions(params: DescriptionParams): Observable<DescriptionResult> {
     if (!params) {

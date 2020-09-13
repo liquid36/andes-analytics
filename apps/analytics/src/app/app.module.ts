@@ -42,6 +42,7 @@ import { AppLocalidadesStatsView } from './views/localidades-stats/localidades-s
 // import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule, PlotlyViaWindowModule } from 'angular-plotly.js';
 import { AppGrafoView } from './views/grafo-view/grafo.view';
+import { environment } from '../environments/environment';
 // PlotlyModule.plotlyjs = PlotlyJS;
 
 
@@ -109,7 +110,7 @@ import { AppGrafoView } from './views/grafo-view/grafo.view';
 
     ], { initialNavigation: 'enabled' }),
     UiModule,
-    SnomedModule.forRoot()
+    SnomedModule.forRoot(environment.API_URL)
   ],
   providers: [
     RoutingGuard

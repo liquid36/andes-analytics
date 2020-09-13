@@ -54,7 +54,7 @@ router.get('/organizaciones', async function (req, res) {
 router.get('/conceptos-numericos', async function (req, res) {
     const db = await getConnection();
     const ConceptosNumericos = db.collection('conceptos_numericos');
-    const orgs = await ConceptosNumericos.find({}, { conceptId: 1, term: 1, fsn: 1 }).toArray();
+    const orgs = await ConceptosNumericos.find({}, { projection: { conceptId: 1, term: 1, fsn: 1 } }).toArray();
     return res.json(orgs);
 });
 

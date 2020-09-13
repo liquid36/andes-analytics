@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 
 export interface Options {
     params?: any;
@@ -12,14 +12,18 @@ export interface Options {
 // Constantes
 const defaultOptions: Options = { params: null, showError: true, showLoader: true };
 
+export const BASE_URL = new InjectionToken<string>('');
+
 @Injectable({
     providedIn: 'root',
 })
 export class Server {
-    private baseURL: string;
     private authToken: string;
 
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient,
+        @Inject(BASE_URL) private baseURL: string
+    ) {
         this.authToken = window.sessionStorage.getItem('token');
     }
 

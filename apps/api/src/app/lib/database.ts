@@ -1,8 +1,8 @@
 
-import { MongoClient, ObjectID } from 'mongodb';
+import { Db, MongoClient, ObjectID } from 'mongodb';
+import { environment } from '../../environments/environment';
 
-const mongoConnection = process.env['ANDES_DB_CONN'] || process.env['MONGO_DB_CONN'] || "localhost:27017";
-const databases = {};
+const databases: { [key: string]: Db } = {};
 
 export const ObjectId = ObjectID;
 
@@ -12,7 +12,7 @@ export const getConnection = async function () {
         if (databases[name]) {
             return databases[name];
         } else {
-            const conn = await MongoClient.connect(mongoConnection, { poolSize: 24 });
+            const conn = await MongoClient.connect(environment.db, { poolSize: 24, useNewUrlParser: true, useUnifiedTopology: true });
             const db = conn.db(name);
             databases[name] = db;
             return db;
@@ -26,10 +26,10 @@ export const getConnection = async function () {
 async function ensureIndex() {
     const db = await getConnection();
     const cache = db.collection('cache');
-    cache.ensureIndex({
+    cache.createIndex({
         hash_key: 1
     });
-    cache.ensureIndex({ 'lastUse': 1 }, { expireAfterSeconds: 2592000 }); // 1 mes
+    cache.createIndex({ 'lastUse': 1 }, { expireAfterSeconds: 2592000 }); // 1 mes
 }
 
 ensureIndex();

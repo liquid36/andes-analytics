@@ -4,5 +4,6 @@ export const environment = {
   host: process.env.HOST || '0.0.0.0',
   key: process.env.JWT_KEY || null,
   andesHost: process.env.ANDES_HOST || 'http://localhost:3002',
-  snowstorm_host: process.env.SNOWSTORM_HOST || 'http://localhost:8080'
+  snowstorm_host: process.env.SNOWSTORM_HOST || 'http://localhost:8080',
+  db: process.env.ANDES_DB || 'mongodb://localhost:27017/andes'
 };
