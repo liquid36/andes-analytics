@@ -5,6 +5,7 @@ import { Subject, Observable, of } from 'rxjs';
 import { mergeObject, distincObject, cache } from '../../operators';
 import { tap, filter, switchMap, pluck, map } from 'rxjs/operators';
 import { DescriptionParams } from '@andes-analytics/snomed';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
     providedIn: 'root',
@@ -14,10 +15,12 @@ export class SnomedSearchService {
     public searchParams$ = this.searchParams.asObservable();
 
     public searchResult$: Observable<any>;
-    // public filterResult$: Observable<any[]>;
+
+    language = 'es';
 
     constructor(
-        private snomed: SnomedAPI
+        private snomed: SnomedAPI,
+        private route: ActivatedRoute
     ) {
         this.searchResult$ = this.searchParams$.pipe(
             mergeObject(),
@@ -38,6 +41,9 @@ export class SnomedSearchService {
             cache()
         );
 
+        this.route.queryParamMap.subscribe(params => {
+            this.language = params.get('language');
+        })
 
     }
 
@@ -57,6 +63,7 @@ export class SnomedSearchService {
         const params: DescriptionParams = {
             term: query.search,
             limit: 20,
+            language: this.language
         };
         if (query.semanticTag && query.semanticTag.length > 0) {
             params.semanticTag = query.semanticTag;

@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
-import { SnomedAPI } from '../../services/snomed.service';
+import { getConceptOperator, SnomedAPI } from '../../services/snomed.service';
 import { QueryOptionsService } from '../../services/query-filter.service';
 import { combineLatest, BehaviorSubject, forkJoin, Subject } from 'rxjs';
 import { pluck, switchMap, map, merge, startWith, tap } from 'rxjs/operators';
@@ -44,10 +44,8 @@ export class AppMapsStatsView {
         private activeRoute: ActivatedRoute,
         private location: Location
     ) {
-        this.concept$ = this.activeRoute.paramMap.pipe(
-            map((dto: any) => dto.params),
-            pluck('id'),
-            switchMap((conceptId) => this.snomed.concept(conceptId)),
+        this.concept$ = getConceptOperator(this.activeRoute).pipe(
+            switchMap(([conceptId, language]) => this.snomed.concept(conceptId, language)),
             cache()
         )
 
@@ -98,8 +96,9 @@ export class AppMapsStatsView {
                         if (dataOrg.direccion && dataOrg.direccion.geoReferencia) {
                             const marker = new (window as any).google.maps.Marker({
                                 position: { lat: dataOrg.direccion.geoReferencia[0], lng: dataOrg.direccion.geoReferencia[1] },
-                                // map: this.mapsCache,
-                                // title: 'Hello World!'
+                                icon: {
+                                    url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                }
                             });
 
                             this.orgMarkers.push(marker);

@@ -7,12 +7,12 @@
     <div class="ml-3 mr-3">
         <div class="row">
             <div class="col-6">
-                <snd-concept-parents [concept]="concept" [iconTemplate]="pillsTemplate"
+                <snd-concept-parents [concept]="concept" [iconTemplate]="pillsTemplate" [language]="language"
                                      (conceptClick)="onSelected($event)">
                 </snd-concept-parents>
             </div>
             <div class="col-6">
-                <snd-concept-childrens [concept]="concept" [iconTemplate]="pillsTemplate"
+                <snd-concept-childrens [concept]="concept" [iconTemplate]="pillsTemplate" [language]="language"
                                        (conceptClick)="onSelected($event)"></snd-concept-childrens>
             </div>
         </div>

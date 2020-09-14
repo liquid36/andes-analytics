@@ -43,8 +43,8 @@ export class SnomedHTTP {
     );
   }
 
-  concept(sctid) {
-    return this.http.get(`${this.snowstormPath}/browser/${this.branch}/concepts/${sctid}`);
+  concept(sctid, params = {}) {
+    return this.http.get(`${this.snowstormPath}/browser/${this.branch}/concepts/${sctid}`, { params });
   }
 
   parents(sctid, params) {

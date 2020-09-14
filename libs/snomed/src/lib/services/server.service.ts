@@ -71,7 +71,7 @@ export class Server {
         const result = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                "Accept-Language": "es"
+                "Accept-Language": (options && options.params && options.params.language) || "es"
             }),
             params: options ? options.params : null
         };

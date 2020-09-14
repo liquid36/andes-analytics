@@ -81,7 +81,8 @@ import { environment } from '../environments/environment';
     NgSelectModule,
     NgxDaterangepickerMd.forRoot(),
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyC__of8PZKirB_IvkjzI7XTlfYtLieGRh0&libraries=visualization'
+      apiKey: environment.GOOGLEMAPS_KEY,
+      libraries: ['visualization']
     }),
     PlotlyViaWindowModule,
     RouterModule.forRoot([

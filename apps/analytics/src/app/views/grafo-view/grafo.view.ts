@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { SnomedAPI } from '../../services/snomed.service';
+import { getConceptOperator, SnomedAPI } from '../../services/snomed.service';
 import { QueryOptionsService } from '../../services/query-filter.service';
 import { combineLatest, BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { pluck, switchMap, map, merge, startWith, tap, take } from 'rxjs/operators';
@@ -42,10 +42,8 @@ export class AppGrafoView {
         private activeRoute: ActivatedRoute,
         private location: Location
     ) {
-        this.concept$ = this.activeRoute.paramMap.pipe(
-            map((dto: any) => dto.params),
-            pluck('id'),
-            switchMap((conceptId) => this.snomed.concept(conceptId)),
+        this.concept$ = getConceptOperator(this.activeRoute).pipe(
+            switchMap(([conceptId, language]) => this.snomed.concept(conceptId, language)),
             cache()
         )
 

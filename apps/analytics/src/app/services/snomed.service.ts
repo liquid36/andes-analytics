@@ -1,10 +1,11 @@
 
 import { Injectable } from '@angular/core';
-import { map, bufferTime, filter, switchMap } from 'rxjs/operators';
-import { of, BehaviorSubject } from 'rxjs';
+import { map, bufferTime, filter, switchMap, pluck } from 'rxjs/operators';
+import { of, BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { QueryOptionsService } from './query-filter.service';
 import { SnomedHTTP, DescriptionParams } from '@andes-analytics/snomed';
 import { cache } from '../operators';
+import { ActivatedRoute } from '@angular/router';
 
 type VISULIZATION = 'unique' | 'count' | 'value' | 'raw';
 
@@ -43,8 +44,8 @@ export class SnomedAPI {
         return this.api.descriptions(params);
     }
 
-    concept(sctid) {
-        return this.api.concept(sctid);
+    concept(sctid, language = 'es') {
+        return this.api.concept(sctid, { language });
     }
 
     parents(sctid) {
@@ -52,9 +53,9 @@ export class SnomedAPI {
         return this.api.parents(sctid, { form });
     }
 
-    children(sctid) {
+    children(sctid, language = 'es') {
         const form = this.qf.getValue('relationship') || 'inferred';
-        return this.api.children(sctid, { form });
+        return this.api.children(sctid, { form, language });
     }
 
     stats(id) {
@@ -174,4 +175,16 @@ export class SnomedAPI {
         cache()
     )
 
+}
+
+export function getConceptOperator(activeRoute: ActivatedRoute): Observable<[string, string]> {
+    return combineLatest(
+        activeRoute.paramMap.pipe(
+            map((dto: any) => dto.params),
+            pluck('id')
+        ),
+        activeRoute.queryParams.pipe(
+            pluck('language'),
+        )
+    ) as any
 }

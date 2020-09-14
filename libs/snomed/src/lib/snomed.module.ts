@@ -56,6 +56,6 @@ export class SnomedModule {
     }
 }
 
-function appLoadFactory(config: SnomedHTTP) {
+export function appLoadFactory(config: SnomedHTTP) {
     return () => config.load();
 }

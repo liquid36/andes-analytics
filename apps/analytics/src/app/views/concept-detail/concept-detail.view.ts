@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { SnomedAPI } from '../../services/snomed.service';
+import { getConceptOperator, SnomedAPI } from '../../services/snomed.service';
 import { QueryOptionsService } from '../../services/query-filter.service';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { tap, pluck, switchAll, switchMap, map } from 'rxjs/operators';
 import { ActivationEnd, ActivatedRoute, Router } from '@angular/router';
 
@@ -18,6 +18,7 @@ export class AppConceptDetailView {
     };
 
     public term$: Observable<any>;
+    public language = 'es';
 
     constructor(
         private snomed: SnomedAPI,
@@ -25,11 +26,11 @@ export class AppConceptDetailView {
         private activeRoute: ActivatedRoute,
         private router: Router
     ) {
-        // this.concept$ = this.qf.onConcept().pipe(
-        this.concept$ = this.activeRoute.paramMap.pipe(
-            map((dto: any) => dto.params),
-            pluck('id'),
-            switchMap((conceptId) => this.snomed.concept(conceptId)),
+        this.activeRoute.queryParams.subscribe(({ language }) => {
+            this.language = language;
+        })
+        this.concept$ = getConceptOperator(this.activeRoute).pipe(
+            switchMap(([conceptId, language]) => this.snomed.concept(conceptId, language)),
             tap(concept => {
                 if (concept) {
                     this.term$ = this.snomed.terms(concept.conceptId);

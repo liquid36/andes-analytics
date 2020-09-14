@@ -18,9 +18,10 @@ export class ConceptChildrensComponent {
 
     @Input() iconTemplate: TemplateRef<any>;
     @Input() form = 'inferred';
+    @Input() language = 'es';
     @Input() set concept(value) {
         this.conceptTemp = value;
-        this.snomed.children(value.conceptId, { form: this.form }).subscribe(children => {
+        this.snomed.children(value.conceptId, { form: this.form, language: this.language }).subscribe(children => {
             children.forEach(e => e._level = 0);
             this.relatioships = children;
         });
@@ -33,7 +34,7 @@ export class ConceptChildrensComponent {
 
     getChildren(relationship, index) {
         if (!relationship._expanded && relationship.conceptId !== '138875005') {
-            this.snomed.children(relationship.conceptId, { form: this.form }).subscribe(children => {
+            this.snomed.children(relationship.conceptId, { form: this.form, language: this.language }).subscribe(children => {
                 relationship._expanded = true;
                 children.forEach(e => e._level = relationship._level + 1);
                 this.relatioships = [

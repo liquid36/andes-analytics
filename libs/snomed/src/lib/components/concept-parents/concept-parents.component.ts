@@ -20,6 +20,7 @@ export class ConceptParentsComponent {
     @Input() iconTemplate: TemplateRef<any>;
 
     @Input() form = 'inferred';
+    @Input() language = 'es';
     @Input() set concept(value) {
         this.conceptTemp = value;
 
@@ -44,7 +45,7 @@ export class ConceptParentsComponent {
 
     getParents(relationship, index) {
         if (!relationship._expanded && relationship.conceptId !== '138875005') {
-            this.api.parents(relationship.conceptId, { form: this.form }).subscribe(parents => {
+            this.api.parents(relationship.conceptId, { form: this.form, language: this.language }).subscribe(parents => {
                 relationship._expanded = true;
                 parents.forEach(e => e._level = relationship._level + 1);
                 this.relatioships = [
