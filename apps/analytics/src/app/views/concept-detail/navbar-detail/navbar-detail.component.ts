@@ -12,8 +12,4 @@ export class AppNavbarDetailComponent {
 
     @Input() concept;
 
-
-
-
-
 }

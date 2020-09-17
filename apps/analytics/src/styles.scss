@@ -1,5 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@ng-select/ng-select/themes/default.theme.css";
+$adi-font-path: '~@andes/icons/fonts/';
+@import '~@andes/icons/scss/andes-icons';
+@import './app/assets/variables.scss';
 
 @import '../../../libs/ui/src/styles';
 
@@ -54,5 +57,428 @@ div {
 
     &::-webkit-scrollbar-corner {
         background: transparent;
+    }
+}
+
+
+// Refactor Item
+
+div {
+    > i[class^="adi"] {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     border-radius: 50%;
+ 
+     // Semantic Tags
+     &.adi-trastorno {
+         color: $trastorno;
+ 
+         &:before {
+         content: "\e8df"
+         }
+     }
+     
+     &.adi-problema {
+         color: $problema;
+ 
+         &:before {
+         content: "\e8df";
+         }
+     }
+     
+     &.adi-hallazgo {
+         color: $hallazgo;
+ 
+         &:before {
+         content: "\e879";
+         }
+     }
+     
+     &.adi-procedimiento {
+         color: $procedimiento;
+ 
+         &:before {
+         content: "\e8db";
+         }
+     }
+     
+     &.adi-producto {
+         color: $producto;
+ 
+         &:before {
+         content: "\e8c5";
+         }
+     }
+     
+     &.adi[class*="corporal"] {
+         color: $estructura-corporal;
+         
+         &:before {
+         content: "\e863";
+         }
+     }
+     
+     &.adi-situación {
+         color: $situacion;
+ 
+         &:before {
+         content: "\e8b4";
+         }
+     }
+     
+     &.adi-calificador {
+         color: $calificador;
+ 
+         &:before {
+         content: "\e869";
+         }
+     }
+     
+     &[class*="producto"] {
+         color: $producto;
+ 
+         &:before {
+         content: "\e8be";
+         }
+     }
+     
+     
+     &[class*="fárm"] {
+         color: $producto;
+ 
+         &:before {
+         content: "\e95b";
+         }
+     }
+     
+     &.adi[class*="nombre"] {
+         color: $producto;
+ 
+         &:before {
+         content: "\e875";
+         }
+     }
+     
+     
+     &.adi[class*="ambiente"] {
+         color: $ambiente;
+ 
+         &:before {
+         content: "\e8b5";
+         }
+     }
+     
+     &.adi-sustancia {
+         color: $sustancia;
+ 
+         &:before {
+         content: "\e8c7";
+         }
+     }
+     
+     &.adi[class*="régimen"] {
+         color: $regimen;
+ 
+         &:before {
+         content: "\e8a1";
+         }
+     }
+     
+     &.adi[class*="objeto"] {
+         color: $objeto;
+ 
+         &:before {
+         content: "\e988";
+         }
+     }
+     
+     &.adi[class*="entidad"] {
+         color: $entidad;
+ 
+         &:before {
+         content: "\e901";
+         }
+     }
+     
+     &.adi-organismo {
+         color: $organismo;
+ 
+         &:before {
+         content: "\e83c";
+         }
+     }
+     
+     &.adi-célula {
+         color: $celula;
+ 
+         &:before {
+         content: "\e8ac";
+         }
+     }
+     
+     &[class*="anomalía"] {
+         color: $anomalia;
+ 
+         &:before {
+         content: "\e80c";
+         }
+     }
+     
+     &[class*="navegación"]{
+         color: $navegacion;
+ 
+         &:before {
+         content: "\e98b";
+         }
+     }
+     
+     &[class*="evento"] {
+         color: $evento;
+ 
+         &:before {
+         content: "\e8af";
+         }
+     }
+     
+     &.adi-ocupación {
+        color: $ocupacion;
+
+        &:before {
+        content: "\e8ab";
+        }
+    }
+     
+     &.adi-atributo {
+        color: $atributo;
+
+        &:before {
+        content: "\ea00";
+        }
+    }
+     
+     &[class*="elemento"] {
+        color: $elemento;
+
+        &:before {
+        content: "\e88b";
+        }
+    }
+     
+     &[class*="proveedor"] {
+        color: $proveedor;
+
+        &:before {
+        content: "\e8a2";
+        }
+    }
+     
+     &[class*="persona"] {
+        color: $persona;
+
+        &:before {
+        content: "\e843";
+        }
+    }
+     
+     &[class*="étnico"] {
+        color: $grupo-etnico;
+
+        &:before {
+        content: "\e87b";
+        }
+    }
+     
+     &[class*="liberación"] {
+        color: $forma-liberacion;
+
+        &:before {
+        content: "\e88b";
+        }
+    }
+     
+     &[class*="farmacéutica"] {
+        color: $forma-farmaceutica;
+
+        &:before {
+        content: "\e842";
+        }
+    }
+     
+     &[class*="celular"] {
+        color: $estructura-celular;
+
+        &:before {
+        content: "\e8ad";
+        }
+    }
+     
+     &[class*="escala"] {
+        color: $escala-evaluacion;
+
+        &:before {
+        content: "\e998";
+        }
+    }
+     
+     &[class*="espécimen"] {
+        color: $especimen;
+
+        &:before {
+        content: "\e9b4";
+        }
+    }
+     
+     &[class*="fármaco"] {
+        color: $farmaco-clinico;
+
+        &:before {
+        content: "\e86c";
+        }
+    }
+     
+     &[class*="presentación"] {
+        color: $unidad-presentacion;
+
+        &:before {
+        content: "\e874";
+        }
+    }
+     
+     &[class*="metadato"] {
+        color: $metadato-fundacional;
+
+        &:before {
+        content: "\e88b";
+        }
+    }
+     
+     &[class*="método"] {
+        color: $metodo-administracion;
+
+        &:before {
+        content: "\ea4d";
+        }
+    }
+     
+     &[class*="owl"] {
+        color: $concepto-metadatos-owl;
+
+        &:before {
+        content: "\ea4d";
+        }
+    }
+     
+     &[class*="previsto"] {
+        color: $sitio-administracion-previsto;
+
+        &:before {
+        content: "\ea0e";
+        }
+    }
+     
+     &[class*="transformación"] {
+        color: $transformacion;
+
+        &:before {
+        content: "\ea57";
+        }
+    }
+     
+     &[class*="disposición"] {
+        color: $disposicion;
+
+        &:before {
+        content: "\ea63";
+        }
+    }
+     
+     &[class*="estadificación"] {
+        color: $estadificacion-tumoral;
+
+        &:before {
+        content: "\ea58";
+        }
+    }
+     
+     &[class*="materia"] {
+        color: $estado-materia;
+
+        &:before {
+        content: "\e999";
+        }
+    }
+     
+     &[class*="fuerza"] {
+        color: $fuerza-fisica;
+
+        &:before {
+        content: "\ea3c";
+        }
+    }
+     
+     &[class*="racial"] {
+        color: $grupo-racial;
+
+        &:before {
+        content: "\e8b6";
+        }
+    }
+     
+     &.adi-localización {
+        color: $localizacion;
+
+        &:before {
+        content: "\e947";
+        }
+    }
+}
+}
+
+snomed-search {
+    --iconFontSize: 1rem;
+    --iconSize: 2rem;
+    --fontSize: .8rem;
+    --titleWidth: 65%;
+
+    div {
+        > i[class^="adi"] {
+            font-size: var(--iconFontSize);
+            width: var(--iconSize);
+            height: var(--iconSize);
+            border: solid 1px;
+        }
+
+        &.titulo-item {
+            display: flex;
+            flex-direction: column;
+            font-size: var(--fontSize);
+            width: var(--titleWidth);
+            margin-left: .5rem;
+        }
+    }
+}
+
+app-navbar-detail-component {
+    --iconFontSize: 1.5rem;
+    --iconSize: 3rem;
+    --fontSize: 1rem;
+
+
+    div {
+        > i[class^="adi"] {
+            font-size: var(--iconFontSize);
+            width: var(--iconSize);
+            height: var(--iconSize);
+            border: solid 2px;
+        }
+
+        &.titulo-item {
+            display: flex;
+            flex-direction: column;
+            font-size: var(--fontSize);
+            width: var(--titleWidth);
+            margin-left: .5rem;
+        }
     }
 }
