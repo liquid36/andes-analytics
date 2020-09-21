@@ -7,7 +7,8 @@ import { ActivationEnd, ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-concept-detail-view',
-    templateUrl: './concept-detail.view.html'
+    templateUrl: './concept-detail.view.html',
+    styleUrls: ['./concept-detail.view.scss']
 })
 export class AppConceptDetailView {
     public concept$;

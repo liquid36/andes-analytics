@@ -1,0 +1,33 @@
+.grid-detail {
+    display: grid;
+    grid-template-columns: 1fr fit-content;
+    grid-template-rows: calc(100vh - 165px - 1.5rem);
+
+    .main-panel {
+        grid-column: 1;
+        grid-row: 1;
+
+        padding: 0 1rem;
+        overflow-y: auto;
+    }
+    
+    .lateral-panel {
+        grid-column: 2;
+        grid-row: 1;
+        height: calc(100vh - 165px - 1.5rem);
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
+        border-left: solid 1px gray;
+        padding: 0 1rem;
+    }
+}
+
+// Titulos
+.title {
+    border-bottom: solid 1px gray;
+    color: deepskyblue;
+    font-size: 1.25rem;
+    font-weight: 400;
+    text-transform: uppercase;
+}

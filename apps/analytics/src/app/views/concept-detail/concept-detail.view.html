@@ -1,31 +1,29 @@
 <ng-container *ngIf="concept$ | async as concept">
-
     <app-navbar-detail-component [concept]="concept"></app-navbar-detail-component>
+    <section class="grid-detail">
+        <main class="main-panel">
+            <app-concept-stats [concept]="concept"></app-concept-stats>
+            <ng-template #pillsTemplate let-concept="concept">
+                <concept-count-pill [concept]="concept"></concept-count-pill>
+            </ng-template>
+            <snd-concept-desc-table [concept]="concept" [refSetLanguage]="refSetLanguage" [terms$]="term$">
+            </snd-concept-desc-table>
 
-    <app-concept-stats [concept]="concept"></app-concept-stats>
-
-    <div class="ml-3 mr-3">
-        <div class="row">
-            <div class="col-6">
-                <snd-concept-parents [concept]="concept" [iconTemplate]="pillsTemplate" [language]="language"
-                                     (conceptClick)="onSelected($event)">
-                </snd-concept-parents>
+            <!-- Diagrama -->
+            <div class="diagram-panel">
+                <p class="title">Diagrama</p>
+                <snd-concept-diagram [concept]="concept"></snd-concept-diagram>
             </div>
-            <div class="col-6">
-                <snd-concept-childrens [concept]="concept" [iconTemplate]="pillsTemplate" [language]="language"
-                                       (conceptClick)="onSelected($event)"></snd-concept-childrens>
-            </div>
-        </div>
+        </main>
 
-        <ng-template #pillsTemplate let-concept="concept">
-            <concept-count-pill [concept]="concept"></concept-count-pill>
-            <!-- <span>HOLA</span> -->
-        </ng-template>
-
-        <snd-concept-desc-table [concept]="concept" [refSetLanguage]="refSetLanguage" [terms$]="term$">
-        </snd-concept-desc-table>
-
-        <snd-concept-diagram [concept]="concept"></snd-concept-diagram>
-    </div>
-
+        <!-- Ancestros & Descendientes -->
+        <aside class="lateral-panel">
+            <p class="title">Ancestros y descendientes</p>
+            <snd-concept-parents [concept]="concept" [iconTemplate]="pillsTemplate" [language]="language"
+                                 (conceptClick)="onSelected($event)">
+            </snd-concept-parents>
+            <snd-concept-childrens [concept]="concept" [iconTemplate]="pillsTemplate" [language]="language"
+                                   (conceptClick)="onSelected($event)"></snd-concept-childrens>
+        </aside>
+    </section>
 </ng-container>

@@ -60,6 +60,11 @@ div {
     }
 }
 
+hr.divider {
+    width: 100%;
+    color: gray;
+    margin: 0.5rem;
+}
 
 // Refactor Item
 
@@ -422,6 +427,14 @@ div {
 
         &:before {
         content: "\e8b6";
+        }
+    }
+    
+     &[class*="religión"] {
+        color: $religion-filosofia;
+
+        &:before {
+        content: "\ea68";
         }
     }
      

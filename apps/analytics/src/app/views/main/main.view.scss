@@ -1,5 +1,4 @@
 main {
-    height: 100vh;
     display: grid;
     grid-template-areas: "header header"
                          "sidebar search"
@@ -8,7 +7,7 @@ main {
     grid-template-columns: 0px 1fr;
 
     &.open {
-        grid-template-columns: 400px 1fr;
+        grid-template-columns: 320px 1fr;
     }
 }
 

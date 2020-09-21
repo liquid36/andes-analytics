@@ -9,7 +9,6 @@
     flex-direction: column;
 }
 
-
 .toogle-float {
     position: absolute;
     top: 50%;
@@ -22,14 +21,17 @@
     display: flex;
 }
 
-.list-group-item {
-    padding: 0.25rem 0.25rem;
-    cursor: pointer;
-     &:hover {
-         background-color: lightgray;
-     }
-}
+.list-group {
+    height: calc(100vh - 140px);
 
+    .list-group-item {
+        padding: 0.25rem 0.25rem;
+        cursor: pointer;
+         &:hover {
+             background-color: lightgray;
+         }
+    }
+}
 
 .font-sm{
     font-size: 0.8rem;
