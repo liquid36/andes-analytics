@@ -30,7 +30,8 @@
     <ng-container *ngIf="(results$ | async) as results">
         <ul class="list-group m-1" *ngIf="results.length > 0">
             <li class="list-group-item d-flex justify-content-between align-items-center"
-                *ngFor="let searchItem of results" (click)="onClick(searchItem.concept)">
+                [class.selected]="selectedConcept === searchItem.concept.conceptId" *ngFor="let searchItem of results"
+                (click)="onClick(searchItem.concept)">
                 <div class="d-flex flex-row align-items-center">
                     <i class="adi adi-{{ searchItem.concept | semtag }} mr-2"></i>
                     <concept-definition-status-icon [concept]="searchItem.concept">

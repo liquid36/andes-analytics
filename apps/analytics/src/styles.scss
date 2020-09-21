@@ -75,7 +75,7 @@ div {
      align-items: center;
      border-radius: 50%;
  
-     // Semantic Tags
+     // ICONOS: Semantic Tags
      &.adi-trastorno {
          color: $trastorno;
  
@@ -435,6 +435,17 @@ div {
 
         &:before {
         content: "\ea68";
+        }
+    }
+    
+     &[class*="SNOMED"] {
+        color: indigo;
+        background-image: $andes-degrade;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+
+        &:before {
+        content: "\e810";
         }
     }
      

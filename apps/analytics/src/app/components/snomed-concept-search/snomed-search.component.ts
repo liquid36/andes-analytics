@@ -9,11 +9,14 @@ import { AppService } from '../../services/app.service';
     templateUrl: './snomed-search.component.html',
     styleUrls: ['snomed-search.component.scss']
 })
+
+
 export class SnomedSearchComponent {
     text = '';
     results$ = this.searchService.getResult('items');
     semantics$ = this.searchService.getResult('semanticTags');
     semTagSelected$ = this.searchService.getSearchParams('semanticTag');
+    selectedConcept = false;
 
     constructor(
         private searchService: SnomedSearchService,
@@ -41,6 +44,7 @@ export class SnomedSearchComponent {
 
     onClick(concept) {
         this.qf.selectConcept(concept.conceptId);
+        this.selectedConcept = concept.conceptId;
     }
 
     toogleNavbar() {

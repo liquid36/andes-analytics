@@ -1,12 +1,53 @@
+@import './../../../../../apps/analytics/src/app/assets/variables.scss';
+
 .navbar {
     // height: var(--navbar-height);
     padding: 0 1rem;
 }
 
-.nav-item {
-    cursor: pointer;
+    .navbar-brand {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+            
+            i.adi {
+                font-size: .85rem;
+                margin-right: 1rem;
+                
+                &.adi-andes-marca {
+                    background-image: $andes-degrade;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    mix-blend-mode: difference;
+                    filter:brightness(1.8);
+                    font-size: 1.2rem;
+                }
+         }
+        }
 
-    &:hover, &.active {
-        background-color: #165897
-    }
+    .nav-item {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        font-size: .85rem;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: normal;
+        width: fit-content;
+        > span {
+            &:hover {
+                color: $andes-info!important;
+            }
+            
+
+        }
+        &.active {
+            background-color: $andes-info;
+            
+            span {
+                &:hover {
+                    color: white!important;
+                }
+            }
+        }    
 }
