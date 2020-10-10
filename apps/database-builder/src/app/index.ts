@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { getPrestacionTx, createPrestacionTx, getPrestaciones, getListaEspera } from './database';
+import { getPrestacionTx, createPrestacionTx, getPrestaciones, getListaEspera, getCache } from './database';
 import { calcularEdad } from './edad';
 import { findSnomed, getConcept } from './snomed'
 import { flatPrestacion } from './prestaciones';
@@ -181,9 +181,15 @@ async function processBatch(cursor, callback, progressCallback) {
 export async function run() {
 
     let total = 0;
-    // await searchGeocode();
+    await searchGeocode();
     await createPrestacionTx();
     const Prestacion = await getPrestaciones();
+
+    const prestacionTx = await getPrestacionTx();
+    prestacionTx.deleteMany({
+        start: { gte: moment().subtract(1, 'month').startOf('month').toDate() }
+    })
+
 
     const cursor = Prestacion.find({
         'estadoActual.tipo': 'validada',
@@ -194,12 +200,15 @@ export async function run() {
             // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
             // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
 
-            // $gt: moment('2020-06-01T00:00:00').startOf('d').toDate()
+            // $gt: moment('2020-08-01T00:00:00').startOf('d').toDate()
 
             // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
             // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
 
-            $gte: moment('2022-06-30 23:59:59.926Z').toDate(),
+            // $gte: moment('2020-07-31 23:59:59.926Z').toDate(),
+
+            $gt: moment().subtract(1, 'month').startOf('month').toDate()
+
 
         },
     }, { batchSize: 3000 });
@@ -215,8 +224,10 @@ export async function run() {
         await Promise.all(ps);
     }
 
-    await listaEspera();
+    const Cache = await getCache();
+    await Cache.deleteMany({});
 
+    await listaEspera();
     await createMetaindex();
     await createConceptosNumericos();
     await populateConceptos();
@@ -230,8 +241,9 @@ export async function listaEspera() {
 
     const cursor = ListaEspera.find({
         paciente: { $exists: true },
-        fecha: { $gte: moment('2020-05-01T00:00:00').startOf('d').toDate() }
-        // fecha: { $gte: moment('2020-06-01T00:00:00').startOf('d').toDate() }
+        // fecha: { $gte: moment('2020-08-01T00:00:00').startOf('d').toDate() }
+        // fecha: { $gte: moment('2020-06-01T00:00:00').startOf('d').toDate() },
+        $gt: moment().subtract(1, 'month').startOf('month').toDate()
     });
 
     const lsitaEsperaAction = async (item) => {
