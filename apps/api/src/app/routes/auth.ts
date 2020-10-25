@@ -1,5 +1,6 @@
 import { application } from '../application';
 import { environment } from '../../environments/environment';
+import { createOrUpdate } from '../lib/users';
 
 const request = require('request-promise-native');
 
@@ -36,9 +37,11 @@ router.post('/login', async (req, res, next) => {
 
         const newToken = await application.sign(user);
 
+        await createOrUpdate(user);
+
         return res.json({ token: newToken });
     } catch (err) {
-        console.log(err)
+        console.log(err);
         return next(403);
     }
 

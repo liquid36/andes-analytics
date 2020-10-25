@@ -34,5 +34,15 @@ async function ensureIndex() {
 
 ensureIndex();
 
+export async function getUserCollection() {
+    const db = await getConnection();
+    return db.collection('users');
+}
+
+export async function getUserFrecuentesCollection() {
+    const db = await getConnection();
+    return db.collection('UserFrecuentes');
+}
+
 export const MAIN_DB = 'prestacionTx';
 export const CACHE_DB = 'cache';

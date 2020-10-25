@@ -44,14 +44,37 @@
                 <concept-count-pill class="d-flex align-center" [concept]="searchItem.concept"></concept-count-pill>
             </li>
         </ul>
-        <div *ngIf="results.length === 0">
-            <h5 *ngIf="text.length > 0">
+        <div *ngIf="results.length === 0 && text.length > 0">
+            <h5 *ngIf="">
                 No hay resultados
             </h5>
-            <h5 *ngIf="!text || text.length === 0">
-                Escribe algún término para optener resultados
-            </h5>
         </div>
+        <ng-container *ngIf="results.length === 0 && (!text || text.length === 0)">
+            <ng-container *ngIf="frecuentes$ | async as frecuentes">
+
+
+                <ul class="list-group m-1" *ngIf="frecuentes.length > 0">
+                    <li class="list-group-item d-flex justify-content-between align-items-center"
+                        [class.selected]="selectedConcept === searchItem.concepto.conceptId"
+                        *ngFor="let searchItem of frecuentes" (click)="onClick(searchItem.concepto)">
+                        <div class="d-flex flex-row align-items-center">
+                            <i class="adi adi-{{ searchItem.concepto | semtag }} mr-2"></i>
+                            <concept-definition-status-icon [concept]="searchItem.concepto">
+                            </concept-definition-status-icon>
+                            <div class="titulo-item">
+                                <b> {{ searchItem.concepto.pt.term }} </b>
+                                <small> {{ searchItem.concepto.conceptId }} | <i> {{ searchItem.concepto | semtag }}
+                                    </i> </small>
+                            </div>
+                        </div>
+                        <concept-count-pill class="d-flex align-center" [concept]="searchItem.concepto">
+                        </concept-count-pill>
+                    </li>
+                </ul>
+
+
+            </ng-container>
+        </ng-container>
     </ng-container>
     <!-- <div class="toogle-float" (click)="toogleNavbar()" [style.left.px]="(appService.navbarState | async) ? 385 : 0">
         {{ (appService.navbarState | async) ? '<' : '>' }}

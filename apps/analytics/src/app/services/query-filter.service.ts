@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { mergeObject, distincObject } from '../operators';
 import { pluck, tap } from 'rxjs/operators';
-import { SnomedHTTP } from '../../../../../libs/snomed/src/lib/services/snomed.http';
+import { IConcept, SnomedHTTP } from '../../../../../libs/snomed/src/lib/services/snomed.http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { UserService } from './users.service';
 
 type IFILTER = 'start' | 'end' | 'organizacion' | 'profesional' | 'relationship' | 'sexo' | 'prestacion' | 'localidad' | 'turno' | 'ambito';
 
@@ -25,7 +26,7 @@ export class QueryOptionsService {
     constructor(
         private snomed: SnomedHTTP,
         private router: Router,
-        private activeRoute: ActivatedRoute
+        private userService: UserService
     ) {
         this.filstrosParams$ = this.filstrosParams.asObservable().pipe(
             mergeObject(),
@@ -56,8 +57,9 @@ export class QueryOptionsService {
         return this.data[name];
     }
 
-    selectConcept(conceptId: string) {
-        this.router.navigate(['concept', conceptId, 'detail'], { queryParamsHandling: 'preserve' });
+    selectConcept(concepto: IConcept) {
+        this.router.navigate(['concept', concepto.conceptId, 'detail'], { queryParamsHandling: 'preserve' });
+        this.userService.registerConcepto(concepto).subscribe();
     }
 
     onConcept() {

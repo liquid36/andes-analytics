@@ -3,6 +3,10 @@ import { SnomedSearchService } from './snomed-search.service';
 import { KeyValue } from '@angular/common';
 import { QueryOptionsService } from '../../services/query-filter.service';
 import { AppService } from '../../services/app.service';
+import { IConcept } from '@andes-analytics/snomed';
+import { UserService } from '../../services/users.service';
+import { Observable } from 'rxjs';
+import { cache } from '../../operators';
 
 @Component({
     selector: 'snomed-search',
@@ -16,13 +20,20 @@ export class SnomedSearchComponent {
     results$ = this.searchService.getResult('items');
     semantics$ = this.searchService.getResult('semanticTags');
     semTagSelected$ = this.searchService.getSearchParams('semanticTag');
-    selectedConcept = false;
+    selectedConcept: string = null;
+
+    public frecuentes$: Observable<any>;
 
     constructor(
         private searchService: SnomedSearchService,
         private qf: QueryOptionsService,
-        public appService: AppService
+        public appService: AppService,
+        private userService: UserService
     ) {
+
+        this.frecuentes$ = this.userService.misFrecuentes().pipe(
+            cache()
+        )
 
     }
 
@@ -42,8 +53,8 @@ export class SnomedSearchComponent {
         this.searchService.search({ semanticTag: null });
     }
 
-    onClick(concept) {
-        this.qf.selectConcept(concept.conceptId);
+    onClick(concept: IConcept) {
+        this.qf.selectConcept(concept);
         this.selectedConcept = concept.conceptId;
     }
 

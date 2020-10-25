@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { SnomedAPI } from '../../services/snomed.service';
 import { Subject, Observable, of } from 'rxjs';
 import { mergeObject, distincObject, cache } from '../../operators';
-import { tap, filter, switchMap, pluck, map } from 'rxjs/operators';
+import { tap, filter, switchMap, pluck, map, startWith } from 'rxjs/operators';
 import { DescriptionParams } from '@andes-analytics/snomed';
 import { ActivatedRoute } from '@angular/router';
 
@@ -38,6 +38,7 @@ export class SnomedSearchService {
                     semanticTags: result.buckets.semanticTags
                 }
             }),
+            startWith({ items: [], semanticTags: {} }),
             cache()
         );
 
