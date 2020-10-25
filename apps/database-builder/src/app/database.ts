@@ -69,6 +69,11 @@ export async function getOrganizaciones() {
     return db.collection('organizaciones');
 }
 
+export async function getCache() {
+    const db = await getConnection('andes', environment.ANDES_DB);
+    return db.collection('cache');
+}
+
 export async function createPrestacionTx() {
     const db = await getConnection('andes', environment.ANDES_DB);
     await db.createCollection('prestacionTx');

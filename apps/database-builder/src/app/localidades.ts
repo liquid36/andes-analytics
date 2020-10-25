@@ -8,7 +8,7 @@ const googleMapsClient = require('@google/maps').createClient({
 async function geocode(address): Promise<any[]> {
     return new Promise((resolve, reject) => {
         googleMapsClient.geocode({ address: address }, function (err, response) {
-            if (err) { return reject(err) };
+            if (err) { return resolve(null) };
             return resolve(response.json.results);
         });
     })
@@ -41,7 +41,7 @@ export async function searchGeocode() {
         const localidadInDB = await localidadesDB.findOne({ localidad: localidad.localidad });
         if (!localidadInDB) {
             const response = await geocode(`${localidad.localidad}, ${localidad.provincia}, argentina`);
-            if (response.length > 0) {
+            if (response && response.length > 0) {
                 const location = response[0].geometry.location;
 
                 const LocalidadDTO = {
