@@ -43,6 +43,7 @@ import { AppLocalidadesStatsView } from './views/localidades-stats/localidades-s
 import { PlotlyModule, PlotlyViaWindowModule } from 'angular-plotly.js';
 import { AppGrafoView } from './views/grafo-view/grafo.view';
 import { environment } from '../environments/environment';
+import { AppTreeChartsView } from './views/conceptos-asociados-stats/treemap-chart/treemap-chart.component';
 // PlotlyModule.plotlyjs = PlotlyJS;
 
 
@@ -72,6 +73,7 @@ import { environment } from '../environments/environment';
     MainView,
     UnauthorizedView,
     NombreFiltrosPipe,
+    AppTreeChartsView
   ],
   imports: [
     HttpClientModule,

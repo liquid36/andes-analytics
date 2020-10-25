@@ -128,6 +128,7 @@ router.post('/rup/cluster', authenticate(), async function (req, res) {
                 $group: {
                     '_id': '$concepto.conceptId',
                     'label': { $first: '$concepto.term' },
+                    'statedAncestors': { $first: '$concepto.statedAncestors' },
                     total: { $sum: 1 }
                 }
             },
@@ -168,6 +169,7 @@ router.post('/rup/cluster', authenticate(), async function (req, res) {
                 $group: {
                     '_id': '$concepto.conceptId',
                     'label': { $first: '$concepto.term' },
+                    'statedAncestors': { $first: '$concepto.statedAncestors' },
                     total: { $sum: 1 }
                 }
             },

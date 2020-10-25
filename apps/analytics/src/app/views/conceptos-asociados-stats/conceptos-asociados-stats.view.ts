@@ -11,7 +11,7 @@ import { cache, combineDataset } from '../../operators';
     templateUrl: './conceptos-asociados-stats.view.html'
 })
 export class AppConceptosAsociadosStatsView {
-    public showGrafico = false;
+    public showGrafico: string = null;
     public loading = false;
     public concept$;
     public asociados$;
@@ -49,7 +49,7 @@ export class AppConceptosAsociadosStatsView {
             switchMap(([concept, semantics, asociacion, _]: [any, any, any, any]) => {
                 return this.snomed.cluster(concept.conceptId, this.semanticTags[semantics], asociacion);
             }),
-            tap(() => this.loading = false),
+            tap(() => this.loading = false)
         );
     }
 }

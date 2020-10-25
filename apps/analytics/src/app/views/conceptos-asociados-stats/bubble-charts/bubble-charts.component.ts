@@ -13,7 +13,7 @@ export class AppBubbleChartsView {
     processData() {
         const newDataSet = [];
 
-        this.data.sort((a, b) => b.total - a.toal).slice(0, 50).forEach((item) => {
+        this.data.sort((a, b) => b.total - a.total).slice(0, 50).forEach((item) => {
             newDataSet.push({ name: item.label, className: 'asd', value: item.total });
         });
         return { children: newDataSet };

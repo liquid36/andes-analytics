@@ -1,9 +1,19 @@
 <ng-container *ngIf="concept$ | async as concept">
 
     <app-navbar-detail-component [concept]="concept">
-        <button class="btn btn-success btn-sm mr-3" type="button" (click)="showGrafico = true">
-            VER GRAFICO
-        </button>
+        <span ngbDropdown>
+            <button ngbDropdownToggle class="btn btn-success dropdown-toggle btn-sm mr-3" type="button">
+                Graficos
+            </button>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <button ngbDropdownItem (click)="showGrafico = 'burbujas'">
+                    Burbujas
+                </button>
+                <button ngbDropdownItem (click)="showGrafico = 'treemap'">
+                    Treemap
+                </button>
+            </div>
+        </span>
 
         <span ngbDropdown>
             <button ngbDropdownToggle class="btn btn-info dropdown-toggle btn-sm" type="button">
@@ -66,11 +76,14 @@
                         </button>
                     </div>
                 </span>
-                <button class="btn btn-outline-danger btn-sm" type="button" (click)="showGrafico = false">
+                <button class="btn btn-outline-danger btn-sm" type="button" (click)="showGrafico = null">
                     X
                 </button>
             </app-navbar-detail-component>
-            <app-bubble-charts-component [data]="asociados"></app-bubble-charts-component>
+            <app-bubble-charts-component [data]="asociados" *ngIf="showGrafico==='burbujas'">
+            </app-bubble-charts-component>
+            <app-treemap-chart-component [data]="asociados" *ngIf="showGrafico==='treemap'">
+            </app-treemap-chart-component>
         </div>
 
 
