@@ -1,9 +1,10 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'snd-concept-diagram',
     templateUrl: './graph-nav.component.html',
-    styleUrls: ['./graph-nav.component.scss']
+    styleUrls: ['./graph-nav.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SndGraphNavComponent {
     @Input() concept: any;

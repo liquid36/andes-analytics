@@ -44,6 +44,7 @@ import { PlotlyModule, PlotlyViaWindowModule } from 'angular-plotly.js';
 import { AppGrafoView } from './views/grafo-view/grafo.view';
 import { environment } from '../environments/environment';
 import { AppTreeChartsView } from './views/conceptos-asociados-stats/treemap-chart/treemap-chart.component';
+import { AppHistogramaChartsView } from './views/concept-detail/histograma-charts/histograma-charts.component';
 // PlotlyModule.plotlyjs = PlotlyJS;
 
 
@@ -73,7 +74,8 @@ import { AppTreeChartsView } from './views/conceptos-asociados-stats/treemap-cha
     MainView,
     UnauthorizedView,
     NombreFiltrosPipe,
-    AppTreeChartsView
+    AppTreeChartsView,
+    AppHistogramaChartsView
   ],
   imports: [
     HttpClientModule,

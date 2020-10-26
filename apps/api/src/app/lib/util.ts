@@ -92,6 +92,13 @@ export const FILTER_AVAILABLE = [
         unwind: true,
         transform: (value) => (value === 'true' ? true : false)
     },
+    {
+        name: 'fecha',
+        query: true,
+        field: 'registros.fecha',
+        label: 'registros.fecha',
+        unwind: true
+    },
     // {
     //     name: 'rangoEtario',
     //     query: false

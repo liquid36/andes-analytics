@@ -9,11 +9,20 @@
             <snd-concept-desc-table [concept]="concept" [refSetLanguage]="refSetLanguage" [terms$]="term$">
             </snd-concept-desc-table>
 
+            <div class="diagram-panel">
+                <p class="title">Evolución temporal</p>
+                <ng-container *ngIf="histograma$ | async as histograma">
+                    <app-histograma-chart-component [data]="histograma"></app-histograma-chart-component>
+                </ng-container>
+            </div>
+
+
             <!-- Diagrama -->
             <div class="diagram-panel">
                 <p class="title">Diagrama</p>
                 <snd-concept-diagram [concept]="concept"></snd-concept-diagram>
             </div>
+
         </main>
 
         <!-- Ancestros & Descendientes -->

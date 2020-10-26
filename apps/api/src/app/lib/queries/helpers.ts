@@ -133,6 +133,17 @@ export function createLabelMetadata(groups) {
 
 const addOnField = {
     // 'decada': addOnQueryEdad
+    fecha (metadata, params) {
+        return [
+            { 
+                $addFields: {   
+                    'registros.fecha': {
+                        $dateToString: { date: '$registros.fecha', format: '%Y-%m' }
+                    }
+                } 
+            }
+        ]
+    }
 }
 
 export function createAddOn(groups, params) {
