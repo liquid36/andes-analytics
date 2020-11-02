@@ -140,6 +140,10 @@ async function processPrestacion(prestacion) {
         if (item.valor && Array.isArray(item.valor)) { valorType = 'array'; }
         if (item.valor && item.valor.concepto) { valorType = 'snomed'; }
 
+        if (valorType === 'string') {
+            item.valor = null;
+        }
+
         await addBucket({
             esPrestacion: false,
             ...tx,
