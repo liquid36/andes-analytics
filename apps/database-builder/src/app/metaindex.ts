@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import { getPrestacionTx, getMetadata, getConceptosNumericos, getOrganizacion, getOrganizaciones } from './database';
 import { getConcepts, toDBStore, getConceptsAncestors } from './snomed';
 
@@ -76,6 +77,7 @@ export async function createMetaindex() {
     // TipoPrestacion
     console.log('start tipo prestacion')
     const tipoPrestacion = await PrestacionTx.aggregate([
+        { $match: { start: {$gte: moment('2020-01-01 00:59:59.926Z').toDate()} } },
         { $unwind: '$registros' },
         {
             $group: {
