@@ -102,6 +102,7 @@ export async function createMetaindex() {
     // TipoPrestacion
     console.log('start localidad')
     const localidades = await PrestacionTx.aggregate([
+        { $match: { start: {$gte: moment('2020-01-01 00:59:59.926Z').toDate()} } },
         { $unwind: '$registros' },
         {
             $group: {
