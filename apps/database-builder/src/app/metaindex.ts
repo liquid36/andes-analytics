@@ -31,6 +31,7 @@ export async function createMetaindex() {
     // Organizaciones
     console.log('start organizaciones')
     const organizaciones = await PrestacionTx.aggregate([
+        { $match: { start: {$gte: moment('2020-06-01 00:59:59.926Z').toDate()} } },
         {
             $group: {
                 _id: '$organizacion.id',
@@ -54,6 +55,7 @@ export async function createMetaindex() {
     // profesionales
     console.log('start profesionales')
     const profesionales = await PrestacionTx.aggregate([
+        { $match: { start: {$gte: moment('2020-01-01 00:59:59.926Z').toDate()} } },
         {
             $group: {
                 _id: '$profesional.id',
