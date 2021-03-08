@@ -191,7 +191,7 @@ export async function run() {
 
     const prestacionTx = await getPrestacionTx();
     prestacionTx.deleteMany({
-        start: { gte: moment().subtract(1, 'month').startOf('month').toDate() }
+        start: { gte: moment().subtract(2, 'month').startOf('month').toDate() }
     })
 
 
@@ -211,7 +211,7 @@ export async function run() {
 
             // $gte: moment('2020-07-31 23:59:59.926Z').toDate(),
 
-            $gte: moment().subtract(1, 'month').startOf('month').toDate()
+            $gte: moment().subtract(2, 'month').startOf('month').toDate()
 
 
         },
@@ -247,7 +247,7 @@ export async function listaEspera() {
         paciente: { $exists: true },
         // fecha: { $gte: moment('2020-08-01T00:00:00').startOf('d').toDate() }
         // fecha: { $gte: moment('2020-06-01T00:00:00').startOf('d').toDate() },
-        fecha: { $gt: moment().subtract(1, 'month').startOf('month').toDate() }
+        fecha: { $gt: moment().subtract(2, 'month').startOf('month').toDate() }
     });
 
     const lsitaEsperaAction = async (item) => {

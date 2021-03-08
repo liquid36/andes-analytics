@@ -13,6 +13,31 @@ export async function createMetaindex() {
     await Metadata.deleteMany({});
     await Organizaciones.deleteMany({});
 
+
+        // TipoPrestacion
+        console.log('start sexo')
+        await Metadata.insertMany([
+            { key: 'masculino', nombre: 'Masculino', type: 'sexo' },
+            { key: 'femenino', nombre: 'Femenino', type: 'sexo' }
+        ]);
+        console.log('end sexo');
+    
+        console.log('start ambito')
+        await Metadata.insertMany([
+            { key: 'internacion', nombre: 'Internacion', type: 'ambito' },
+            { key: 'ambulatorio', nombre: 'Ambulatorio', type: 'ambito' }
+        ]);
+        console.log('end ambito');
+    
+    
+        console.log('start turno')
+        await Metadata.insertMany([
+            { key: 'true', nombre: 'Con turno', type: 'turno' },
+            { key: 'false', nombre: 'Sin turno', type: 'turno' }
+        ]);
+        console.log('end turno');
+
+
     await Organizacion.aggregate([
         {
             $project: {
@@ -55,7 +80,7 @@ export async function createMetaindex() {
     // profesionales
     console.log('start profesionales')
     const profesionales = await PrestacionTx.aggregate([
-        { $match: { start: {$gte: moment('2020-01-01 00:59:59.926Z').toDate()} } },
+        { $match: { start: {$gte: moment('2020-06-01 00:59:59.926Z').toDate()} } },
         {
             $group: {
                 _id: '$profesional.id',
@@ -79,7 +104,7 @@ export async function createMetaindex() {
     // TipoPrestacion
     console.log('start tipo prestacion')
     const tipoPrestacion = await PrestacionTx.aggregate([
-        { $match: { start: {$gte: moment('2020-01-01 00:59:59.926Z').toDate()} } },
+        { $match: { start: {$gte: moment('2020-06S-01 00:59:59.926Z').toDate()} } },
         { $unwind: '$registros' },
         {
             $group: {
@@ -104,7 +129,7 @@ export async function createMetaindex() {
     // TipoPrestacion
     console.log('start localidad')
     const localidades = await PrestacionTx.aggregate([
-        { $match: { start: {$gte: moment('2020-01-01 00:59:59.926Z').toDate()} } },
+        { $match: { start: {$gte: moment('2020-06-01 00:59:59.926Z').toDate()} } },
         { $unwind: '$registros' },
         {
             $group: {
@@ -125,28 +150,7 @@ export async function createMetaindex() {
     await Metadata.insertMany(localidades);
     console.log('end tipo prestacion')
 
-    // TipoPrestacion
-    console.log('start sexo')
-    await Metadata.insertMany([
-        { key: 'masculino', nombre: 'Masculino', type: 'sexo' },
-        { key: 'femenino', nombre: 'Femenino', type: 'sexo' }
-    ]);
-    console.log('end sexo');
 
-    console.log('start ambito')
-    await Metadata.insertMany([
-        { key: 'internacion', nombre: 'Internacion', type: 'ambito' },
-        { key: 'ambulatorio', nombre: 'Ambulatorio', type: 'ambito' }
-    ]);
-    console.log('end ambito');
-
-
-    console.log('start turno')
-    await Metadata.insertMany([
-        { key: 'true', nombre: 'Con turno', type: 'turno' },
-        { key: 'false', nombre: 'Sin turno', type: 'turno' }
-    ]);
-    console.log('end turno');
 
 
 }
