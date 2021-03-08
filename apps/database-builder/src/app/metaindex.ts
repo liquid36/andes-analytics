@@ -56,7 +56,7 @@ export async function createMetaindex() {
     // Organizaciones
     console.log('start organizaciones')
     const organizaciones = await PrestacionTx.aggregate([
-        { $match: { start: {$gte: moment('2020-06-01 00:59:59.926Z').toDate()} } },
+        { $match: { start: {$gte: moment('2021-01-01 00:59:59.926Z').toDate()} } },
         {
             $group: {
                 _id: '$organizacion.id',
@@ -80,7 +80,7 @@ export async function createMetaindex() {
     // profesionales
     console.log('start profesionales')
     const profesionales = await PrestacionTx.aggregate([
-        { $match: { start: {$gte: moment('2020-06-01 00:59:59.926Z').toDate()} } },
+        { $match: { start: {$gte: moment('2021-01-01 00:59:59.926Z').toDate()} } },
         {
             $group: {
                 _id: '$profesional.id',
@@ -104,7 +104,7 @@ export async function createMetaindex() {
     // TipoPrestacion
     console.log('start tipo prestacion')
     const tipoPrestacion = await PrestacionTx.aggregate([
-        { $match: { start: {$gte: moment('2020-06S-01 00:59:59.926Z').toDate()} } },
+        { $match: { start: {$gte: moment('2021-01-01 00:59:59.926Z').toDate()} } },
         { $unwind: '$registros' },
         {
             $group: {
@@ -129,7 +129,7 @@ export async function createMetaindex() {
     // TipoPrestacion
     console.log('start localidad')
     const localidades = await PrestacionTx.aggregate([
-        { $match: { start: {$gte: moment('2020-06-01 00:59:59.926Z').toDate()} } },
+        { $match: { start: {$gte: moment('2021-01-01 00:59:59.926Z').toDate()} } },
         { $unwind: '$registros' },
         {
             $group: {
@@ -165,7 +165,7 @@ export async function createConceptosNumericos() {
     await ConceptosNumericos.deleteMany({});
 
     await PrestacionTx.aggregate([
-        { $match: { 'registros.valorType': 'number' } },
+        { $match: { 'registros.valorType': 'number', start: {$gte: moment('2021-01-01 00:59:59.926Z').toDate() }   } },
         { $group: { _id: '$concepto.conceptId', 'concepto': { $first: '$concepto' } } },
         { $replaceRoot: { newRoot: '$concepto' } },
         { $out: 'conceptos_numericos' }
