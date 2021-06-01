@@ -53,7 +53,8 @@ async function addBucket(item) {
             start,
             end,
             'organizacion.id': item.organizacion.id,
-            'profesional.id': item.profesional && item.profesional.id
+            'profesional.id': item.profesional && item.profesional.id,
+            'total' : { $lte : 1000 }
         },
         {
             $inc: inc,
