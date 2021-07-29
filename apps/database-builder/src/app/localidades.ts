@@ -1,5 +1,5 @@
 import { environment } from '../environments/environment';
-import { getPacientes, getLocalidades } from './database';
+import { getLocalidades, getPacientes } from './database';
 
 const googleMapsClient = require('@google/maps').createClient({
     key: environment.GOOGLE_KEY
@@ -8,7 +8,9 @@ const googleMapsClient = require('@google/maps').createClient({
 async function geocode(address): Promise<any[]> {
     return new Promise((resolve, reject) => {
         googleMapsClient.geocode({ address: address }, function (err, response) {
-            if (err) { return resolve(null) };
+            if (err) { 
+                return resolve(null) 
+            };
             return resolve(response.json.results);
         });
     })
@@ -16,7 +18,7 @@ async function geocode(address): Promise<any[]> {
 
 async function distinctLocalidades() {
     const pacientesDB = await getPacientes();
-    const $pipeline = [
+    const $pipeline = [ 
         {
             $unwind: '$direccion'
         },
@@ -43,18 +45,14 @@ export async function searchGeocode() {
             const response = await geocode(`${localidad.localidad}, ${localidad.provincia}, argentina`);
             if (response && response.length > 0) {
                 const location = response[0].geometry.location;
-
                 const LocalidadDTO = {
                     localidad: localidad.localidad,
                     provincia: localidad.provincia,
                     pais: localidad.pais,
                     location
-                }
-
+                }                
+                await localidadesDB.insertOne(LocalidadDTO);
                 console.log(localidad.localidad, localidad.provincia, localidad.pais, location.lat, location.lng);
-
-                await localidadesDB.insert(LocalidadDTO);
-
             } else {
                 console.log('SIN GEOLOCALIZACION', localidad.localidad);
             }

@@ -1,8 +1,32 @@
 import * as moment from 'moment';
-import { getPrestacionTx, getMetadata, getConceptosNumericos, getOrganizacion, getOrganizaciones } from './database';
-import { getConcepts, toDBStore, getConceptsAncestors } from './snomed';
+import { getConceptosNumericos, getMetadata, getOrganizacion, getOrganizaciones, getPrestacionTx } from './database';
+import { getConceptsAncestors } from './snomed';
+
+async function insertMetadata(data) {
+    const Metadata = await getMetadata();
+
+    return Metadata.updateOne(
+        { type: data.type, key: data.key },
+        {
+            $setOnInsert : {
+                type: data.type,
+                key: data.key,
+                nombre: data.nombre
+            }
+        },
+        { upsert: true }
+    )
+}
+
+async function insertMetadataMany(list, type) {
+    const ps = list.map(doc => insertMetadata({ key: doc.key, nombre: doc.nombre, type: type }));
+    await Promise.all(ps);
+}
+
 
 export async function createMetaindex() {
+
+    const fechaLimite = moment('2021-01-01 00:59:59.926Z').toDate();
     const PrestacionTx = await getPrestacionTx();
     const Metadata = await getMetadata();
     const Organizacion = await getOrganizacion();
@@ -10,53 +34,45 @@ export async function createMetaindex() {
 
     // Clean DATA.
     console.log('clean metadata')
-    await Metadata.deleteMany({});
+    // await Metadata.deleteMany({});
     await Organizaciones.deleteMany({});
 
 
-        // TipoPrestacion
-        console.log('start sexo')
-        await Metadata.insertMany([
-            { key: 'masculino', nombre: 'Masculino', type: 'sexo' },
-            { key: 'femenino', nombre: 'Femenino', type: 'sexo' }
-        ]);
-        console.log('end sexo');
+    // TipoPrestacion
+    console.log('start sexo');
+    await insertMetadata({ key: 'masculino', nombre: 'Masculino', type: 'sexo' });
+    await insertMetadata({ key: 'femenino', nombre: 'Femenino', type: 'sexo' });
+    console.log('end sexo');
+
     
-        console.log('start ambito')
-        await Metadata.insertMany([
-            { key: 'internacion', nombre: 'Internacion', type: 'ambito' },
-            { key: 'ambulatorio', nombre: 'Ambulatorio', type: 'ambito' }
-        ]);
-        console.log('end ambito');
-    
-    
-        console.log('start turno')
-        await Metadata.insertMany([
-            { key: 'true', nombre: 'Con turno', type: 'turno' },
-            { key: 'false', nombre: 'Sin turno', type: 'turno' }
-        ]);
-        console.log('end turno');
+    console.log('start ambito');
+    await insertMetadata({ key: 'internacion', nombre: 'Internacion', type: 'ambito' });
+    await insertMetadata({ key: 'ambulatorio', nombre: 'Ambulatorio', type: 'ambito' });
+    console.log('end ambito');
 
 
-    await Organizacion.aggregate([
-        {
-            $project: {
-                _id: { $toString: '$_id' },
-                id: { $toString: '$_id' },
-                nombre: 1,
-                direccion: 1
-            }
-        },
-        {
-            $out: 'organizaciones'
-        }
-    ], { allowDiskUse: true }).toArray();
+    console.log('start turno');
+    await insertMetadata({ key: 'true', nombre: 'Con turno', type: 'turno' });
+    await insertMetadata({ key: 'false', nombre: 'Sin turno', type: 'turno' });
+    console.log('end turno');
 
 
+    console.log('start tabla organizaciones');
+    const aggr: any =  Organizacion.find();
+    for await (const org of aggr) {
+        await Organizaciones.insertOne({
+            _id: String(org._id),
+            id: String(org._id),
+            nombre: org.nombre,
+            direccion: org.direccion
+        })
+    }
+    console.log('end tabla organizaciones');
+ 
     // Organizaciones
     console.log('start organizaciones')
     const organizaciones = await PrestacionTx.aggregate([
-        { $match: { start: {$gte: moment('2021-01-01 00:59:59.926Z').toDate()} } },
+        { $match: { start: {$gte: fechaLimite } } },
         {
             $group: {
                 _id: '$organizacion.id',
@@ -71,16 +87,13 @@ export async function createMetaindex() {
             }
         }
     ], { allowDiskUse: true }).toArray();
-
-    organizaciones.forEach(doc => { delete doc._id; });
-
-    await Metadata.insertMany(organizaciones);
+    await insertMetadataMany(organizaciones, 'organizacion');
     console.log('end organizaciones')
 
     // profesionales
     console.log('start profesionales')
     const profesionales = await PrestacionTx.aggregate([
-        { $match: { start: {$gte: moment('2021-01-01 00:59:59.926Z').toDate()} } },
+        { $match: { start: {$gte: fechaLimite } } },
         {
             $group: {
                 _id: '$profesional.id',
@@ -95,16 +108,13 @@ export async function createMetaindex() {
             }
         }
     ], { allowDiskUse: true }).toArray();
-
-    profesionales.forEach(doc => { delete doc._id; });
-
-    await Metadata.insertMany(profesionales);
-    console.log('end profesionales')
+    await insertMetadataMany(profesionales, 'profesional');
+    console.log('end profesionales');
 
     // TipoPrestacion
     console.log('start tipo prestacion')
     const tipoPrestacion = await PrestacionTx.aggregate([
-        { $match: { start: {$gte: moment('2021-01-01 00:59:59.926Z').toDate()} } },
+        { $match: { start: { $gte: fechaLimite } } },
         { $unwind: '$registros' },
         {
             $group: {
@@ -120,16 +130,13 @@ export async function createMetaindex() {
             }
         }
     ], { allowDiskUse: true }).toArray();
-
-    tipoPrestacion.forEach(doc => { delete doc._id; });
-
-    await Metadata.insertMany(tipoPrestacion);
+    await insertMetadataMany(tipoPrestacion, 'prestacion');
     console.log('end tipo prestacion')
 
     // TipoPrestacion
     console.log('start localidad')
     const localidades = await PrestacionTx.aggregate([
-        { $match: { start: {$gte: moment('2021-01-01 00:59:59.926Z').toDate()} } },
+        { $match: { start: { $gte: fechaLimite } } },
         { $unwind: '$registros' },
         {
             $group: {
@@ -144,19 +151,15 @@ export async function createMetaindex() {
             }
         }
     ], { allowDiskUse: true }).toArray();
-
-    localidades.forEach(doc => { delete doc._id; });
-
-    await Metadata.insertMany(localidades);
+    await insertMetadataMany(localidades, 'localidad');
     console.log('end tipo prestacion')
-
-
-
 
 }
 
 
 export async function createConceptosNumericos() {
+    const fechaLimite = moment('2021-01-01 00:59:59.926Z').toDate();
+
     const PrestacionTx = await getPrestacionTx();
     const ConceptosNumericos = await getConceptosNumericos();
 
@@ -165,7 +168,7 @@ export async function createConceptosNumericos() {
     await ConceptosNumericos.deleteMany({});
 
     await PrestacionTx.aggregate([
-        { $match: { 'registros.valorType': 'number', start: {$gte: moment('2021-01-01 00:59:59.926Z').toDate() }   } },
+        { $match: { 'registros.valorType': 'number', start: { fechaLimite }   } },
         { $group: { _id: '$concepto.conceptId', 'concepto': { $first: '$concepto' } } },
         { $replaceRoot: { newRoot: '$concepto' } },
         { $out: 'conceptos_numericos' }

@@ -1,11 +1,9 @@
 import * as moment from 'moment';
-import { getPrestacionTx, createPrestacionTx, getPrestaciones, getListaEspera, getCache } from './database';
+import { createPrestacionTx, getCache, getListaEspera, getPrestaciones, getPrestacionTx } from './database';
 import { calcularEdad } from './edad';
-import { findSnomed, getConcept } from './snomed'
-import { flatPrestacion } from './prestaciones';
-import { getCoordenadas, getLocalidad, findPaciente } from './paciente';
 import { searchGeocode } from './localidades';
-import { createMetaindex, createConceptosNumericos, populateConceptos } from './metaindex';
+import { findPaciente, getCoordenadas, getLocalidad } from './paciente';
+import { flatPrestacion } from './prestaciones';
 
 function removeDuplicate(items): any[] {
     const deduplicado = items.reduce((acc, current) => {
@@ -26,9 +24,9 @@ async function addBucket(item) {
     item.prestacionId = item.prestacionId && item.prestacionId.toString();
     if (item.paciente) {
         item.paciente.id = item.paciente.id.toString();
-        delete item.paciente['nombre'];
-        delete item.paciente['apellido'];
-        delete item.paciente['documento'];
+        // delete item.paciente['nombre'];
+        // delete item.paciente['apellido'];
+        // delete item.paciente['documento'];
     }
 
     if (item.tipoPrestacion) {
@@ -37,17 +35,16 @@ async function addBucket(item) {
     }
 
     delete item.concepto['_id'];
-    delete item.concepto['id'];
+    delete item.concepto['id']; 
 
-
-    const prestacionTx = await getPrestacionTx();
+    const PrestacionTx = await getPrestacionTx();
     const inc: any = {
         total: 1
     };
 
     const start = moment(item.fecha.ejecucion).startOf('month').toDate();
     const end = moment(item.fecha.ejecucion).endOf('month').toDate();
-    await prestacionTx.update(
+    await PrestacionTx.updateMany(
         {
             'concepto.conceptId': item.concepto.conceptId,
             start,
@@ -184,38 +181,45 @@ async function processBatch(cursor, callback, progressCallback) {
 }
 
 export async function run() {
+    // const fechaMin = moment().subtract(3, 'month').startOf('month').toDate();
+    // const fechaMax = moment().subtract(3, 'month').startOf('month').toDate();
+
+    const fechaMin = moment('2018-01-01 00:13:18.926Z').toDate();
+    const fechaMax = moment('2019-06-30 23:59:59.926Z').toDate();
 
     let total = 0;
     await searchGeocode();
     await createPrestacionTx();
     const Prestacion = await getPrestaciones();
+    const PrestacionTx = await getPrestacionTx();
 
-    const prestacionTx = await getPrestacionTx();
-    prestacionTx.deleteMany({
-        start: { gte: moment().subtract(2, 'month').startOf('month').toDate() }
-    })
+    await PrestacionTx.deleteMany({
+        start: { $gte: moment().subtract(3, 'months').startOf('months').toDate() }
+    });
 
-
+    console.log(buildFechaQuery('ejecucion.fecha', fechaMin, fechaMax));
+    
     const cursor = Prestacion.find({
         'estadoActual.tipo': 'validada',
-        'ejecucion.fecha': {
-            // $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
-            // $lte: moment('2019-06-30 23:59:59.926Z').toDate()
+        ...buildFechaQuery('ejecucion.fecha', fechaMin, fechaMax)
+        // 'ejecucion.fecha': {
+        //     // $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
+        //     // $lte: moment('2019-06-30 23:59:59.926Z').toDate()
 
-            // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
-            // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
+        //     // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
+        //     // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
 
-            // $gt: moment('2020-08-01T00:00:00').startOf('d').toDate()
+        //     // $gt: moment('2020-08-01T00:00:00').startOf('d').toDate()
 
-            // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
-            // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
+        //     // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
+        //     // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
 
-            // $gte: moment('2020-07-31 23:59:59.926Z').toDate(),
+        //     // $gte: moment('2020-07-31 23:59:59.926Z').toDate(),
 
-            $gte: moment().subtract(2, 'month').startOf('month').toDate()
+        //     $gte: fechaMin
 
 
-        },
+        // },
     }, { batchSize: 3000 });
     while (await cursor.hasNext()) {
         total += 30;
@@ -232,23 +236,34 @@ export async function run() {
     const Cache = await getCache();
     await Cache.deleteMany({});
 
-    await listaEspera();
+    await listaEspera(fechaMin, fechaMax);
     await createMetaindex();
     await createConceptosNumericos();
     await populateConceptos();
 }
 
-export async function listaEspera() {
+function buildFechaQuery(key: string, fechaMin, fechaMax) {
+    const q = { [key] : {} };
+    if (fechaMin) {
+        q[key]['$gte'] = fechaMin;
+    }
+
+    if (fechaMax) {
+        q[key]['$lte'] = fechaMax;
+    }
+    return q;
+}
+
+export async function listaEspera(fechaMin, fechaMax) {
     console.log('Starting lista espera');
 
     let total = 0;
     const ListaEspera = await getListaEspera();
 
     const cursor = ListaEspera.find({
-        paciente: { $exists: true },
-        // fecha: { $gte: moment('2020-08-01T00:00:00').startOf('d').toDate() }
-        // fecha: { $gte: moment('2020-06-01T00:00:00').startOf('d').toDate() },
-        fecha: { $gt: moment().subtract(2, 'month').startOf('month').toDate() }
+        paciente: { $exists: true }, 
+        ...buildFechaQuery('fecha', fechaMin, fechaMax)
+        // fecha: { $gt: moment().subtract(3, 'month').startOf('month').toDate() }
     });
 
     const lsitaEsperaAction = async (item) => {

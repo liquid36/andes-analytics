@@ -1,4 +1,4 @@
-import { getPacientes, getLocalidades } from './database';
+import { getLocalidades, getPacientes } from './database';
 
 export async function findPaciente(id) {
     const collection = await getPacientes();
@@ -30,7 +30,7 @@ export function getLocalidad(paciente) {
     if (paciente && paciente.direccion && paciente.direccion.length > 0) {
         const d = paciente.direccion[0];
         if (d.ubicacion && d.ubicacion.localidad) {
-            return d.ubicacion.localidad.nombre;
+            return d.ubicacion.localidad.nombre.toLowerCase();
         }
     }
     return null;
