@@ -194,7 +194,7 @@ export async function run(fechaMin, fechaMax) {
     const PrestacionTx = await getPrestacionTx();
 
     await PrestacionTx.deleteMany({
-        start: { $gte: moment().subtract(3, 'months').startOf('months').toDate() }
+        ...buildFechaQuery('start', fechaMin, fechaMax)
     });
 
     console.log(buildFechaQuery('ejecucion.fecha', fechaMin, fechaMax));
