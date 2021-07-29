@@ -1,3 +1,4 @@
+import * as moment from "moment";
 
 
 require('dotenv').config();
@@ -17,7 +18,9 @@ async function main() {
             populateConceptos()
         ]);
     } else {
-        await run();
+        const fechaMin = moment(process.argv[2], 'YYYYMMDD').startOf('M').toDate();
+        const fechaMax = moment(process.argv[3], 'YYYYMMDD').endOf('M').toDate();;
+        await run(fechaMin, fechaMax);
         // await calcularArbolSnomed();
     }
     process.exit();

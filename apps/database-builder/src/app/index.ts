@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import { createPrestacionTx, getCache, getListaEspera, getPrestaciones, getPrestacionTx } from './database';
 import { calcularEdad } from './edad';
-import { searchGeocode } from './localidades';
+import { createConceptosNumericos, createMetaindex, populateConceptos } from './metaindex';
 import { findPaciente, getCoordenadas, getLocalidad } from './paciente';
 import { flatPrestacion } from './prestaciones';
 
@@ -180,15 +180,15 @@ async function processBatch(cursor, callback, progressCallback) {
     }
 }
 
-export async function run() {
+export async function run(fechaMin, fechaMax) {
     // const fechaMin = moment().subtract(3, 'month').startOf('month').toDate();
     // const fechaMax = moment().subtract(3, 'month').startOf('month').toDate();
 
-    const fechaMin = moment('2018-01-01 00:13:18.926Z').toDate();
-    const fechaMax = moment('2019-06-30 23:59:59.926Z').toDate();
+    // const fechaMin = moment('2018-01-01 00:13:18.926Z').toDate();
+    // const fechaMax = moment('2019-06-30 23:59:59.926Z').toDate();
 
     let total = 0;
-    await searchGeocode();
+    // await searchGeocode();
     await createPrestacionTx();
     const Prestacion = await getPrestaciones();
     const PrestacionTx = await getPrestacionTx();
@@ -202,24 +202,6 @@ export async function run() {
     const cursor = Prestacion.find({
         'estadoActual.tipo': 'validada',
         ...buildFechaQuery('ejecucion.fecha', fechaMin, fechaMax)
-        // 'ejecucion.fecha': {
-        //     // $gt: moment('2018-01-01 00:13:18.926Z').toDate(),
-        //     // $lte: moment('2019-06-30 23:59:59.926Z').toDate()
-
-        //     // $gte: moment('2019-06-30 23:59:59.926Z').toDate(),
-        //     // $lte: moment('2019-12-31 23:59:59.926Z').toDate()
-
-        //     // $gt: moment('2020-08-01T00:00:00').startOf('d').toDate()
-
-        //     // $gte: moment('2019-09-30 23:59:59.926Z').toDate()
-        //     // $lte: moment('2019-09-30 23:59:59.926Z').toDate()
-
-        //     // $gte: moment('2020-07-31 23:59:59.926Z').toDate(),
-
-        //     $gte: fechaMin
-
-
-        // },
     }, { batchSize: 3000 });
     while (await cursor.hasNext()) {
         total += 30;
