@@ -271,7 +271,10 @@ export async function listaEspera(fechaMin, fechaMax) {
             }
             return { conceptId: null, term: 'SIN ESPECIFICAR', fsn: 'SIN ESPECIFICAR', semanticTag: '' }
         }
-
+        if (moment(item.fecha).isBefore(moment('2020-05-01'))) {
+            return;
+        }
+        
         const tx = {
             prestacionId: null,
             paciente: item.paciente,
