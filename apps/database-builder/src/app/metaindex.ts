@@ -26,7 +26,7 @@ async function insertMetadataMany(list, type) {
 
 export async function createMetaindex() {
 
-    const fechaLimite = moment('2021-01-01 00:59:59.926Z').toDate();
+    const fechaLimite = moment('2021-05-01 00:59:59.926Z').toDate();
     const PrestacionTx = await getPrestacionTx();
     const Metadata = await getMetadata();
     const Organizacion = await getOrganizacion();
