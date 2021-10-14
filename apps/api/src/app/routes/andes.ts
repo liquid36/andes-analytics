@@ -19,7 +19,7 @@ function toArray(item) {
     return Array.isArray(item) ? item : [item];
 }
 
-router.post('/analytics/:visualization', authenticate(), async function (req, res) {
+router.post('/analytics/:visualization', authenticate(), async function (req, res, next) {
     let { target, filter, visualization, group, project } = req.body;
     target = toArray(target);
     group = group && toArray(group);
@@ -31,9 +31,12 @@ router.post('/analytics/:visualization', authenticate(), async function (req, re
     }
 
     visualization = req.params.visualization;
-
-    const rs = await execQuery(visualization, target, filter, group, project);
-    return res.json(rs);
+    try {
+        const rs = await execQuery(visualization, target, filter, group, project);
+        return res.json(rs);
+    } catch (err) {
+        return next(err);
+    }
 
 });
 
