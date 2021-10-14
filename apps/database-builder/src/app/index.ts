@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 import { createPrestacionTx, getCache, getListaEspera, getPrestaciones, getPrestacionTx } from './database';
 import { calcularEdad } from './edad';
+import { searchGeocode } from './localidades';
 import { createConceptosNumericos, createMetaindex, populateConceptos } from './metaindex';
 import { findPaciente, getCoordenadas, getLocalidad } from './paciente';
 import { flatPrestacion } from './prestaciones';
@@ -188,7 +189,7 @@ export async function run(fechaMin, fechaMax) {
     // const fechaMax = moment('2019-06-30 23:59:59.926Z').toDate();
 
     let total = 0;
-    // await searchGeocode();
+    await searchGeocode();
     await createPrestacionTx();
     const Prestacion = await getPrestaciones();
     const PrestacionTx = await getPrestacionTx();

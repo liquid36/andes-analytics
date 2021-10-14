@@ -1,10 +1,10 @@
 import * as moment from 'moment';
-
+import { ConceptId, Params, PeriodoList } from '../types';
+import { createCacheKey, restoreFromCacheV2, storeInCacheV2, touchCache } from './cache';
 import { getConnection, MAIN_DB } from './database';
-import { TIME_UNIT, FILTER_AVAILABLE } from './util';
-import { touchCache, restoreFromCacheV2, createCacheKey, storeInCacheV2 } from './cache';
 import { groupReducer, matchConceptExpression } from './queries/helpers';
-import { ConceptId, PeriodoList, Params } from '../types';
+import { FILTER_AVAILABLE, TIME_UNIT } from './util';
+
 
 let date_min = moment('2018-01-01T00:00:00.000-03:00').startOf(TIME_UNIT);
 let date_max = moment('2020-08-31T00:00:00.000-03:00').endOf(TIME_UNIT);
@@ -20,7 +20,7 @@ async function minmaxDate() {
 
 minmaxDate();
 
-export const execQuery = async function (metrica: string, conceptsIds, filters, group) {
+export const execQuery = async function (metrica: string, conceptsIds, filters, group, project) {
     let cache = {};
     const queryData = require('./queries/' + metrica).QUERY;
     const cacheActive = queryData.cache;
@@ -37,14 +37,14 @@ export const execQuery = async function (metrica: string, conceptsIds, filters, 
     const results = {};
     const ps = conceptsIds.map(async conceptId => {
         const { self, conceptId: concept } = matchConceptExpression(conceptId);
-        results[concept] = await execQueryByConcept(queryData, conceptId, periods, cache, params, group);
+        results[concept] = await execQueryByConcept(queryData, conceptId, periods, cache, params, group, project);
     });
 
     await Promise.all(ps);
     return results;
 }
 
-async function execQueryByConcept(queryData, conceptId: ConceptId, periodos: PeriodoList, cache, params: Params, group) {
+async function execQueryByConcept(queryData, conceptId: ConceptId, periodos: PeriodoList, cache, params: Params, group, project) {
 
     if (!queryData.query) {
         throw new Error(`Visualization [${queryData.name}] not have query function`);
@@ -63,7 +63,7 @@ async function execQueryByConcept(queryData, conceptId: ConceptId, periodos: Per
                 touchCache(inCache);
                 return inCache.value;
             } else {
-                const qs = await queryData.query(conceptId, periodo, params, group);
+                const qs = await queryData.query(conceptId, periodo, params, group, project);
                 if (cacheActive) {
                     storeInCacheV2(queryData.name, conceptId, periodo, params, group, qs);
                 }

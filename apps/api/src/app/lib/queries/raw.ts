@@ -1,8 +1,8 @@
-import { getConnection, MAIN_DB, ObjectId } from '../database';
-import { makeBasePipeline, createAddOn, createIdMetadata, hash, createLabelMetadata } from './helpers';
-import { ConceptId, Periodo, Params } from '../../types';
+import { ConceptId, Params, Periodo } from '../../types';
+import { getConnection, MAIN_DB } from '../database';
+import { makeBasePipeline } from './helpers';
 
-async function query(conceptId: ConceptId, periodo: Periodo, params: Params, group) {
+async function query(conceptId: ConceptId, periodo: Periodo, params: Params, group, project) {
     const db = await getConnection();
     const PrestacionesTx = db.collection(MAIN_DB);
 
@@ -11,6 +11,10 @@ async function query(conceptId: ConceptId, periodo: Periodo, params: Params, gro
     // const addOns = group ? createAddOn(group, params) : [];
 
     const countKey = needUnwind ? 1 : '$total';
+
+    project = project || ['fecha', 'profesionalNombre', 'organizacionNombre', 'tipoPrestacion', 'concepto', 'semtag', 'edad', 'sexo', 'localidad', 'latitud', 'longitud' ,'valor'];
+    const project$ = project.reduce((acc, curr) => {  return {  ...acc, [curr] : projectMapping[curr] }  }, {})
+
 
     const $pipeline = [
         ...pipeline,
@@ -30,20 +34,22 @@ async function query(conceptId: ConceptId, periodo: Periodo, params: Params, gro
             $project: {
                 _id: 'null',
                 // label: createLabelMetadata(group),
-                value: {
-                    fecha: { $dateToString: { date: '$registros.fecha', format: '%Y-%m' } },
-                    profesionalNombre: '$profesional.nombre',
-                    organizacionNombre: '$organizacion.nombre',
-                    tipoPrestacion: '$registros.tipoPrestacion.term',
-                    concepto: '$concepto.term',
-                    semtag: '$concepto.semanticTag',
-                    edad: '$registros.paciente.edad.edad',
-                    sexo: '$registros.paciente.sexo',
-                    localidad: '$registros.paciente.localidad',
-                    latitud: '$registros.paciente.coordenadas.lat',
-                    longitud: '$registros.paciente.coordenadas.lng',
-                    valor: '$registros.valor'
-                }
+                value: project$
+                
+                // {
+                //     fecha: { $dateToString: { date: '$registros.fecha', format: '%Y-%m' } },
+                //     profesionalNombre: '$profesional.nombre',
+                //     organizacionNombre: '$organizacion.nombre',
+                //     tipoPrestacion: '$registros.tipoPrestacion.term',
+                //     concepto: '$concepto.term',
+                //     semtag: '$concepto.semanticTag',
+                //     edad: '$registros.paciente.edad.edad',
+                //     sexo: '$registros.paciente.sexo',
+                //     localidad: '$registros.paciente.localidad',
+                //     latitud: '$registros.paciente.coordenadas.lat',
+                //     longitud: '$registros.paciente.coordenadas.lng',
+                //     valor: '$registros.valor'
+                // }
             }
         }
     ];
@@ -55,6 +61,8 @@ async function query(conceptId: ConceptId, periodo: Periodo, params: Params, gro
     });
     return results;
 }
+ 
+
 
 const initial = () => []
 
@@ -78,3 +86,23 @@ export const QUERY = {
     unwind: true,
     split: true
 }
+
+const projectMapping = {
+    fecha: { $dateToString: { date: '$registros.fecha', format: '%Y-%m' } },
+    profesionalNombre: '$profesional.nombre',
+    organizacionNombre: '$organizacion.nombre',
+    tipoPrestacion: '$registros.tipoPrestacion.term',
+    concepto: '$concepto.term',
+    semtag: '$concepto.semanticTag',
+    edad: '$registros.paciente.edad.edad',
+    sexo: '$registros.paciente.sexo',
+    localidad: '$registros.paciente.localidad',
+    latitud: '$registros.paciente.coordenadas.lat',
+    longitud: '$registros.paciente.coordenadas.lng',
+    valor: '$registros.valor',
+    documento: '$registros.paciente.documento',
+    fechaNacimiento: { $dateToString:  { date: '$registros.paciente.fechaNacimiento', format: '%Y-%m-%d' } },
+    pacienteNombre: { $concat: [ '$registros.paciente.apellido' , ' ' , '$registros.paciente.nombre' ] } ,
+    concepto_conceptId: '$concepto.conceptId',
+    concepto_term: '$concepto.term'
+};

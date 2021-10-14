@@ -1,7 +1,7 @@
 import { application, authenticate, checkPermission } from '../application';
 import { execQuery } from '../lib/analytica';
-import { makePattern } from '../lib/util';
 import { getConnection, MAIN_DB } from '../lib/database';
+import { makePattern } from '../lib/util';
 
 export const router = application.router();
 
@@ -20,10 +20,10 @@ function toArray(item) {
 }
 
 router.post('/analytics/:visualization', authenticate(), async function (req, res) {
-    let { target, filter, visualization, group } = req.body;
+    let { target, filter, visualization, group, project } = req.body;
     target = toArray(target);
     group = group && toArray(group);
-    filter = filter || {};
+    filter = filter || {}; 
 
     if (!fullAccess(req)) {
         const profesional = req.user.profesional.id;
@@ -32,7 +32,7 @@ router.post('/analytics/:visualization', authenticate(), async function (req, re
 
     visualization = req.params.visualization;
 
-    const rs = await execQuery(visualization, target, filter, group);
+    const rs = await execQuery(visualization, target, filter, group, project);
     return res.json(rs);
 
 });

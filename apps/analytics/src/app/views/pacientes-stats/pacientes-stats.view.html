@@ -1,6 +1,10 @@
 <ng-container *ngIf="concept$ | async as concept">
 
-    <app-navbar-detail-component [concept]="concept"></app-navbar-detail-component>
+    <app-navbar-detail-component [concept]="concept">
+        <button class="btn btn-xs btn-info" type="button" (click)="getListado()" *ngIf="showListado">
+            Listado Pacientes
+        </button>
+    </app-navbar-detail-component>
 
     <!-- <ui-modal #modal>
         <iframe #frame style="height:600px;width:80vw;border:none"

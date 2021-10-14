@@ -1,11 +1,11 @@
 
+import { DescriptionParams, SnomedHTTP } from '@andes-analytics/snomed';
 import { Injectable } from '@angular/core';
-import { map, bufferTime, filter, switchMap, pluck } from 'rxjs/operators';
-import { of, BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { QueryOptionsService } from './query-filter.service';
-import { SnomedHTTP, DescriptionParams } from '@andes-analytics/snomed';
-import { cache } from '../operators';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { bufferTime, filter, map, pluck, switchMap } from 'rxjs/operators';
+import { cache } from '../operators';
+import { QueryOptionsService } from './query-filter.service';
 
 type VISULIZATION = 'unique' | 'count' | 'value' | 'raw';
 
@@ -133,13 +133,14 @@ export class SnomedAPI {
         return this.api.analytics(body).pipe(map(data => data[sctid]));
     }
 
-    analytics(sctid, visualization: VISULIZATION, group = null, filters = {}) {
+    analytics(sctid, visualization: VISULIZATION, group = null, filters = {}, project = null) {
         const filter = { ...this.getParams(), ...filters };
         const body = {
             visualization,
             target: sctid,
             filter,
-            group
+            group,
+            project
         }
         return this.api.analytics(body).pipe(map(data => data[sctid]));
     }

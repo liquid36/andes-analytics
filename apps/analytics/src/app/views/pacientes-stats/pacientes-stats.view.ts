@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { getConceptOperator, SnomedAPI } from '../../services/snomed.service';
-import { QueryOptionsService } from '../../services/query-filter.service';
-import { combineLatest, BehaviorSubject, forkJoin, Observable, Subject } from 'rxjs';
-import { pluck, switchMap, map, startWith, tap, take, publishReplay, refCount, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, combineLatest, forkJoin, Observable, Subject } from 'rxjs';
+import { first, map, publishReplay, refCount, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { AuthService } from '../../auth/auth.service';
 import { cache } from '../../operators';
+import { QueryOptionsService } from '../../services/query-filter.service';
+import { getConceptOperator, SnomedAPI } from '../../services/snomed.service';
 
 @Component({
     selector: 'app-pacientes-stats-view',
@@ -27,6 +28,8 @@ export class AppPacientesStatsView {
 
     public demografiaCache;
 
+    public showListado = false;
+
 
     public graph = {
         layout: { width: 320 * 3, height: 240 * 2, barmode: 'overlay' },
@@ -36,8 +39,13 @@ export class AppPacientesStatsView {
     constructor(
         private snomed: SnomedAPI,
         private qf: QueryOptionsService,
-        private activeRoute: ActivatedRoute
+        private activeRoute: ActivatedRoute,
+        private auth: AuthService,
     ) {
+
+
+        this.showListado = this.auth.check('analytics:nominal');
+        
         this.concept$ = getConceptOperator(this.activeRoute).pipe(
             switchMap(([conceptId, language]) => {
                 return forkJoin(
@@ -103,6 +111,20 @@ export class AppPacientesStatsView {
 
     setMetrica(metrica) {
         this.metrica.next(metrica);
+    }
+
+    getListado() {
+        this.concept$.pipe(first()).subscribe((c) => {
+            const project = ['concepto_conceptId', 'concepto_term', 'pacienteNombre', 'fechaNacimiento', 'documento', 'edad', 'sexo', 'fecha', 'localidad']
+            return this.snomed.analytics(c.conceptId, 'raw', null, {}, project).subscribe((data) => {
+                const { value } = data;
+
+                const csvContent = "data:text/csv;charset=utf-8," + project.join(',') + '\n' + value.map(e => Object.values(e).join(",")).join("\n");
+                
+                const encodedUri = encodeURI(csvContent);
+                window.open(encodedUri);
+            })
+        });
     }
 
 
