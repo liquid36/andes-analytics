@@ -19,6 +19,9 @@ function removeDuplicate(items): any[] {
 
 
 async function addBucket(item) {
+    if (!item.organizacion.id) {
+        return;
+    }
     item.organizacion.id = item.organizacion.id.toString();
     item.profesional.id = item.profesional.id && item.profesional.id.toString();
     item.registroId = item.registroId && item.registroId.toString();
