@@ -20,7 +20,7 @@
           },
           "configurations": {
             "production": {
-              "sourceMap": "true",
+              "sourceMap": true,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
