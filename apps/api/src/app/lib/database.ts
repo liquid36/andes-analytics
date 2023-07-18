@@ -7,7 +7,7 @@ const databases: { [key: string]: Db } = {};
 export const ObjectId = ObjectID;
 
 export const getConnection = async function () {
-    const name = 'andes';
+    const name = 'analytics';
     try {
         if (databases[name]) {
             return databases[name];

@@ -24,27 +24,27 @@ const getConnection = async function (key, name, url) {
 }
 
 export async function getPrestacionTx() {
-    const db = await getConnection('analytics', 'andes', environment.ANALYTICS_DB);
+    const db = await getConnection('analytics', 'analytics', environment.ANALYTICS_DB);
     return db.collection('prestacionTx');
 }
 
 export async function getMetadata() {
-    const db = await getConnection('analytics', 'andes', environment.ANALYTICS_DB);
+    const db = await getConnection('analytics', 'analytics', environment.ANALYTICS_DB);
     return db.collection('metadata');
 }
 
 export async function getConceptos() {
-    const db = await getConnection('analytics', 'andes', environment.ANALYTICS_DB);
+    const db = await getConnection('analytics', 'analytics', environment.ANALYTICS_DB);
     return db.collection('conceptos');
 }
 
 export async function getLocalidades() {
-    const db = await getConnection('analytics', 'andes', environment.ANALYTICS_DB);
+    const db = await getConnection('analytics', 'analytics', environment.ANALYTICS_DB);
     return db.collection('localidades');
 }
 
 export async function getConceptosNumericos() {
-    const db = await getConnection('analytics', 'andes', environment.ANALYTICS_DB);
+    const db = await getConnection('analytics', 'analytics', environment.ANALYTICS_DB);
     return db.collection('conceptos_numericos');
 }
 
@@ -69,17 +69,17 @@ export async function getOrganizacion() {
 }
 
 export async function getOrganizaciones() {
-    const db = await getConnection('analytics', 'andes', environment.ANALYTICS_DB);
+    const db = await getConnection('analytics', 'analytics', environment.ANALYTICS_DB);
     return db.collection('organizaciones');
 }
 
 export async function getCache() {
-    const db = await getConnection('analytics', 'andes', environment.ANALYTICS_DB);
+    const db = await getConnection('analytics', 'analytics', environment.ANALYTICS_DB);
     return db.collection('cache');
 }
 
 export async function createPrestacionTx() {
-    const db = await getConnection('analytics', 'andes', environment.ANALYTICS_DB);
+    const db = await getConnection('analytics', 'analytics', environment.ANALYTICS_DB);
     await db.createCollection('prestacionTx');
 
     const PrestacionTx = await getPrestacionTx();
