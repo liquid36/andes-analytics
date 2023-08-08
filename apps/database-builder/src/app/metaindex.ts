@@ -168,7 +168,7 @@ export async function createConceptosNumericos() {
     await ConceptosNumericos.deleteMany({});
 
     await PrestacionTx.aggregate([
-        { $match: { 'registros.valorType': 'number', start: { fechaLimite }   } },
+        { $match: { 'registros.valorType': 'number', start: { $gte: fechaLimite }   } },
         { $group: { _id: '$concepto.conceptId', 'concepto': { $first: '$concepto' } } },
         { $replaceRoot: { newRoot: '$concepto' } },
         { $out: 'conceptos_numericos' }
